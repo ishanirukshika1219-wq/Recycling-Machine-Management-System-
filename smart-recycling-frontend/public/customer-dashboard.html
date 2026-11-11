@@ -1,0 +1,428 @@
+<!-- customer-dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard - SRMMS</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    /* Force the number span inside stat-value / metric-value to
+       match the size of plain (unwrapped) values like "3,560.00".
+       Only the trailing unit span ("kg" / "pts") stays small. */
+    .stat-value .stat-num,
+    .metric-value .stat-num,
+    .points-value .stat-num {
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="active">
+            <a href="customer-dashboard.html">
+              <span class="nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="start-recycling.html">
+              <span class="nav-icon">♻</span>
+              <span>Start Recycling</span>
+            </a>
+          </li>
+          <li>
+            <a href="customer-appoinments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+          <li>
+            <a href="transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>Transactions</span>
+            </a>
+          </li>
+          <li>
+            <a href="rewards.html">
+              <span class="nav-icon">🏅</span>
+              <span>Rewards</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <span class="nav-icon">👤</span>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+        
+        <div class="header-right">
+         
+          <div class="user-profile-badge">
+            <div class="user-avatar">
+              <img src="https://i.pravatar.cc/100?img=47" alt="Ishani">
+            </div>
+            <span class="user-name" id="userName">Customer</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Inner Content -->
+      <div class="dashboard-wrapper">
+
+        <!-- Welcome Title & Reward Points Badge Section -->
+        <div class="welcome-header">
+          <div class="welcome-text">
+            <h1>Dashboard</h1>
+            <h2>Hello, <span id="welcomeName">Customer</span> 👋</h2>
+            <p>Let's recycle and earn rewards!</p>
+          </div>
+
+          <div class="reward-points-card">
+            <div class="reward-info">
+              <small>Reward Points</small>
+              <div class="points-value"><span class="stat-num" id="dashboardPointsValue">0</span> <span>pts</span></div>
+            </div>
+            <div class="reward-gift-icon">🎁</div>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="metrics-grid">
+
+          <!-- Total Recycled -->
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">Total Recycled (kg)</span>
+              <div class="metric-value"><span class="stat-num" id="metricRecycledKg">0.00</span> <span>kg</span></div>
+            </div>
+            <div class="metric-icon green-icon">⚖</div>
+          </div>
+
+          <!-- Total Earned -->
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">Total Earned (Rs.)</span>
+              <div class="metric-value" id="metricTotalEarned">0.00</div>
+            </div>
+            <div class="metric-icon green-light-icon">💲</div>
+          </div>
+
+          <!-- This Month -->
+          <div class="metric-card">
+            <div class="metric-info">
+              <span class="metric-label">This Month (Rs.)</span>
+              <div class="metric-value" id="metricThisMonth">0.00</div>
+            </div>
+            <div class="metric-icon blue-icon">📊</div>
+          </div>
+
+        </div>
+
+        <!-- Recent Transactions Card -->
+        <div class="transactions-card">
+          <h3>Recent Transactions</h3>
+
+          <div class="table-responsive">
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Category</th>
+                  <th>Weight (kg)</th>
+                  <th>Amount (Rs.)</th>
+                  <th>Points</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recentTransactionsBody">
+                <tr>
+                  <td colspan="6" style="text-align:center; color:#666;">Loading transactions...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-action">
+            <a href="transactions.html" class="view-all-btn">View All Transactions</a>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+    const customerData = localStorage.getItem("customer");
+
+    // If user is not logged in
+    if (!customerData) {
+        window.location.href = "/";
+    } else {
+        const customer = JSON.parse(customerData);
+
+        // Display customer name
+        document.getElementById("userName").textContent =
+            customer.name || customer.email;
+
+        document.getElementById("welcomeName").textContent =
+            customer.name || customer.email;
+    }
+
+    function formatMoney(num) {
+        return num.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    /* =====================================================
+       LOAD DASHBOARD DATA FROM DB
+       (recycling_transaction + transaction_item tables,
+       via /api/transactions/customer/{customerId}/details)
+    ====================================================== */
+
+    async function loadDashboardData() {
+
+        const storedCustomer = localStorage.getItem("customer");
+
+        if (!storedCustomer) {
+            return;
+        }
+
+        let customer;
+
+        try {
+            customer = JSON.parse(storedCustomer);
+        } catch (error) {
+            return;
+        }
+
+        if (!customer.customerId) {
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                API_BASE + "/transactions/customer/" + customer.customerId + "/details"
+            );
+
+            if (!response.ok) {
+                console.error("Unable to load transactions for dashboard.");
+                return;
+            }
+
+            const transactions = await response.json();
+
+            if (!Array.isArray(transactions)) {
+                return;
+            }
+
+            /* ---- TOTALS ---- */
+
+            let totalWeight = 0;
+            let totalEarned = 0;
+            let totalPoints = 0;
+            let thisMonthEarned = 0;
+
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            transactions.forEach(function(tx) {
+
+                const weight = parseFloat(tx.totalWeight) || 0;
+                const value = parseFloat(tx.totalValue) || 0;
+                const points = parseInt(tx.rewardPoints) || 0;
+
+                totalWeight += weight;
+                totalEarned += value;
+                totalPoints += points;
+
+                if (tx.transactionDate) {
+
+                    const txDate = new Date(tx.transactionDate);
+
+                    if (
+                        txDate.getMonth() === currentMonth &&
+                        txDate.getFullYear() === currentYear
+                    ) {
+                        thisMonthEarned += value;
+                    }
+
+                }
+
+            });
+
+            document.getElementById("metricRecycledKg").textContent =
+                totalWeight.toFixed(2);
+
+            document.getElementById("metricTotalEarned").textContent =
+                formatMoney(totalEarned);
+
+            document.getElementById("metricThisMonth").textContent =
+                formatMoney(thisMonthEarned);
+
+            document.getElementById("dashboardPointsValue").textContent =
+                totalPoints.toLocaleString("en-US");
+
+            /* ---- RECENT TRANSACTIONS (latest 4) ---- */
+
+            const sorted = transactions.slice().sort(function(a, b) {
+                return new Date(b.transactionDate) - new Date(a.transactionDate);
+            });
+
+            const recent = sorted.slice(0, 4);
+
+            const tbody = document.getElementById("recentTransactionsBody");
+
+            tbody.innerHTML = "";
+
+            if (recent.length === 0) {
+
+                tbody.innerHTML =
+                    '<tr><td colspan="6" style="text-align:center; color:#666;">No recycling transactions yet.</td></tr>';
+
+                return;
+
+            }
+
+            recent.forEach(function(tx) {
+
+                const dateStr = tx.transactionDate
+                    ? new Date(tx.transactionDate).toISOString().split("T")[0]
+                    : "-";
+
+                const statusClass =
+                    (tx.status || "").toLowerCase() === "completed"
+                        ? "status-completed"
+                        : "status-pending";
+
+                const row = document.createElement("tr");
+
+                row.innerHTML =
+                    "<td>" + dateStr + "</td>" +
+                    "<td>" + (tx.categoryName || "-") + "</td>" +
+                    "<td>" + (parseFloat(tx.totalWeight) || 0).toFixed(2) + "</td>" +
+                    "<td>" + formatMoney(parseFloat(tx.totalValue) || 0) + "</td>" +
+                    "<td>" + (parseInt(tx.rewardPoints) || 0) + "</td>" +
+                    '<td><span class="status-pill ' + statusClass + '">' +
+                        (tx.status || "Completed") +
+                    "</span></td>";
+
+                tbody.appendChild(row);
+
+            });
+
+        } catch (error) {
+
+            console.error("Dashboard data loading error:", error);
+
+        }
+
+    }
+
+    async function loadProfilePhoto() {
+
+    const storedCustomer =
+        localStorage.getItem("customer");
+
+    if (!storedCustomer) {
+        return;
+    }
+
+    try {
+
+        const customer =
+            JSON.parse(storedCustomer);
+
+        if (!customer.customerId) {
+            return;
+        }
+
+        const response =
+            await fetch(
+                "http://localhost:8080/api/customers/" +
+                customer.customerId
+            );
+
+        if (!response.ok) {
+            return;
+        }
+
+        const data =
+            await response.json();
+
+        if (
+            data.profilePhoto &&
+            data.profilePhoto.trim() !== ""
+        ) {
+
+            const photoElements =
+                document.querySelectorAll(
+                    ".user-avatar img, #headerProfilePhoto, .profile-avatar-img"
+                );
+
+            photoElements.forEach(function(img) {
+                img.src = data.profilePhoto;
+            });
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Profile photo loading error:",
+            error
+        );
+
+    }
+}
+
+loadDashboardData();
+loadProfilePhoto();
+</script>
+
+</body>
+</html>

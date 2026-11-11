@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logout - SRMMS</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="customer-dashboard.html">
+              <span class="nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="start-recycling.html">
+              <span class="nav-icon">♻</span>
+              <span>Start Recycling</span>
+            </a>
+          </li>
+           <li>
+            <a href="customer-appoinments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+          <li>
+            <a href="transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>Transactions</span>
+            </a>
+          </li>
+          <li>
+            <a href="rewards.html">
+              <span class="nav-icon">🏅</span>
+              <span>Rewards</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <span class="nav-icon">👤</span>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li class="logout-item active">
+            <a href="logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Dashboard Background Area (Dimmed by Overlay) -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+        
+        <div class="header-right">
+          <div class="notification-icon">🔔</div>
+          <div class="user-profile-badge">
+            <div class="user-avatar">
+              <img src="https://i.pravatar.cc/100?img=47" alt="Ishani">
+            </div>
+            <span class="user-name">Ishani ▾</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Background Content -->
+      <div class="dashboard-wrapper">
+        <div class="welcome-header">
+          <div>
+            <h1 class="welcome-title">Hello, Ishani 👋</h1>
+            <p class="welcome-subtitle">Let's recycle and earn rewards!</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">♻</div>
+            <div class="stat-info">
+              <span class="stat-label">Total Recycled (kg)</span>
+              <div class="stat-value">125.75 kg</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">💵</div>
+            <div class="stat-info">
+              <span class="stat-label">Total Earned (Rs.)</span>
+              <div class="stat-value">3,560.00</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+              <span class="stat-label">This Month (Rs.)</span>
+              <div class="stat-value">1,250.00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Logout Modal Overlay -->
+  <div class="logout-modal-overlay">
+    <div class="logout-modal-card">
+      
+      <!-- Green Recycling Icon -->
+      <div class="modal-recycle-icon">♻</div>
+      
+      <!-- Modal Title & Question -->
+      <h2 class="modal-title">Logout</h2>
+      <p class="modal-message">Are you sure you want to logout?</p>
+      
+      <!-- Action Buttons -->
+      <div class="modal-actions">
+        <a href="customer-dashboard.html" class="btn-modal-cancel">Cancel</a>
+        <a href="home.html" class="btn-modal-logout">Logout</a>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

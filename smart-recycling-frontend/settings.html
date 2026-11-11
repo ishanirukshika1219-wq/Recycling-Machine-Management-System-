@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - SRMMS</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+</head>
+
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS</span>
+      </div>
+
+      <nav class="sidebar-nav">
+
+        <ul>
+
+          <li>
+            <a href="customer-dashboard.html">
+              <span class="nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="start-recycling.html">
+              <span class="nav-icon">♻</span>
+              <span>Start Recycling</span>
+            </a>
+          </li>
+           <li>
+            <a href="customer-appoinments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>Transactions</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="rewards.html">
+              <span class="nav-icon">🏅</span>
+              <span>Rewards</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="profile.html">
+              <span class="nav-icon">👤</span>
+              <span>Profile</span>
+            </a>
+          </li>
+
+          <li class="active">
+            <a href="settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+
+          <li class="logout-item">
+            <a href="logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+
+        </ul>
+
+      </nav>
+
+    </aside>
+
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+
+        <button class="menu-toggle">
+          ☰
+        </button>
+
+        <div class="header-right">
+
+          
+          <div class="user-profile-badge">
+
+            <div class="user-avatar">
+
+              <img
+                id="headerProfilePhoto"
+                src="https://i.pravatar.cc/100?img=47"
+                alt="Ishani">
+
+            </div>
+
+            <span
+              class="user-name"
+              id="settingsUserName">
+
+              Ishani ▾
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </header>
+
+
+      <!-- Dashboard Inner Wrapper -->
+      <div class="dashboard-wrapper">
+
+
+        <!-- Page Header -->
+        <div class="page-header-block">
+
+          <h1 class="page-title">
+            Settings
+          </h1>
+
+          <p class="page-subtitle">
+            Manage your account preferences, security, and notifications.
+          </p>
+
+        </div>
+
+
+        <!-- Settings Grid -->
+        <div class="settings-grid">
+
+
+          <!-- Security Settings Card -->
+          <div class="profile-card-panel">
+
+            <h2 class="panel-title">
+              Security & Password
+            </h2>
+
+
+            <form
+              class="profile-form"
+              id="passwordForm">
+
+
+              <div class="form-group">
+
+                <label for="currentPassword">
+                  Current Password
+                </label>
+
+                <input
+                  type="password"
+                  id="currentPassword"
+                  placeholder="••••••••">
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="newPassword">
+                  New Password
+                </label>
+
+                <input
+                  type="password"
+                  id="newPassword"
+                  placeholder="Enter new password">
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="confirmPassword">
+                  Confirm New Password
+                </label>
+
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  placeholder="Confirm new password">
+
+              </div>
+
+
+            </form>
+
+          </div>
+
+
+          <!-- Notification Preferences Card -->
+          <div class="profile-card-panel">
+
+            <h2 class="panel-title">
+              Notifications
+            </h2>
+
+
+            <div class="toggle-list">
+
+
+              <div class="toggle-item">
+
+                <div class="toggle-info">
+
+                  <span class="toggle-title">
+                    Email Notifications
+                  </span>
+
+                  <span class="toggle-desc">
+                    Receive updates about your recycling progress via email.
+                  </span>
+
+                </div>
+
+
+                <label class="switch">
+
+                  <input
+                    type="checkbox"
+                    checked>
+
+                  <span class="slider"></span>
+
+                </label>
+
+              </div>
+
+
+             
+
+
+              <div class="toggle-item">
+
+                <div class="toggle-info">
+
+                  <span class="toggle-title">
+                    Promotional Offers
+                  </span>
+
+                  <span class="toggle-desc">
+                    Receive special reward bonuses and promotional news.
+                  </span>
+
+                </div>
+
+
+                <label class="switch">
+
+                  <input
+                    type="checkbox">
+
+                  <span class="slider"></span>
+
+                </label>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Preferences Section -->
+        <div class="profile-card-panel settings-pref-card">
+
+          <h2 class="panel-title">
+            Preferences
+          </h2>
+
+
+          <div class="pref-form-grid">
+
+
+            <div class="form-group">
+
+              <label for="languageSelect">
+                Language
+              </label>
+
+              <select
+                id="languageSelect"
+                class="settings-select">
+
+                <option
+                  value="en"
+                  selected>
+                  English
+                </option>
+
+                <option value="si">
+                  Sinhala
+                </option>
+
+                <option value="ta">
+                  Tamil
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="currencySelect">
+                Preferred Currency
+              </label>
+
+              <select
+                id="currencySelect"
+                class="settings-select">
+
+                <option
+                  value="lkr"
+                  selected>
+                  LKR (Rs.)
+                </option>
+
+                <option value="usd">
+                  USD ($)
+                </option>
+
+              </select>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+
+        <!-- Save Actions Bar -->
+        <div class="profile-actions-bar">
+
+          <button
+            type="button"
+            class="btn-outline-edit"
+            id="resetButton">
+
+            Reset Defaults
+
+          </button>
+
+
+          <button
+            type="button"
+            class="btn-primary-save"
+            id="saveSettingsButton">
+
+            💾 Save Settings
+
+          </button>
+
+        </div>
+
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+
+  <script>
+
+    const API_BASE =
+      "http://localhost:8080/api";
+
+
+    // =====================================================
+    // GET LOGGED-IN CUSTOMER
+    // =====================================================
+
+    const storedCustomer =
+      localStorage.getItem("customer");
+
+
+    if (!storedCustomer) {
+
+      window.location.href =
+        "login.html";
+
+    }
+
+
+    let customer;
+
+
+    try {
+
+      customer =
+        JSON.parse(storedCustomer);
+
+    } catch (error) {
+
+      localStorage.removeItem("customer");
+
+      window.location.href =
+        "login.html";
+
+    }
+
+
+    if (!customer ||
+        !customer.customerId) {
+
+      window.location.href =
+        "login.html";
+
+    }
+
+
+    // =====================================================
+    // ELEMENTS
+    // =====================================================
+
+    const currentPassword =
+      document.getElementById(
+        "currentPassword"
+      );
+
+    const newPassword =
+      document.getElementById(
+        "newPassword"
+      );
+
+    const confirmPassword =
+      document.getElementById(
+        "confirmPassword"
+      );
+
+    const saveSettingsButton =
+      document.getElementById(
+        "saveSettingsButton"
+      );
+
+    const resetButton =
+      document.getElementById(
+        "resetButton"
+      );
+
+    const headerProfilePhoto =
+      document.getElementById(
+        "headerProfilePhoto"
+      );
+
+    const settingsUserName =
+      document.getElementById(
+        "settingsUserName"
+      );
+
+
+    // =====================================================
+    // DISPLAY CUSTOMER NAME
+    // =====================================================
+
+    settingsUserName.textContent =
+      (customer.name ||
+       customer.email ||
+       "Customer") +
+      " ▾";
+
+
+    // =====================================================
+    // LOAD LATEST CUSTOMER PROFILE
+    // =====================================================
+
+    async function loadCustomerData() {
+
+      try {
+
+        const response =
+          await fetch(
+            API_BASE +
+            "/customers/" +
+            customer.customerId
+          );
+
+
+        if (!response.ok) {
+          return;
+        }
+
+
+        const data =
+          await response.json();
+
+
+        // Update name
+
+        settingsUserName.textContent =
+          (data.name ||
+           data.email ||
+           "Customer") +
+          " ▾";
+
+
+        // Update profile photo
+
+        if (
+          data.profilePhoto &&
+          data.profilePhoto.trim() !== ""
+        ) {
+
+          headerProfilePhoto.src =
+            data.profilePhoto;
+
+        }
+
+
+        // Update local storage
+
+        customer = {
+
+          ...customer,
+
+          customerId:
+            data.customerId,
+
+          name:
+            data.name,
+
+          email:
+            data.email,
+
+          phone:
+            data.phone,
+
+          registeredDate:
+            data.registeredDate,
+
+          address:
+            data.address || "",
+
+          city:
+            data.city || "",
+
+          postalCode:
+            data.postalCode || "",
+
+          profilePhoto:
+            data.profilePhoto ||
+            customer.profilePhoto ||
+            null
+
+        };
+
+
+        localStorage.setItem(
+          "customer",
+          JSON.stringify(customer)
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Customer loading error:",
+          error
+        );
+
+      }
+
+    }
+
+
+    // =====================================================
+    // SAVE SETTINGS / CHANGE PASSWORD
+    // =====================================================
+
+    saveSettingsButton.addEventListener(
+      "click",
+      async function () {
+
+
+        const current =
+          currentPassword.value.trim();
+
+        const newPass =
+          newPassword.value.trim();
+
+        const confirmPass =
+          confirmPassword.value.trim();
+
+
+        // =================================================
+        // CHECK PASSWORD FIELDS
+        // =================================================
+
+        if (!current) {
+
+          alert(
+            "Please enter your current password."
+          );
+
+          return;
+
+        }
+
+
+        if (!newPass) {
+
+          alert(
+            "Please enter a new password."
+          );
+
+          return;
+
+        }
+
+
+        if (!confirmPass) {
+
+          alert(
+            "Please confirm your new password."
+          );
+
+          return;
+
+        }
+
+
+        // =================================================
+        // CHECK NEW PASSWORD MATCH
+        // =================================================
+
+        if (newPass !== confirmPass) {
+
+          alert(
+            "New password and confirm password do not match."
+          );
+
+          return;
+
+        }
+
+
+        // =================================================
+        // CHECK NEW PASSWORD LENGTH
+        // =================================================
+
+        if (newPass.length < 6) {
+
+          alert(
+            "New password must be at least 6 characters."
+          );
+
+          return;
+
+        }
+
+
+        // =================================================
+        // SEND PASSWORD CHANGE REQUEST
+        // =================================================
+
+        try {
+
+          const response =
+            await fetch(
+              API_BASE +
+              "/customers/change-password/" +
+              customer.customerId,
+              {
+
+                method: "PUT",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                  JSON.stringify({
+
+                    currentPassword:
+                      current,
+
+                    newPassword:
+                      newPass
+
+                  })
+
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          // =================================================
+          // ERROR
+          // =================================================
+
+          if (!response.ok) {
+
+            alert(
+              data.message ||
+              "Failed to update password."
+            );
+
+            return;
+
+          }
+
+
+          // =================================================
+          // SUCCESS
+          // =================================================
+
+          alert(
+            "Password changed successfully!"
+          );
+
+
+          // Clear password fields
+
+          currentPassword.value =
+            "";
+
+          newPassword.value =
+            "";
+
+          confirmPassword.value =
+            "";
+
+
+        } catch (error) {
+
+          console.error(
+            "Password update error:",
+            error
+          );
+
+
+          alert(
+            "Cannot connect to the server."
+          );
+
+        }
+
+      }
+    );
+
+
+    // =====================================================
+    // RESET DEFAULTS
+    // =====================================================
+
+    resetButton.addEventListener(
+      "click",
+      function () {
+
+        currentPassword.value =
+          "";
+
+        newPassword.value =
+          "";
+
+        confirmPassword.value =
+          "";
+
+
+        document.getElementById(
+          "languageSelect"
+        ).value = "en";
+
+
+        document.getElementById(
+          "currencySelect"
+        ).value = "lkr";
+
+
+        alert(
+          "Settings reset to defaults."
+        );
+
+      }
+    );
+
+
+    // =====================================================
+    // LOAD DATA WHEN PAGE OPENS
+    // =====================================================
+
+    loadCustomerData();
+
+  </script>
+
+</body>
+</html>

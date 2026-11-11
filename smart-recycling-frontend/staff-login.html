@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SRMMS</title>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+
+<body class="login-body">
+
+<div class="login-container">
+    <div class="login-card">
+
+        <div class="login-header">
+            <h2>Welcome Back!</h2>
+            <p>Login to your account</p>
+        </div>
+
+        <form id="loginForm" class="login-form">
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    autocomplete="username"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-input-wrapper">
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required>
+                </div>
+            </div>
+
+            <div class="form-options">
+
+                <label class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <span>Remember me</span>
+                </label>
+
+                <a href="#" class="forgot-password"
+                   id="forgotPasswordLink">
+                    Forgot password?
+                </a>
+
+            </div>
+
+            <p id="loginMessage"
+               role="alert"
+               style="display:none; margin:10px 0;">
+            </p>
+
+            <button type="submit"
+                    class="login-submit-btn"
+                    id="loginButton">
+                Login
+            </button>
+
+        </form>
+
+        <div class="register-prompt">
+            <span>Don't have an account?</span>
+            <a href="register.html">Register</a>
+        </div>
+
+        <div class="eco-illustration">
+
+            <div class="recycling-scene">
+
+                <div class="character-group">
+                    <span class="person person-1">🧍‍♂️</span>
+                    <div class="eco-bin bin-green">♻</div>
+                    <div class="eco-bin bin-blue">♻</div>
+                </div>
+
+                <div class="center-recycle-symbol">♻</div>
+
+                <div class="character-group">
+                    <div class="eco-bin bin-green">♻</div>
+                    <div class="eco-bin bin-darkgreen">♻</div>
+                    <span class="person person-2">🧍‍♂️</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+const API_BASE = "http://localhost:8080/api";
+
+const loginForm = document.getElementById("loginForm");
+const loginButton = document.getElementById("loginButton");
+const loginMessage = document.getElementById("loginMessage");
+const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+
+function showMessage(message, success = false) {
+    loginMessage.textContent = message;
+    loginMessage.style.display = "block";
+    loginMessage.style.color = success ? "green" : "red";
+}
+
+// STAFF LOGIN
+loginForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const email = document.getElementById("email")
+        .value.trim().toLowerCase();
+
+    const password = document.getElementById("password").value;
+    const remember = document.getElementById("remember").checked;
+
+    if (email !== "staff7247@gmail.com") {
+        showMessage("Only the authorized staff account can log in.");
+        return;
+    }
+
+    loginButton.disabled = true;
+    loginButton.textContent = "Logging in...";
+    loginMessage.style.display = "none";
+
+    try {
+
+        const response = await fetch(`${API_BASE}/staff/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            showMessage(data.message || "Login failed. Check your details.");
+            return;
+        }
+
+        const staff = {
+            staffId: data.staff.staffId,
+            name: data.staff.name,
+            email: data.staff.email,
+            loginHistoryId: data.staff.loginHistoryId
+        };
+
+        if (remember) {
+            localStorage.setItem("staff", JSON.stringify(staff));
+            sessionStorage.removeItem("staff");
+        } else {
+            sessionStorage.setItem("staff", JSON.stringify(staff));
+            localStorage.removeItem("staff");
+        }
+
+        window.location.href = "staff-dashboard.html";
+
+    } catch (error) {
+
+        showMessage(
+            "Cannot connect to the server. Please start the Spring Boot backend."
+        );
+
+        console.error("Staff login error:", error);
+
+    } finally {
+
+        loginButton.disabled = false;
+        loginButton.textContent = "Login";
+    }
+});
+
+// FORGOT PASSWORD
+forgotPasswordLink.addEventListener("click", async function(event) {
+
+    event.preventDefault();
+
+    const enteredEmail =
+        document.getElementById("email").value.trim();
+
+    const email = enteredEmail ||
+        prompt("Enter your registered staff email address:");
+
+    if (!email || !email.trim()) {
+        showMessage("Please enter your staff email address.");
+        return;
+    }
+
+    forgotPasswordLink.style.pointerEvents = "none";
+
+    try {
+
+        const response = await fetch(`${API_BASE}/staff/forgot-password`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email.trim().toLowerCase()
+            })
+        });
+
+        const data = await response.json();
+
+        showMessage(
+            data.message || "Please check your email.",
+            response.ok && data.success
+        );
+
+    } catch (error) {
+
+        showMessage("Cannot connect to the server. Please try again.");
+        console.error("Forgot password error:", error);
+
+    } finally {
+
+        forgotPasswordLink.style.pointerEvents = "";
+    }
+});
+</script>
+
+</body>
+</html>

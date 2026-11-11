@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - SRMMS</title>
+  <link rel="stylesheet" href="src/style.css">
+</head>
+
+<body class="login-body">
+
+  <div class="login-container">
+    <div class="login-card">
+
+      <!-- Header Titles -->
+      <div class="login-header">
+        <h2>Welcome Back!</h2>
+        <p>Login to your account</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="login-form">
+
+        <div class="form-group">
+          <label for="email">Email</label>
+<input
+    type="email"
+    id="email"
+    placeholder="Enter your Email"
+    required
+>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+
+          <div class="password-input-wrapper">
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-options">
+
+          <label class="remember-me">
+            <input type="checkbox" id="remember">
+            <span>Remember me</span>
+          </label>
+
+          <a
+            href="customer-forgot-password.html"
+            class="forgot-password"
+          >
+            Forgot password?
+          </a>
+
+        </div>
+
+        <button
+          type="submit"
+          class="login-submit-btn"
+        >
+          Login
+        </button>
+
+      </form>
+
+      <!-- Register Prompt Link -->
+      <div class="register-prompt">
+        <span>Don't have an account?</span>
+        <a href="register.html">Register</a>
+      </div>
+
+      <!-- Bottom Eco Illustration Graphic -->
+      <div class="eco-illustration">
+
+        <div class="recycling-scene">
+
+          <!-- Person 1 & Bin -->
+          <div class="character-group">
+
+            <span class="person person-1">
+              🧍‍♂️
+            </span>
+
+            <div class="eco-bin bin-green">
+              ♻
+            </div>
+
+            <div class="eco-bin bin-blue">
+              ♻
+            </div>
+
+          </div>
+
+          <!-- Recycle Background Accent -->
+          <div class="center-recycle-symbol">
+            ♻
+          </div>
+
+          <!-- Person 2 & Bin -->
+          <div class="character-group">
+
+            <div class="eco-bin bin-green">
+              ♻
+            </div>
+
+            <div class="eco-bin bin-darkgreen">
+              ♻
+            </div>
+
+            <span class="person person-2">
+              🧍‍♂️
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- =====================================================
+       LOGIN JAVASCRIPT
+       ===================================================== -->
+
+  <script>
+
+const API_BASE = "http://localhost:8080/api";
+
+
+document
+    .getElementById("loginForm")
+    .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+
+        // Get email
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+
+        // Get password
+        const password =
+            document
+                .getElementById("password")
+                .value;
+
+
+        // Check email and password
+        if (!email || !password) {
+
+            alert(
+                "Please enter your email and password."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            // Send login request
+            const response =
+                await fetch(
+                    API_BASE + "/customers/login",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                email: email,
+                                password: password
+                            })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            // Login failed
+            if (!response.ok) {
+
+                alert(
+                    data.message ||
+                    "Invalid email or password."
+                );
+
+                return;
+            }
+
+
+            // =================================================
+            // SAVE REAL CUSTOMER DATA
+            // =================================================
+
+            const customer = {
+
+                customerId:
+                    data.customerId,
+
+                name:
+                    data.name,
+
+                email:
+                    data.email,
+
+                phone:
+                    data.phone,
+
+                registeredDate:
+                    data.registeredDate,
+
+                address:
+                    data.address || "",
+
+                city:
+                    data.city || "",
+
+                postalCode:
+                    data.postalCode || ""
+            };
+
+
+            // Save customer in browser
+            localStorage.setItem(
+                "customer",
+                JSON.stringify(customer)
+            );
+
+
+            // Go to dashboard
+            window.location.href =
+                "customer-dashboard.html";
+
+        }
+
+
+        catch (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+            alert(
+                "Cannot connect to the server."
+            );
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

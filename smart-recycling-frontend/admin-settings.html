@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>Admin Settings - SRMMS Admin</title>
+
+  <link
+    rel="stylesheet"
+    href="src/dashboard.css">
+
+</head>
+
+
+<body class="dashboard-body">
+
+
+<div class="dashboard-container">
+
+
+  <!-- Admin Sidebar Navigation -->
+
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+
+      <span class="brand-logo-icon">♻</span>
+
+      <span class="brand-name">
+        SRMMS
+        <small class="admin-badge">
+          Admin
+        </small>
+      </span>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <ul>
+
+        <li>
+          <a href="admin-dashboard.html">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+
+
+        <li>
+          <a href="category-rates.html">
+            <span class="nav-icon">🏷</span>
+            <span>Category & Rates</span>
+          </a>
+        </li>
+
+
+        <li>
+          <a href="all-transactions.html">
+            <span class="nav-icon">📋</span>
+            <span>All Transactions</span>
+          </a>
+        </li>
+
+
+        <li>
+          <a href="appointments.html">
+            <span class="nav-icon">📅</span>
+            <span>Appointments</span>
+          </a>
+        </li>
+
+
+        <li>
+          <a href="manage-users.html">
+            <span class="nav-icon">👥</span>
+            <span>Manage Users</span>
+          </a>
+        </li>
+        
+        <li>
+             <a href="staff-management.html">
+                <span class="nav-icon">🧑‍💼</span>
+                <span>Staff Management</span>
+             </a>
+            </li>
+        <li>
+            <a href="customer-inquiries.html">
+                <span class="nav-icon">📩</span>
+                <span>Customer Inquiries</span>
+            </a>
+        </li>
+
+
+
+        <li>
+          <a href="reward-rules.html">
+            <span class="nav-icon">🏅</span>
+            <span>Reward Rules</span>
+          </a>
+        </li>
+
+
+        <li>
+          <a href="reports.html">
+            <span class="nav-icon">📈</span>
+            <span>Reports</span>
+          </a>
+        </li>
+
+
+        <li class="active">
+          <a href="admin-settings.html">
+            <span class="nav-icon">⚙</span>
+            <span>Settings</span>
+          </a>
+        </li>
+
+
+        <li class="logout-item">
+          <a href="admin-logout.html">
+            <span class="nav-icon">↪</span>
+            <span>Logout</span>
+          </a>
+        </li>
+
+      </ul>
+
+    </nav>
+
+  </aside>
+
+
+
+  <!-- Main Content -->
+
+  <main class="main-content">
+
+
+    <!-- Header -->
+
+    <header class="top-header">
+
+      <button class="menu-toggle">
+        ☰
+      </button>
+
+
+      <div class="header-right">
+
+       
+
+
+        <div class="user-profile-badge">
+
+          <span
+            class="user-name"
+            id="adminNameHeader">
+            System Admin ▾
+          </span>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+
+    <!-- Dashboard Wrapper -->
+
+    <div class="dashboard-wrapper">
+
+
+      <!-- Page Header -->
+
+      <div class="page-header-block page-header-flex">
+
+        <div>
+
+          <h1 class="page-title">
+            Admin System Settings
+          </h1>
+
+          <p class="page-subtitle">
+            Configure system parameters, operational controls, admin security, and backups.
+          </p>
+
+        </div>
+
+
+        <button
+          class="btn-primary-save"
+          id="saveAdminSettingsBtn">
+
+          💾 Save All Configurations
+
+        </button>
+
+      </div>
+
+
+
+      <!-- Settings Grid -->
+
+      <div class="settings-grid">
+
+
+        <!-- LEFT COLUMN -->
+
+        <div class="settings-column">
+
+
+          <!-- System Information -->
+
+          <div class="profile-card-panel">
+
+            <h2 class="panel-title">
+              System Information
+            </h2>
+
+
+            <form class="profile-form">
+
+
+              <div class="form-group">
+
+                <label for="systemName">
+                  System Name
+                </label>
+
+                <input
+                  type="text"
+                  id="systemName">
+
+              </div>
+
+
+
+              <div class="form-group">
+
+                <label for="adminAlertEmail">
+                  Administrator Alert Email
+                </label>
+
+                <input
+                  type="email"
+                  id="adminAlertEmail">
+
+              </div>
+
+
+
+              <!-- NEW: Phone Number -->
+
+              <div class="form-group">
+
+                <label for="adminPhone">
+                  Phone Number
+                </label>
+
+                <input
+                  type="tel"
+                  id="adminPhone"
+                  maxlength="20"
+                  placeholder="e.g. +94 77 123 4567">
+
+              </div>
+
+
+
+              <!-- NEW: Location -->
+
+              <div class="form-group">
+
+                <label for="adminLocation">
+                  Location
+                </label>
+
+                <input
+                  type="text"
+                  id="adminLocation"
+                  maxlength="255"
+                  placeholder="e.g. Sabaragamuwa University of Sri Lanka, Belihuloya">
+
+              </div>
+
+
+
+              <div class="form-group">
+
+                <label for="currencySymbol">
+                  Default Currency
+                </label>
+
+
+                <select
+                  id="currencySymbol"
+                  class="settings-select">
+
+                  <option value="LKR">
+                    Sri Lankan Rupee (Rs. / LKR)
+                  </option>
+
+                  <option value="USD">
+                    US Dollar ($ / USD)
+                  </option>
+
+                  <option value="EUR">
+                    Euro (€ / EUR)
+                  </option>
+
+                </select>
+
+              </div>
+
+
+            </form>
+
+          </div>
+
+
+
+          <!-- Operational Controls -->
+
+          <div class="profile-card-panel">
+
+            <h2 class="panel-title">
+              Operation & Kiosk Controls
+            </h2>
+
+
+            <div class="setting-toggle-item">
+
+              <div class="toggle-info">
+
+                <strong>
+                  Automated Transaction Verification
+                </strong>
+
+                <span>
+                  Automatically mark deposits under 2 kg as verified.
+                </span>
+
+              </div>
+
+
+              <label class="switch">
+
+                <input
+                  type="checkbox"
+                  id="autoVerification">
+
+                <span class="slider round"></span>
+
+              </label>
+
+            </div>
+
+
+
+            <div class="setting-toggle-item">
+
+              <div class="toggle-info">
+
+                <strong>
+                  Machine Maintenance Mode
+                </strong>
+
+                <span>
+                  Temporarily disable customer drop-off bookings and transactions.
+                </span>
+
+              </div>
+
+
+              <label class="switch">
+
+                <input
+                  type="checkbox"
+                  id="maintenanceMode">
+
+                <span class="slider round"></span>
+
+              </label>
+
+            </div>
+
+
+
+            <div class="setting-toggle-item">
+
+              <div class="toggle-info">
+
+                <strong>
+                  SMS Transaction Alerts
+                </strong>
+
+                <span>
+                  Send receipt SMS notifications to users upon deposit completion.
+                </span>
+
+              </div>
+
+
+              <label class="switch">
+
+                <input
+                  type="checkbox"
+                  id="smsAlerts">
+
+                <span class="slider round"></span>
+
+              </label>
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- RIGHT COLUMN -->
+
+        <div class="settings-column">
+
+
+          <!-- Admin Security -->
+
+          <div class="profile-card-panel">
+
+            <h2 class="panel-title">
+              Admin Security & Credentials
+            </h2>
+
+
+            <form
+              class="profile-form"
+              id="passwordForm">
+
+
+              <div class="form-group">
+
+                <label for="adminCurrentPassword">
+                  Current Admin Password
+                </label>
+
+                <input
+                  type="password"
+                  id="adminCurrentPassword"
+                  placeholder="••••••••">
+
+              </div>
+
+
+
+              <div class="form-group">
+
+                <label for="adminNewPassword">
+                  New Password
+                </label>
+
+                <input
+                  type="password"
+                  id="adminNewPassword"
+                  placeholder="••••••••">
+
+              </div>
+
+
+
+              <div class="form-group">
+
+                <label for="adminConfirmPassword">
+                  Confirm New Password
+                </label>
+
+                <input
+                  type="password"
+                  id="adminConfirmPassword"
+                  placeholder="••••••••">
+
+              </div>
+
+
+
+              <div class="form-actions-flex">
+
+                <button
+                  type="submit"
+                  class="btn-primary-save">
+
+                  Update Admin Password
+
+                </button>
+
+              </div>
+
+
+            </form>
+
+          </div>
+
+
+
+         
+
+          
+
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+
+<script>
+
+
+// ============================================================
+// API CONFIGURATION
+// ============================================================
+
+const API_BASE = "http://localhost:8080/api";
+
+
+// ============================================================
+// ADMIN ID
+// ============================================================
+
+let adminId = 1;
+
+
+// ============================================================
+// GET ADMIN INFORMATION FROM LOCAL STORAGE
+// ============================================================
+
+const storedAdmin = localStorage.getItem("admin");
+
+if (storedAdmin) {
+
+    try {
+
+        const admin = JSON.parse(storedAdmin);
+
+
+        if (admin.adminId) {
+
+            adminId = admin.adminId;
+
+        }
+
+
+        if (admin.name) {
+
+            document.getElementById(
+                "adminNameHeader"
+            ).textContent = admin.name + " ▾";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Invalid admin data:",
+            error
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// SAFE JSON READER
+// (the server may return plain text or an empty body)
+// ============================================================
+
+async function readJsonSafely(response) {
+
+    const text = await response.text();
+
+    if (!text) {
+        return {};
+    }
+
+    try {
+
+        return JSON.parse(text);
+
+    } catch (error) {
+
+        return { message: text };
+
+    }
+
+}
+
+
+// ============================================================
+// LOAD ADMIN SETTINGS FROM DATABASE
+// ============================================================
+
+async function loadAdminSettings() {
+
+    try {
+
+        const response = await fetch(
+            API_BASE +
+            "/admin/settings/" +
+            adminId +
+            "?time=" +
+            new Date().getTime(),
+            {
+                method: "GET",
+                cache: "no-store"
+            }
+        );
+
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            throw new Error(
+                "HTTP " +
+                response.status +
+                (errorText ? ": " + errorText.substring(0, 150) : "")
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "ADMIN SETTINGS FROM DATABASE:",
+            data
+        );
+
+
+        // SYSTEM NAME
+
+        document.getElementById(
+            "systemName"
+        ).value =
+            data.systemName || "";
+
+
+        // ADMIN ALERT EMAIL
+
+        document.getElementById(
+            "adminAlertEmail"
+        ).value =
+            data.alertEmail || "";
+
+
+        // PHONE NUMBER
+
+        document.getElementById(
+            "adminPhone"
+        ).value =
+            data.phone || "";
+
+
+        // LOCATION
+
+        document.getElementById(
+            "adminLocation"
+        ).value =
+            data.location || "";
+
+
+        // DEFAULT CURRENCY
+
+        document.getElementById(
+            "currencySymbol"
+        ).value =
+            data.currency || "LKR";
+
+
+        // AUTOMATED TRANSACTION VERIFICATION
+
+        document.getElementById(
+            "autoVerification"
+        ).checked =
+            data.autoVerification === true;
+
+
+        // MAINTENANCE MODE
+
+        document.getElementById(
+            "maintenanceMode"
+        ).checked =
+            data.maintenanceMode === true;
+
+
+        // SMS ALERTS
+
+        document.getElementById(
+            "smsAlerts"
+        ).checked =
+            data.smsAlerts === true;
+
+
+        // ADMIN NAME
+
+        if (data.name) {
+
+            document.getElementById(
+                "adminNameHeader"
+            ).textContent =
+                data.name + " ▾";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error loading admin settings:",
+            error
+        );
+
+        alert(
+            "Unable to load admin settings.\n\nReason: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// PAGE LOAD
+// ============================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadAdminSettings();
+
+    }
+);
+
+
+// ============================================================
+// SAVE ALL CONFIGURATIONS
+// ============================================================
+
+document
+    .getElementById(
+        "saveAdminSettingsBtn"
+    )
+    .addEventListener(
+        "click",
+        async function () {
+
+
+            const systemName =
+                document.getElementById(
+                    "systemName"
+                ).value.trim();
+
+
+            const alertEmail =
+                document.getElementById(
+                    "adminAlertEmail"
+                ).value.trim();
+
+
+            // NEW
+            const phone =
+                document.getElementById(
+                    "adminPhone"
+                ).value.trim();
+
+
+            // NEW
+            const location =
+                document.getElementById(
+                    "adminLocation"
+                ).value.trim();
+
+
+            const currency =
+                document.getElementById(
+                    "currencySymbol"
+                ).value;
+
+
+            const autoVerification =
+                document.getElementById(
+                    "autoVerification"
+                ).checked;
+
+
+            const maintenanceMode =
+                document.getElementById(
+                    "maintenanceMode"
+                ).checked;
+
+
+            const smsAlerts =
+                document.getElementById(
+                    "smsAlerts"
+                ).checked;
+
+
+            // VALIDATION
+
+            if (!systemName) {
+
+                alert(
+                    "Please enter the System Name."
+                );
+
+                return;
+
+            }
+
+
+            if (!alertEmail) {
+
+                alert(
+                    "Please enter the Administrator Alert Email."
+                );
+
+                return;
+
+            }
+
+
+            // PHONE NUMBER (optional, but must look like a phone number)
+
+            if (
+                phone &&
+                !/^[0-9+\-\s()]{7,20}$/.test(phone)
+            ) {
+
+                alert(
+                    "Please enter a valid phone number (digits, +, -, spaces only)."
+                );
+
+                return;
+
+            }
+
+
+            // SETTINGS OBJECT
+
+            const settings = {
+
+                systemName:
+                    systemName,
+
+                alertEmail:
+                    alertEmail,
+
+                phone:
+                    phone,
+
+                location:
+                    location,
+
+                currency:
+                    currency,
+
+                autoVerification:
+                    autoVerification,
+
+                maintenanceMode:
+                    maintenanceMode,
+
+                smsAlerts:
+                    smsAlerts
+
+            };
+
+
+            // SAVE TO DATABASE
+
+            try {
+
+                const response =
+                    await fetch(
+                        API_BASE +
+                        "/admin/settings/" +
+                        adminId,
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify(settings)
+
+                        }
+                    );
+
+
+                const data =
+                    await readJsonSafely(response);
+
+
+                if (!response.ok) {
+
+                    alert(
+                        data.message ||
+                        "Failed to save settings."
+                    );
+
+                    return;
+
+                }
+
+
+                alert(
+                    "Admin settings saved successfully."
+                );
+
+
+                await loadAdminSettings();
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Save settings error:",
+                    error
+                );
+
+                alert(
+                    "Cannot connect to the server."
+                );
+
+            }
+
+        }
+    );
+
+
+// ============================================================
+// CHANGE ADMIN PASSWORD
+// ============================================================
+
+document
+    .getElementById(
+        "passwordForm"
+    )
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+
+            event.preventDefault();
+
+
+            // GET PASSWORD VALUES
+
+            const currentPassword =
+                document.getElementById(
+                    "adminCurrentPassword"
+                ).value;
+
+
+            const newPassword =
+                document.getElementById(
+                    "adminNewPassword"
+                ).value;
+
+
+            const confirmPassword =
+                document.getElementById(
+                    "adminConfirmPassword"
+                ).value;
+
+
+            // VALIDATION
+
+            if (
+                !currentPassword ||
+                !newPassword ||
+                !confirmPassword
+            ) {
+
+                alert(
+                    "Please fill all password fields."
+                );
+
+                return;
+
+            }
+
+
+            if (newPassword.length < 6) {
+
+                alert(
+                    "New password must contain at least 6 characters."
+                );
+
+                return;
+
+            }
+
+
+            if (newPassword !== confirmPassword) {
+
+                alert(
+                    "New password and confirm password do not match."
+                );
+
+                return;
+
+            }
+
+
+            // SEND PASSWORD TO BACKEND
+
+            try {
+
+                const response =
+                    await fetch(
+                        API_BASE +
+                        "/admin/change-password/" +
+                        adminId,
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    currentPassword:
+                                        currentPassword,
+
+                                    newPassword:
+                                        newPassword,
+
+                                    confirmPassword:
+                                        confirmPassword
+
+                                })
+
+                        }
+                    );
+
+
+                const data =
+                    await readJsonSafely(response);
+
+
+                if (!response.ok) {
+
+                    alert(
+                        data.message ||
+                        "Password update failed."
+                    );
+
+                    return;
+
+                }
+
+
+                // SUCCESS
+
+                alert(
+                    "Password updated successfully. Please login again with your new password."
+                );
+
+
+                // CLEAR PASSWORD FIELDS
+
+                document.getElementById(
+                    "adminCurrentPassword"
+                ).value = "";
+
+
+                document.getElementById(
+                    "adminNewPassword"
+                ).value = "";
+
+
+                document.getElementById(
+                    "adminConfirmPassword"
+                ).value = "";
+
+
+                // REMOVE OLD LOGIN DATA
+
+                localStorage.removeItem(
+                    "admin"
+                );
+
+
+                // GO TO LOGIN
+
+                window.location.href =
+                    "admin-login.html";
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Password update error:",
+                    error
+                );
+
+                alert(
+                    "Cannot connect to the server."
+                );
+
+            }
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users - SRMMS Admin</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    .stat-value .stat-num {
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+    }
+
+    .filter-controls-grid {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-controls-grid .form-group {
+      margin: 0;
+    }
+
+    .filter-controls-grid .search-group {
+      flex: 1 1 220px;
+    }
+
+    .filter-controls-grid label {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .filter-controls-grid select,
+    .filter-controls-grid input {
+      margin: 0;
+      height: 40px;
+      box-sizing: border-box;
+    }
+
+    .filter-btn-wrap {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .btn-action-view:disabled,
+    .btn-action-reject:disabled,
+    .btn-action-approve:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Admin Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS <small class="admin-badge">Admin</small></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="admin-dashboard.html">
+              <span class="nav-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="category-rates.html">
+              <span class="nav-icon">🏷</span>
+              <span>Category & Rates</span>
+            </a>
+          </li>
+          <li>
+            <a href="all-transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>All Transactions</span>
+            </a>
+          </li>
+          <li>
+            <a href="appointments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="manage-users.html">
+              <span class="nav-icon">👥</span>
+              <span>Manage Users</span>
+            </a>
+          </li>
+          <li>
+             <a href="staff-management.html">
+                <span class="nav-icon">🧑‍💼</span>
+                <span>Staff Management</span>
+             </a>
+            </li>
+          
+          <li>
+              <a href="customer-inquiries.html">
+                  <span class="nav-icon">📩</span>
+                  <span>Customer Inquiries</span>
+              </a>
+          </li>
+
+          <li>
+            <a href="reward-rules.html">
+              <span class="nav-icon">🏅</span>
+              <span>Reward Rules</span>
+            </a>
+          </li>
+          <li>
+            <a href="reports.html">
+              <span class="nav-icon">📈</span>
+              <span>Reports</span>
+            </a>
+          </li>
+          <li>
+            <a href="admin-settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+        
+        <div class="header-right">
+          
+          <div class="user-profile-badge">
+            
+            <span class="user-name">System Admin ▾</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Inner Wrapper -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page Header Block -->
+        <div class="page-header-block page-header-flex">
+          <div>
+            <h1 class="page-title">User Management</h1>
+            <p class="page-subtitle">Manage system access, customer accounts, and collection staff credentials.</p>
+          </div>
+          
+        </div>
+
+        <!-- Role Metrics Overview Cards -->
+        <div class="admin-kpi-grid">
+          
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">👥</div>
+            <div class="stat-info">
+              <span class="stat-label">Total Customers</span>
+              <div class="stat-value"><span class="stat-num" id="kpiTotalCustomers">0</span></div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">👷</div>
+            <div class="stat-info">
+              <span class="stat-label">Collection Staff</span>
+              <div class="stat-value"><span class="stat-num" id="kpiCollectionStaff">0</span></div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">🛡</div>
+            <div class="stat-info">
+              <span class="stat-label">System Admins</span>
+              <div class="stat-value"><span class="stat-num" id="kpiSystemAdmins">0</span></div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">🚫</div>
+            <div class="stat-info">
+              <span class="stat-label">Deactivated Accounts</span>
+              <div class="stat-value"><span class="stat-num" id="kpiDeactivated">0</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Filter & Search Controls Bar -->
+        <div class="profile-card-panel filter-bar-panel">
+          <div class="filter-controls-grid">
+            
+            <div class="form-group search-group">
+              <label for="searchUser">Search User</label>
+              <input type="text" id="searchUser" placeholder="Search by name, email, or user ID..." class="settings-input">
+            </div>
+
+            <div class="form-group">
+              <label for="filterRole">User Role</label>
+              <select id="filterRole" class="settings-select">
+                <option value="all" selected>All Roles</option>
+                <option value="customer">Customer</option>
+                <option value="staff">Collection Staff</option>
+                <option value="admin">Administrator</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="filterUserStatus">Account Status</label>
+              <select id="filterUserStatus" class="settings-select">
+                <option value="all" selected>All Statuses</option>
+                <option value="active">Active</option>
+                <option value="deactivated">Deactivated</option>
+              </select>
+            </div>
+
+            <div class="form-group filter-btn-wrap">
+              <button class="btn-primary-save filter-btn" id="applyFilterBtn">Apply Filter</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Main User Directory Table -->
+        <div class="transactions-panel-card">
+          <div class="panel-header-flex">
+            <div>
+              <h2 class="panel-title">System User Directory</h2>
+              <span class="results-count-tag" id="resultsCountTag">Loading...</span>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="transactions-table full-history-table">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>User Profile</th>
+                  <th>Role</th>
+                  <th>Contact Info</th>
+                  <th>Registered Date</th>
+                  <th>Points / Activity</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr>
+                  <td colspan="8" style="text-align:center;">Loading users...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Control -->
+          <div class="pagination-wrapper">
+            <span class="pagination-info" id="paginationInfo">Page 1 of 1</span>
+            <div class="pagination-btns" id="paginationBtns">
+              <!-- Buttons generated dynamically -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+    const PAGE_SIZE = 10;
+
+    let allUsers = [];
+    let filteredUsers = [];
+    let currentPage = 1;
+
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+    function normalizeForSearch(value) {
+        return String(value).toLowerCase().replace(/[^a-z0-9]/g, "");
+    }
+
+    function roleToPillClass(role) {
+
+        if (role === "customer") return "role-customer";
+        if (role === "staff") return "role-staff";
+        if (role === "admin") return "role-admin";
+
+        return "role-customer";
+    }
+
+    function fallbackAvatar(userId) {
+
+        /* Deterministic-ish avatar so the same user always gets the
+           same placeholder image (pravatar has ~70 numbered images) */
+
+        let hash = 0;
+
+        for (let i = 0; i < userId.length; i++) {
+            hash = (hash * 31 + userId.charCodeAt(i)) % 70;
+        }
+
+        return "https://i.pravatar.cc/100?img=" + (Math.abs(hash) + 1);
+
+    }
+
+
+    /* =====================================================
+       LOAD KPI STATS FROM DB
+       (customer + staff + admin tables, via
+       /api/admin/users/stats)
+    ====================================================== */
+
+    async function loadUserStats() {
+
+        try {
+
+            const response = await fetch(API_BASE + "/admin/users/stats");
+
+            if (!response.ok) {
+                console.error("Unable to load user stats.");
+                return;
+            }
+
+            const stats = await response.json();
+
+            document.getElementById("kpiTotalCustomers").textContent =
+                (parseInt(stats.totalCustomers) || 0).toLocaleString("en-US");
+
+            document.getElementById("kpiCollectionStaff").textContent =
+                (parseInt(stats.collectionStaff) || 0).toLocaleString("en-US");
+
+            document.getElementById("kpiSystemAdmins").textContent =
+                (parseInt(stats.systemAdmins) || 0).toLocaleString("en-US");
+
+            document.getElementById("kpiDeactivated").textContent =
+                (parseInt(stats.deactivatedAccounts) || 0).toLocaleString("en-US");
+
+        } catch (error) {
+
+            console.error("User stats loading error:", error);
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD ALL USERS FROM DB
+       (customer + staff + admin tables, via
+       /api/admin/users)
+    ====================================================== */
+
+    async function loadAllUsers() {
+
+        const tbody = document.getElementById("usersTableBody");
+
+        try {
+
+            const response = await fetch(API_BASE + "/admin/users");
+
+            if (!response.ok) {
+
+                tbody.innerHTML =
+                    '<tr><td colspan="8" style="text-align:center; color:red;">Failed to load users.</td></tr>';
+
+                return;
+
+            }
+
+            const users = await response.json();
+
+            allUsers = Array.isArray(users) ? users : [];
+            filteredUsers = allUsers;
+            currentPage = 1;
+
+            renderPage();
+
+        } catch (error) {
+
+            console.error("Users loading error:", error);
+
+            tbody.innerHTML =
+                '<tr><td colspan="8" style="text-align:center; color:red;">Cannot connect to the server.</td></tr>';
+
+        }
+
+    }
+
+
+    /* =====================================================
+       APPLY FILTERS (search / role / status)
+    ====================================================== */
+
+    function applyFilters() {
+
+        const rawSearch =
+            document.getElementById("searchUser").value;
+
+        const normalizedSearch =
+            normalizeForSearch(rawSearch);
+
+        const roleTerm =
+            document.getElementById("filterRole").value;
+
+        const statusTerm =
+            document.getElementById("filterUserStatus").value;
+
+        filteredUsers = allUsers.filter(function(user) {
+
+            const idNorm = normalizeForSearch(user.userId || "");
+            const nameNorm = normalizeForSearch(user.name || "");
+            const emailNorm = normalizeForSearch(user.email || "");
+
+            const matchesSearch =
+                normalizedSearch === "" ||
+                idNorm.includes(normalizedSearch) ||
+                nameNorm.includes(normalizedSearch) ||
+                emailNorm.includes(normalizedSearch);
+
+            const matchesRole =
+                roleTerm === "all" || user.role === roleTerm;
+
+            const matchesStatus =
+                statusTerm === "all" ||
+                (user.status || "").toLowerCase() === statusTerm;
+
+            return matchesSearch && matchesRole && matchesStatus;
+
+        });
+
+        currentPage = 1;
+
+        renderPage();
+
+    }
+
+
+    /* =====================================================
+       RENDER CURRENT PAGE (table rows + pagination)
+    ====================================================== */
+
+    function renderPage() {
+
+        const tbody = document.getElementById("usersTableBody");
+
+        const totalRecords = filteredUsers.length;
+
+        document.getElementById("resultsCountTag").textContent =
+            "Showing " +
+            (totalRecords === 0 ? 0 : Math.min(PAGE_SIZE, totalRecords)) +
+            " of " + totalRecords.toLocaleString("en-US") + " registered accounts";
+
+        if (totalRecords === 0) {
+
+            tbody.innerHTML =
+                '<tr><td colspan="8" style="text-align:center;">No matching users found.</td></tr>';
+
+            renderPagination(0);
+
+            return;
+
+        }
+
+        const totalPages = Math.max(1, Math.ceil(totalRecords / PAGE_SIZE));
+
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        const startIndex = (currentPage - 1) * PAGE_SIZE;
+        const pageItems = filteredUsers.slice(startIndex, startIndex + PAGE_SIZE);
+
+        tbody.innerHTML = "";
+
+        pageItems.forEach(function(user) {
+
+            const isActive =
+                (user.status || "").toLowerCase() === "active";
+
+            const statusClass =
+                isActive ? "status-completed" : "status-cancelled";
+
+            const avatarSrc =
+                user.profilePhoto && user.profilePhoto.trim() !== ""
+                    ? user.profilePhoto
+                    : fallbackAvatar(user.userId);
+
+            const registeredStr = user.registeredDate
+                ? new Date(user.registeredDate).toISOString().split("T")[0]
+                : "-";
+
+            const contactSecondary =
+                user.phone ? "<small>" + escapeHtml(user.phone) + "</small>" : "";
+
+            const row = document.createElement("tr");
+
+            let actionsHtml;
+
+            if (user.role === "admin") {
+
+                actionsHtml =
+                    '<button type="button" class="btn-action-view btn-edit-user">Edit Profile</button>';
+
+            } else if (isActive) {
+
+                actionsHtml =
+                    '<div class="action-buttons-wrap">' +
+                        '<button type="button" class="btn-action-view btn-edit-user">Edit</button>' +
+                        '<button type="button" class="btn-action-reject btn-toggle-status">Deactivate</button>' +
+                    '</div>';
+
+            } else {
+
+                actionsHtml =
+                    '<div class="action-buttons-wrap">' +
+                        '<button type="button" class="btn-action-view btn-edit-user">Edit</button>' +
+                        '<button type="button" class="btn-action-approve btn-toggle-status">Activate</button>' +
+                    '</div>';
+
+            }
+
+            row.innerHTML =
+                '<td class="tx-id">' + escapeHtml(user.userId) + "</td>" +
+                '<td>' +
+                    '<div class="user-table-cell">' +
+                        '<img src="' + escapeHtml(avatarSrc) + '" alt="' + escapeHtml(user.name || "") + '" class="table-avatar">' +
+                        '<div class="user-cell-info">' +
+                            '<strong>' + escapeHtml(user.name || "-") + '</strong>' +
+                        '</div>' +
+                    '</div>' +
+                '</td>' +
+                '<td><span class="role-pill ' + roleToPillClass(user.role) + '">' + escapeHtml(user.roleLabel) + '</span></td>' +
+                '<td>' +
+                    '<div class="contact-cell">' +
+                        '<span>' + escapeHtml(user.email || "-") + '</span>' +
+                        contactSecondary +
+                    '</div>' +
+                '</td>' +
+                '<td>' + registeredStr + '</td>' +
+                '<td><span>' + escapeHtml(user.activityText || "-") + '</span></td>' +
+                '<td><span class="status-pill ' + statusClass + '">' + escapeHtml(user.status || "Active") + '</span></td>' +
+                '<td>' + actionsHtml + '</td>';
+
+            row.querySelector(".btn-edit-user").addEventListener(
+                "click",
+                function() {
+
+                    alert(
+                        "User: " + user.userId +
+                        "\nName: " + (user.name || "-") +
+                        "\nRole: " + user.roleLabel +
+                        "\nContact: " + (user.email || "-") +
+                        (user.phone ? "\nPhone: " + user.phone : "") +
+                        "\nStatus: " + (user.status || "Active")
+                    );
+
+                }
+            );
+
+            const toggleBtn = row.querySelector(".btn-toggle-status");
+
+            if (toggleBtn) {
+
+                toggleBtn.addEventListener(
+                    "click",
+                    function() {
+                        toggleUserStatus(user, isActive ? "Deactivated" : "Active");
+                    }
+                );
+
+            }
+
+            tbody.appendChild(row);
+
+        });
+
+        renderPagination(totalPages);
+
+    }
+
+
+    /* =====================================================
+       ACTIVATE / DEACTIVATE (customer or staff only)
+    ====================================================== */
+
+    async function toggleUserStatus(user, newStatus) {
+
+        const endpoint =
+            user.role === "staff"
+                ? "/admin/users/staff/" + user.rawId + "/status"
+                : "/admin/users/customers/" + user.rawId + "/status";
+
+        try {
+
+            const response = await fetch(
+                API_BASE + endpoint,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: newStatus })
+                }
+            );
+
+            if (!response.ok) {
+
+                const text = await response.text();
+                alert(text || "Failed to update status.");
+
+                return;
+
+            }
+
+            await loadAllUsers();
+            await loadUserStats();
+
+        } catch (error) {
+
+            console.error("Status toggle error:", error);
+            alert("Cannot connect to the server.");
+
+        }
+
+    }
+
+
+    /* =====================================================
+       PAGINATION CONTROLS
+    ====================================================== */
+
+    function renderPagination(totalPages) {
+
+        const infoEl = document.getElementById("paginationInfo");
+        const btnsEl = document.getElementById("paginationBtns");
+
+        infoEl.textContent = "Page " + currentPage + " of " + Math.max(totalPages, 1);
+
+        btnsEl.innerHTML = "";
+
+        const prevBtn = document.createElement("button");
+        prevBtn.className = "page-btn";
+        prevBtn.textContent = "« Previous";
+        prevBtn.disabled = currentPage <= 1;
+        prevBtn.addEventListener("click", function() {
+            currentPage--;
+            renderPage();
+        });
+        btnsEl.appendChild(prevBtn);
+
+        const maxButtons = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+        let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+        if (endPage - startPage + 1 < maxButtons) {
+            startPage = Math.max(1, endPage - maxButtons + 1);
+        }
+
+        for (let page = startPage; page <= endPage; page++) {
+
+            const pageBtn = document.createElement("button");
+            pageBtn.className = "page-btn" + (page === currentPage ? " active-page" : "");
+            pageBtn.textContent = String(page);
+
+            pageBtn.addEventListener("click", function() {
+                currentPage = page;
+                renderPage();
+            });
+
+            btnsEl.appendChild(pageBtn);
+
+        }
+
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "page-btn";
+        nextBtn.textContent = "Next »";
+        nextBtn.disabled = currentPage >= totalPages;
+        nextBtn.addEventListener("click", function() {
+            currentPage++;
+            renderPage();
+        });
+        btnsEl.appendChild(nextBtn);
+
+    }
+
+
+    /* =====================================================
+       EVENT LISTENERS
+    ====================================================== */
+
+    document.getElementById("applyFilterBtn").addEventListener(
+        "click", applyFilters
+    );
+
+    document.getElementById("searchUser").addEventListener(
+        "input", applyFilters
+    );
+
+    document.getElementById("filterRole").addEventListener(
+        "change", applyFilters
+    );
+
+    document.getElementById("filterUserStatus").addEventListener(
+        "change", applyFilters
+    );
+
+
+    /* =====================================================
+       PAGE LOAD
+    ====================================================== */
+
+    loadAllUsers();
+    loadUserStats();
+
+  </script>
+
+</body>
+</html>

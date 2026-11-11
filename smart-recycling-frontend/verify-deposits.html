@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Deposits - SRMMS Staff</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    .verification-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .verification-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    .verification-table th,
+    .verification-table td {
+      padding: 13px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e8e8e8;
+      font-size: 13px;
+    }
+
+    .verification-table th {
+      background: #f7f9f8;
+      font-weight: 600;
+      color: #444;
+    }
+
+    .verification-table td {
+      color: #555;
+    }
+
+    .verify-action,
+    .reject-action {
+      border: none;
+      border-radius: 5px;
+      padding: 7px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 2px;
+    }
+
+    .verify-action {
+      background: #198754;
+      color: white;
+    }
+
+    .reject-action {
+      background: #dc3545;
+      color: white;
+    }
+
+    .verify-action:disabled,
+    .reject-action:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .pending-badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 15px;
+      background: #fff3cd;
+      color: #856404;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .verification-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .verification-toolbar input {
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      min-width: 240px;
+      outline: none;
+    }
+
+    .verification-message {
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 6px;
+      display: none;
+      font-size: 13px;
+    }
+
+    .verification-message.error {
+      display: block;
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .verification-message.success {
+      display: block;
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .empty-message,
+    .loading-message {
+      text-align: center !important;
+      padding: 30px !important;
+      color: #777 !important;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    @media (max-width: 600px) {
+      .verification-toolbar input {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+
+<body class="dashboard-body">
+
+<div class="dashboard-container">
+
+  <!-- Staff Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="brand-logo-icon">♻</span>
+      <span class="brand-name">SRMMS <small class="role-badge-staff">Staff</small></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a href="staff-dashboard.html">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+
+        <li class="active">
+          <a href="verify-deposits.html">
+            <span class="nav-icon">🔍</span>
+            <span>Verify Deposits</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="walkin-deposit.html">
+            <span class="nav-icon">➕</span>
+            <span>Walk-in Deposit</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="assigned-bookings.html">
+            <span class="nav-icon">📅</span>
+            <span>Assigned Bookings</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="processed-logs.html">
+            <span class="nav-icon">📜</span>
+            <span>My Processed Logs</span>
+          </a>
+        </li>
+
+        <li class="logout-item">
+          <a href="staff-logout.html">
+            <span class="nav-icon">↪</span>
+            <span>Logout</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+
+    <!-- Top Header Bar -->
+    <header class="top-header">
+      <button class="menu-toggle">☰</button>
+
+      <div class="header-right">
+        <div class="user-profile-badge">
+          <div class="user-avatar">
+            <img src="https://i.pravatar.cc/100?img=12" alt="Staff Member">
+          </div>
+          
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Inner Wrapper -->
+    <div class="dashboard-wrapper">
+
+      <!-- Page Header -->
+      <div class="page-header-block page-header-flex">
+        <div>
+          <h1 class="page-title">Deposit Inspection & Verification</h1>
+          <p class="page-subtitle">
+            Review online deposits, verify submitted details, and authorize rewards.
+          </p>
+        </div>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="admin-kpi-grid">
+
+        <div class="stat-card">
+          <div class="stat-icon green-bg-icon">⌛</div>
+          <div class="stat-info">
+            <span class="stat-label">Pending Deposits</span>
+            <div class="stat-value" id="pendingCount">0</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green-bg-icon">⚖</div>
+          <div class="stat-info">
+            <span class="stat-label">Pending Weight</span>
+            <div class="stat-value" id="pendingWeight">0.00 Kg</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green-bg-icon">💵</div>
+          <div class="stat-info">
+            <span class="stat-label">Pending Value</span>
+            <div class="stat-value" id="pendingValue">Rs. 0.00</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Deposits Section -->
+      <div class="dashboard-section">
+
+        <div class="section-header">
+          <h2>Pending Online Deposits</h2>
+        </div>
+
+        <div class="verification-toolbar">
+          <input
+            type="text"
+            id="searchDeposit"
+            placeholder="Search by customer or transaction ID..."
+          >
+        </div>
+
+        <div id="verificationMessage" class="verification-message"></div>
+
+        <div class="verification-table-wrapper">
+          <table class="verification-table">
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>Customer</th>
+                <th>Source</th>
+                <th>Category</th>
+                <th>Weight</th>
+                <th>Total Value</th>
+                <th>Reward Points</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="depositTableBody">
+              <tr>
+                <td colspan="10" class="loading-message">
+                  Loading pending deposits...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  const API_BASE = "http://localhost:8080/api";
+
+  let pendingDeposits = [];
+
+  // -----------------------------------------
+  // LOAD STAFF DETAILS
+  // -----------------------------------------
+  function loadStaffDetails() {
+    try {
+      const rawStaff =
+        localStorage.getItem("staff") ||
+        sessionStorage.getItem("staff");
+
+      if (rawStaff) {
+        const staff = JSON.parse(rawStaff);
+
+        document.getElementById("staffName").textContent =
+          staff.name || "Staff";
+      }
+    } catch (error) {
+      console.error("Unable to load staff details:", error);
+    }
+  }
+
+  // -----------------------------------------
+  // SHOW MESSAGE
+  // -----------------------------------------
+  function showMessage(message, type) {
+    const messageBox =
+      document.getElementById("verificationMessage");
+
+    messageBox.textContent = message;
+    messageBox.className = "verification-message " + type;
+
+    window.setTimeout(() => {
+      messageBox.className = "verification-message";
+      messageBox.textContent = "";
+    }, 4000);
+  }
+
+  // -----------------------------------------
+  // FORMAT NUMBERS
+  // -----------------------------------------
+  function formatNumber(value) {
+    return Number(value || 0).toFixed(2);
+  }
+
+  function formatDate(value) {
+    if (!value) return "-";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return "-";
+
+    return date.toLocaleString();
+  }
+
+  // -----------------------------------------
+  // LOAD PENDING ONLINE DEPOSITS
+  // -----------------------------------------
+  async function loadPendingDeposits() {
+    const tableBody =
+      document.getElementById("depositTableBody");
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="10" class="loading-message">
+          Loading pending deposits...
+        </td>
+      </tr>
+    `;
+
+    try {
+      const response = await fetch(
+        `${API_BASE}/transactions/pending-online`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to load pending deposits.");
+      }
+
+      const data = await response.json();
+
+      pendingDeposits = Array.isArray(data) ? data : [];
+
+      updateSummaryCards();
+      renderDeposits(pendingDeposits);
+
+    } catch (error) {
+      console.error("Deposit loading error:", error);
+
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="10" class="empty-message">
+            Unable to load deposits. Please check the backend server.
+          </td>
+        </tr>
+      `;
+
+      showMessage(error.message, "error");
+    }
+  }
+
+  // -----------------------------------------
+  // UPDATE SUMMARY CARDS
+  // -----------------------------------------
+  function updateSummaryCards() {
+    const totalCount = pendingDeposits.length;
+
+    const totalWeight = pendingDeposits.reduce(
+      (sum, deposit) =>
+        sum + Number(deposit.totalWeight || 0),
+      0
+    );
+
+    const totalValue = pendingDeposits.reduce(
+      (sum, deposit) =>
+        sum + Number(deposit.totalValue || 0),
+      0
+    );
+
+    document.getElementById("pendingCount").textContent =
+      totalCount;
+
+    document.getElementById("pendingWeight").textContent =
+      formatNumber(totalWeight) + " Kg";
+
+    document.getElementById("pendingValue").textContent =
+      "Rs. " + formatNumber(totalValue);
+  }
+
+  // -----------------------------------------
+  // RENDER DEPOSITS TABLE
+  // -----------------------------------------
+  function renderDeposits(deposits) {
+    const tableBody =
+      document.getElementById("depositTableBody");
+
+    if (!deposits.length) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="10" class="empty-message">
+            No pending online deposits found.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tableBody.innerHTML = deposits.map(deposit => `
+      <tr>
+        <td>#${deposit.transactionId}</td>
+
+        <td>${escapeHTML(deposit.customerName || "Unknown Customer")}</td>
+
+        <td>${escapeHTML(deposit.source || "ONLINE")}</td>
+
+        <td>${escapeHTML(deposit.categoryName || "-")}</td>
+
+        <td>${formatNumber(deposit.totalWeight)} Kg</td>
+
+        <td>Rs. ${formatNumber(deposit.totalValue)}</td>
+
+        <td>${Number(deposit.rewardPoints || 0)}</td>
+
+        <td>${formatDate(deposit.transactionDate)}</td>
+
+        <td>
+          <span class="pending-badge">Pending</span>
+        </td>
+
+        <td>
+          <button
+            class="verify-action"
+            data-action="verify"
+            data-id="${Number(deposit.transactionId)}">
+            Verify
+          </button>
+
+          <button
+            class="reject-action"
+            data-action="reject"
+            data-id="${Number(deposit.transactionId)}">
+            Reject
+          </button>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  // -----------------------------------------
+  // ESCAPE HTML
+  // -----------------------------------------
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, character => {
+      const entities = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      };
+
+      return entities[character];
+    });
+  }
+
+  // -----------------------------------------
+  // SEARCH DEPOSITS
+  // -----------------------------------------
+  document.getElementById("searchDeposit")
+    .addEventListener("input", function () {
+
+      const searchText = this.value.toLowerCase().trim();
+
+      const filteredDeposits = pendingDeposits.filter(deposit => {
+        const transactionId =
+          String(deposit.transactionId || "").toLowerCase();
+
+        const customerName =
+          String(deposit.customerName || "").toLowerCase();
+
+        const categoryName =
+          String(deposit.categoryName || "").toLowerCase();
+
+        return transactionId.includes(searchText) ||
+               customerName.includes(searchText) ||
+               categoryName.includes(searchText);
+      });
+
+      renderDeposits(filteredDeposits);
+    });
+
+  // -----------------------------------------
+  // VERIFY / REJECT BUTTON ACTIONS
+  // -----------------------------------------
+  document.getElementById("depositTableBody")
+    .addEventListener("click", async function (event) {
+
+      const button = event.target.closest("button[data-action]");
+
+      if (!button) return;
+
+      const transactionId = button.dataset.id;
+      const action = button.dataset.action;
+
+      if (!transactionId) return;
+
+      if (action === "verify") {
+        const confirmed = confirm(
+          "Are you sure you want to verify this deposit?"
+        );
+
+        if (!confirmed) return;
+
+        await updateDeposit(transactionId, "verify", button);
+      }
+
+      if (action === "reject") {
+        const confirmed = confirm(
+          "Are you sure you want to reject this deposit?"
+        );
+
+        if (!confirmed) return;
+
+        await updateDeposit(transactionId, "reject", button);
+      }
+    });
+
+  // -----------------------------------------
+  // UPDATE DEPOSIT STATUS
+  // -----------------------------------------
+  async function updateDeposit(transactionId, action, button) {
+    button.disabled = true;
+    button.textContent = "Processing...";
+
+    try {
+      const response = await fetch(
+        `${API_BASE}/transactions/${transactionId}/${action}`,
+        {
+          method: "PATCH"
+        }
+      );
+
+      const responseText = await response.text();
+
+      if (!response.ok) {
+        throw new Error(
+          responseText || "Unable to update deposit."
+        );
+      }
+
+      showMessage(
+        action === "verify"
+          ? "Deposit verified successfully."
+          : "Deposit rejected successfully.",
+        "success"
+      );
+
+      // Reload table and summary cards after successful action
+      await loadPendingDeposits();
+
+    } catch (error) {
+      console.error("Deposit update error:", error);
+
+      showMessage(error.message, "error");
+
+      button.disabled = false;
+      button.textContent =
+        action === "verify" ? "Verify" : "Reject";
+    }
+  }
+
+  // -----------------------------------------
+  // INITIAL PAGE LOAD
+  // -----------------------------------------
+  document.addEventListener("DOMContentLoaded", function () {
+    loadStaffDetails();
+    loadPendingDeposits();
+  });
+</script>
+
+</body>
+</html>

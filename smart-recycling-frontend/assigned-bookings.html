@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assigned Bookings - SRMMS Staff</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    .filter-controls-grid { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+    .filter-controls-grid .form-group { margin: 0; }
+    .filter-controls-grid .search-group { flex: 0 1 220px; }
+    .filter-controls-grid label { display: block; margin-bottom: 6px; }
+    .filter-controls-grid select,
+    .filter-controls-grid input { margin: 0; height: 40px; box-sizing: border-box; }
+    #searchAssigned { width: 100%; max-width: 220px; }
+    .filter-btn-wrap { display: flex; align-items: flex-end; }
+
+    .assigned-bookings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .booking-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .booking-card-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .booking-card-head strong { font-size: 15px; }
+    .booking-line { font-size: 14px; color: #374151; }
+    .booking-line small { color: #6b7280; }
+    .booking-actions { margin-top: 6px; }
+
+    .empty-message { grid-column: 1 / -1; text-align: center; padding: 30px; color: #666; }
+    .error-message { grid-column: 1 / -1; text-align: center; padding: 30px; color: #d32f2f; }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Staff Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS <small class="role-badge-staff">Staff</small></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="staff-dashboard.html">
+              <span class="nav-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="verify-deposits.html">
+              <span class="nav-icon">🔍</span>
+              <span>Verify Deposits</span>
+            </a>
+          </li>
+          <li>
+            <a href="walkin-deposit.html">
+              <span class="nav-icon">➕</span>
+              <span>Walk-in Deposit</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="assigned-bookings.html">
+              <span class="nav-icon">📅</span>
+              <span>Assigned Bookings</span>
+            </a>
+          </li>
+          <li>
+            <a href="processed-logs.html">
+              <span class="nav-icon">📜</span>
+              <span>My Processed Logs</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="staff-logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+
+        <div class="header-right">
+          
+          <div class="user-profile-badge">
+            <div class="user-avatar">
+              <img src="https://i.pravatar.cc/100?img=12" alt="Staff Member">
+            </div>
+            
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Inner Wrapper -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page Header Block -->
+        <div class="page-header-block page-header-flex">
+          <div>
+            <h1 class="page-title">My Assigned Appointment Bookings</h1>
+            <p class="page-subtitle">Bookings confirmed by the admin. Mark each one as completed after the drop-off.</p>
+          </div>
+        </div>
+
+        <!-- Filter Controls Bar -->
+        <div class="profile-card-panel filter-bar-panel">
+          <div class="filter-controls-grid">
+
+            <div class="form-group search-group">
+              <label for="searchAssigned">Search Assigned Bookings</label>
+              <input type="text" id="searchAssigned" placeholder="Search by Booking ID or Customer..." class="settings-input">
+            </div>
+
+            <div class="form-group">
+              <label for="filterAssignedStatus">Booking Status</label>
+              <select id="filterAssignedStatus" class="settings-select">
+                <option value="all" selected>All Statuses</option>
+                <option value="confirmed">Confirmed Drop-off</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="assignedDate">Schedule Date</label>
+              <input type="date" id="assignedDate" class="settings-input">
+            </div>
+
+            <div class="form-group filter-btn-wrap">
+              <button type="button" id="applyFilterBtn" class="btn-primary-save filter-btn">Apply Filter</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Assigned Bookings List Grid -->
+        <div class="assigned-bookings-grid" id="assignedGrid">
+          <div class="empty-message">Loading bookings...</div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+    let allBookings = [];
+
+    /* ---------- STAFF (from login, if your login stores it) ---------- */
+
+    function getStaff() {
+        try {
+            const raw = localStorage.getItem("staff");
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    const staff = getStaff();
+
+    if (staff) {
+        document.getElementById("staffName").textContent = staff.name || staff.email || "Staff";
+    }
+
+    /* ---------- HELPERS ---------- */
+
+    function normalizeText(v) {
+        return String(v == null ? "" : v).toLowerCase().trim();
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text == null ? "" : String(text);
+        return div.innerHTML;
+    }
+
+    function formatBookingId(id) {
+        return "BKG-" + String(id).padStart(5, "0");
+    }
+
+    function formatCustomerId(id) {
+        return id == null ? "" : "CUST-" + String(id).padStart(6, "0");
+    }
+
+    function formatTime(t) {
+        if (!t) return "-";
+        const parts = String(t).split(":");
+        let h = parseInt(parts[0], 10);
+        const m = parts[1] || "00";
+        const suffix = h >= 12 ? "PM" : "AM";
+        h = h % 12 || 12;
+        return String(h).padStart(2, "0") + ":" + m + " " + suffix;
+    }
+
+    function statusClass(status) {
+        const s = normalizeText(status);
+        if (s === "confirmed") return "status-verified";
+        if (s === "completed") return "status-completed";
+        return "status-pending";
+    }
+
+    async function readError(response, fallback) {
+        try {
+            const err = await response.json();
+            if (err && err.message) return err.message;
+        } catch (e) { /* ignore */ }
+        return fallback;
+    }
+
+    /* ---------- LOAD FROM DATABASE ---------- */
+
+    async function loadBookings() {
+
+        const grid = document.getElementById("assignedGrid");
+
+        try {
+            const response = await fetch(API_BASE + "/appointments");
+            if (!response.ok) throw new Error("HTTP " + response.status);
+
+            const data = await response.json();
+
+            // Staff only handles bookings the admin has confirmed (or already completed)
+            allBookings = (Array.isArray(data) ? data : []).filter(function(a) {
+                const s = normalizeText(a.status);
+                return s === "confirmed" || s === "completed";
+            });
+
+            // Soonest first
+            allBookings.sort(function(a, b) {
+                const x = String(a.appointmentDate) + " " + String(a.appointmentTime);
+                const y = String(b.appointmentDate) + " " + String(b.appointmentTime);
+                return x.localeCompare(y);
+            });
+
+            applyFilters();
+
+        } catch (error) {
+            console.error("Assigned bookings loading error:", error);
+            grid.innerHTML = '<div class="error-message">Cannot connect to the server.</div>';
+        }
+    }
+
+    /* ---------- FILTERS ---------- */
+
+    function applyFilters() {
+
+        const search = normalizeText(document.getElementById("searchAssigned").value);
+        const status = normalizeText(document.getElementById("filterAssignedStatus").value);
+        const date = document.getElementById("assignedDate").value;
+
+        const list = allBookings.filter(function(a) {
+
+            const searchMatch =
+                search === "" ||
+                normalizeText(a.appointmentId).includes(search) ||
+                normalizeText(formatBookingId(a.appointmentId)).includes(search) ||
+                normalizeText(a.customerName).includes(search) ||
+                normalizeText(a.customerId).includes(search);
+
+            const statusMatch = status === "all" || normalizeText(a.status) === status;
+            const dateMatch = !date || String(a.appointmentDate) === date;
+
+            return searchMatch && statusMatch && dateMatch;
+        });
+
+        renderBookings(list);
+    }
+
+    /* ---------- RENDER ---------- */
+
+    function renderBookings(list) {
+
+        const grid = document.getElementById("assignedGrid");
+
+        if (list.length === 0) {
+            grid.innerHTML = '<div class="empty-message">No bookings found.</div>';
+            return;
+        }
+
+        grid.innerHTML = "";
+
+        list.forEach(function(a) {
+
+            const status = a.status || "Confirmed";
+            const canComplete = normalizeText(status) === "confirmed";
+
+            const card = document.createElement("div");
+            card.className = "booking-card";
+
+            card.innerHTML =
+                '<div class="booking-card-head">' +
+                    "<strong>" + formatBookingId(a.appointmentId) + "</strong>" +
+                    '<span class="status-pill ' + statusClass(status) + '">' + escapeHtml(status) + "</span>" +
+                "</div>" +
+                '<div class="booking-line"><strong>' + escapeHtml(a.customerName || "Customer") + "</strong><br>" +
+                    "<small>" + formatCustomerId(a.customerId) + "</small></div>" +
+                '<div class="booking-line">📅 ' + escapeHtml(a.appointmentDate || "-") +
+                    " | " + formatTime(a.appointmentTime) + "</div>" +
+                '<div class="booking-line">♻ ' + escapeHtml(a.categoryName || "-") + "</div>" +
+                '<div class="booking-line"><small>Notes: ' + escapeHtml(a.notes || "-") + "</small></div>" +
+                (a.staffName
+                    ? '<div class="booking-line"><small>Handled by: ' + escapeHtml(a.staffName) + "</small></div>"
+                    : "") +
+                (canComplete
+                    ? '<div class="booking-actions"><button type="button" class="btn-action-approve" data-id="' +
+                        escapeHtml(a.appointmentId) + '">Mark Completed</button></div>'
+                    : "");
+
+            grid.appendChild(card);
+        });
+
+        grid.querySelectorAll(".btn-action-approve").forEach(function(btn) {
+            btn.addEventListener("click", function() {
+                completeBooking(btn.getAttribute("data-id"));
+            });
+        });
+    }
+
+    /* ---------- MARK COMPLETED ---------- */
+
+    async function completeBooking(id) {
+        if (!confirm("Mark this booking as completed?")) return;
+
+        const body = { status: "Completed" };
+
+        if (staff) {
+            body.staffId = staff.staffId != null ? staff.staffId : (staff.id != null ? staff.id : null);
+            body.staffName = staff.name || staff.email || null;
+        }
+
+        try {
+            const response = await fetch(API_BASE + "/appointments/" + id + "/status", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                alert(await readError(response, "Could not update the booking."));
+                return;
+            }
+
+            loadBookings();
+
+        } catch (error) {
+            console.error("Complete booking error:", error);
+            alert("Cannot connect to the server.");
+        }
+    }
+
+    /* ---------- EVENTS ---------- */
+
+    document.getElementById("applyFilterBtn").addEventListener("click", applyFilters);
+    document.getElementById("searchAssigned").addEventListener("input", applyFilters);
+    document.getElementById("filterAssignedStatus").addEventListener("change", applyFilters);
+    document.getElementById("assignedDate").addEventListener("change", applyFilters);
+
+    loadBookings();
+
+    setInterval(loadBookings, 30000);
+
+  </script>
+
+</body>
+</html>

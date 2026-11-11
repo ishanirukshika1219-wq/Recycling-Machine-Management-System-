@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - SRMMS</title>
+
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+
+    /* Keep editable fields looking like the existing profile information */
+
+    .profile-info-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font: inherit;
+      color: inherit;
+      padding: 0;
+      margin: 0;
+    }
+
+    .profile-info-input[readonly] {
+      cursor: default;
+    }
+
+    .profile-info-input:not([readonly]) {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+    }
+
+    .profile-info-input::placeholder {
+      color: #999;
+    }
+
+  </style>
+</head>
+
+
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+
+    <!-- =====================================================
+         SIDEBAR NAVIGATION
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS</span>
+      </div>
+
+
+      <nav class="sidebar-nav">
+
+        <ul>
+
+          <li>
+            <a href="customer-dashboard.html">
+              <span class="nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="start-recycling.html">
+              <span class="nav-icon">♻</span>
+              <span>Start Recycling</span>
+            </a>
+          </li>
+           <li>
+            <a href="customer-appoinments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>Transactions</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="rewards.html">
+              <span class="nav-icon">🏅</span>
+              <span>Rewards</span>
+            </a>
+          </li>
+
+
+          <li class="active">
+            <a href="profile.html">
+              <span class="nav-icon">👤</span>
+              <span>Profile</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+
+
+          <li class="logout-item">
+            <a href="admin-logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+
+        </ul>
+
+      </nav>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="main-content">
+
+
+      <!-- TOP HEADER -->
+
+      <header class="top-header">
+
+        <button class="menu-toggle">
+          ☰
+        </button>
+
+
+        <div class="header-right">
+
+         
+
+
+          <div class="user-profile-badge">
+
+            <div class="user-avatar">
+
+              <img
+                id="headerProfilePhoto"
+                src="https://i.pravatar.cc/100?img=47"
+                alt="Customer">
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </header>
+
+
+
+      <!-- =====================================================
+           DASHBOARD WRAPPER
+           ===================================================== -->
+
+      <div class="dashboard-wrapper">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header-block">
+
+          <h1 class="page-title">
+            My Profile
+          </h1>
+
+          <p class="page-subtitle">
+            Manage your personal information and account details.
+          </p>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             TOP ROW
+             ===================================================== -->
+
+        <div class="profile-top-grid">
+
+
+          <!-- PROFILE SUMMARY -->
+
+          <div class="profile-card-panel user-summary-card">
+
+            <div class="profile-avatar-wrapper">
+
+              <img
+                id="profilePhoto"
+                src="https://i.pravatar.cc/150?img=47"
+                alt="Customer"
+                class="profile-avatar-img">
+
+
+              <button
+                type="button"
+                class="avatar-edit-badge"
+                id="photoButton"
+                title="Upload Photo">
+
+                📷
+
+              </button>
+
+
+              <!-- Hidden image input -->
+
+              <input
+                type="file"
+                id="photoInput"
+                accept="image/*"
+                style="display:none;">
+
+            </div>
+
+
+            <h2
+              class="profile-user-name"
+              id="profileUserName">
+
+              Customer
+
+            </h2>
+
+
+          </div>
+
+
+
+          <!-- =================================================
+               PERSONAL INFORMATION
+               ================================================= -->
+
+          <div class="profile-card-panel">
+
+            <h2 class="panel-title">
+              Personal Information
+            </h2>
+
+
+            <form
+              class="profile-form"
+              id="profileForm">
+
+
+              <!-- FULL NAME -->
+
+              <div class="form-group">
+
+                <label for="fullName">
+                  Full Name
+                </label>
+
+                <input
+                  type="text"
+                  id="fullName"
+                  readonly>
+
+              </div>
+
+
+
+              <!-- EMAIL -->
+
+              <div class="form-group">
+
+                <label for="emailAddress">
+                  Email Address
+                </label>
+
+                <input
+                  type="email"
+                  id="emailAddress"
+                  readonly>
+
+              </div>
+
+
+
+              <!-- PHONE -->
+
+              <div class="form-group">
+
+                <label for="phoneNumber">
+                  Phone Number
+                </label>
+
+                <input
+                  type="text"
+                  id="phoneNumber"
+                  readonly>
+
+              </div>
+
+
+            </form>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             BOTTOM ROW
+             ===================================================== -->
+
+        <div class="profile-bottom-grid">
+
+
+          <!-- =================================================
+               ADDRESS / CONTACT
+               ================================================= -->
+
+          <div class="profile-card-panel">
+
+            <h2 class="panel-title">
+              Address / Contact
+            </h2>
+
+
+            <div class="info-list">
+
+
+              <!-- ADDRESS -->
+
+              <div class="info-item">
+
+                <div class="info-icon">
+                  📍
+                </div>
+
+
+                <div class="info-details">
+
+                  <span class="info-label">
+                    Address
+                  </span>
+
+
+                  <input
+                    type="text"
+                    id="address"
+                    class="info-value profile-info-input"
+                    placeholder=""
+                    readonly>
+
+                </div>
+
+              </div>
+
+
+
+              <!-- CITY -->
+
+              <div class="info-item">
+
+                <div class="info-icon">
+                  🏙
+                </div>
+
+
+                <div class="info-details">
+
+                  <span class="info-label">
+                    City
+                  </span>
+
+
+                  <input
+                    type="text"
+                    id="city"
+                    class="info-value profile-info-input"
+                    placeholder=""
+                    readonly>
+
+                </div>
+
+              </div>
+
+
+
+              <!-- POSTAL CODE -->
+
+              <div class="info-item">
+
+                <div class="info-icon">
+                  📮
+                </div>
+
+
+                <div class="info-details">
+
+                  <span class="info-label">
+                    Postal Code
+                  </span>
+
+
+                  <input
+                    type="text"
+                    id="postalCode"
+                    class="info-value profile-info-input"
+                    placeholder=""
+                    readonly>
+
+                </div>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+
+          <!-- =================================================
+               ACCOUNT INFORMATION
+               ================================================= -->
+
+          <div class="profile-card-panel">
+
+            <h2 class="panel-title">
+              Account Information
+            </h2>
+
+
+            <div class="info-list">
+
+
+              <!-- CUSTOMER ID -->
+
+              <div class="info-item">
+
+                <div class="info-icon">
+                  🪪
+                </div>
+
+
+                <div class="info-details">
+
+                  <span class="info-label">
+                    Customer ID
+                  </span>
+
+
+                  <span
+                    class="info-value"
+                    id="customerId">
+
+                    -
+
+                  </span>
+
+                </div>
+
+              </div>
+
+
+
+              <!-- MEMBER SINCE -->
+
+              <div class="info-item">
+
+                <div class="info-icon">
+                  📅
+                </div>
+
+
+                <div class="info-details">
+
+                  <span class="info-label">
+                    Member Since
+                  </span>
+
+
+                  <span
+                    class="info-value"
+                    id="memberSince">
+
+                    -
+
+                  </span>
+
+                </div>
+
+              </div>
+
+
+
+              <!-- ACCOUNT TYPE -->
+
+              <div class="info-item">
+
+                <div class="info-icon">
+                  📄
+                </div>
+
+
+                <div class="info-details">
+
+                  <span class="info-label">
+                    Account Type
+                  </span>
+
+
+                  <span class="info-value">
+                    Customer
+                  </span>
+
+                </div>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- =====================================================
+             ACTION BUTTONS
+             ===================================================== -->
+
+        <div class="profile-actions-bar">
+
+
+          <button
+            type="button"
+            class="btn-outline-edit"
+            id="editButton">
+
+            ✏ Edit Profile
+
+          </button>
+
+
+          <button
+            type="button"
+            class="btn-primary-save"
+            id="saveButton">
+
+            💾 Save Changes
+
+          </button>
+
+
+        </div>
+
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+
+  <!-- =========================================================
+       JAVASCRIPT
+       ========================================================= -->
+
+  <script>
+
+    const API_BASE =
+      "http://localhost:8080/api";
+
+
+    // =========================================================
+    // GET LOGGED-IN CUSTOMER
+    // =========================================================
+
+    const storedCustomer =
+      localStorage.getItem("customer");
+
+
+    if (!storedCustomer) {
+
+      alert(
+        "Customer information not found. Please login again."
+      );
+
+      window.location.href =
+        "login.html";
+
+    }
+
+
+    let customer;
+
+
+    try {
+
+      customer =
+        JSON.parse(storedCustomer);
+
+    } catch (error) {
+
+      console.error(
+        "Invalid customer data:",
+        error
+      );
+
+      localStorage.removeItem("customer");
+
+      window.location.href =
+        "login.html";
+
+    }
+
+
+    // =========================================================
+    // CHECK CUSTOMER ID
+    // =========================================================
+
+    if (!customer ||
+        !customer.customerId) {
+
+      alert(
+        "Customer information not found. Please login again."
+      );
+
+      window.location.href =
+        "login.html";
+
+    }
+
+
+
+    // =========================================================
+    // ELEMENTS
+    // =========================================================
+
+    const fullName =
+      document.getElementById("fullName");
+
+    const emailAddress =
+      document.getElementById("emailAddress");
+
+    const phoneNumber =
+      document.getElementById("phoneNumber");
+
+    const address =
+      document.getElementById("address");
+
+    const city =
+      document.getElementById("city");
+
+    const postalCode =
+      document.getElementById("postalCode");
+
+    const profileUserName =
+      document.getElementById("profileUserName");
+
+    const customerIdElement =
+      document.getElementById("customerId");
+
+    const memberSinceElement =
+      document.getElementById("memberSince");
+
+    const editButton =
+      document.getElementById("editButton");
+
+    const saveButton =
+      document.getElementById("saveButton");
+
+    const profilePhoto =
+      document.getElementById("profilePhoto");
+
+    const headerProfilePhoto =
+      document.getElementById(
+        "headerProfilePhoto"
+      );
+
+    const photoButton =
+      document.getElementById(
+        "photoButton"
+      );
+
+    const photoInput =
+      document.getElementById(
+        "photoInput"
+      );
+
+
+    // =========================================================
+    // SELECTED PHOTO
+    // =========================================================
+
+    let selectedProfilePhoto = null;
+
+
+
+    // =========================================================
+    // PHOTO BUTTON
+    // =========================================================
+
+    photoButton.addEventListener(
+      "click",
+      function () {
+
+        photoInput.click();
+
+      }
+    );
+
+
+
+    // =========================================================
+    // SELECT PHOTO
+    // =========================================================
+
+    photoInput.addEventListener(
+      "change",
+      function (event) {
+
+        const file =
+          event.target.files[0];
+
+
+        if (!file) {
+          return;
+        }
+
+
+        // Check image type
+
+        if (!file.type.startsWith("image/")) {
+
+          alert(
+            "Please select an image file."
+          );
+
+          photoInput.value = "";
+
+          return;
+        }
+
+
+        // Check size - maximum 2 MB
+
+        if (file.size > 2 * 1024 * 1024) {
+
+          alert(
+            "Please select an image smaller than 2 MB."
+          );
+
+          photoInput.value = "";
+
+          return;
+        }
+
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload =
+          function (e) {
+
+            selectedProfilePhoto =
+              e.target.result;
+
+
+            // Show preview
+
+            profilePhoto.src =
+              selectedProfilePhoto;
+
+
+            headerProfilePhoto.src =
+              selectedProfilePhoto;
+
+          };
+
+
+        reader.readAsDataURL(file);
+
+      }
+    );
+
+
+
+    // =========================================================
+    // LOAD CUSTOMER PROFILE
+    // =========================================================
+
+    async function loadCustomerProfile() {
+
+      try {
+
+        const response =
+          await fetch(
+            API_BASE +
+            "/customers/" +
+            customer.customerId
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Customer information could not be loaded."
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        // =====================================================
+        // PERSONAL INFORMATION
+        // =====================================================
+
+        fullName.value =
+          data.name || "";
+
+        emailAddress.value =
+          data.email || "";
+
+        phoneNumber.value =
+          data.phone || "";
+
+
+        // =====================================================
+        // ADDRESS
+        // =====================================================
+
+        address.value =
+          data.address || "";
+
+        city.value =
+          data.city || "";
+
+        postalCode.value =
+          data.postalCode || "";
+
+
+        // =====================================================
+        // PROFILE NAME
+        // =====================================================
+
+        profileUserName.textContent =
+          data.name || "Customer";
+
+
+        // =====================================================
+        // CUSTOMER ID
+        // =====================================================
+
+        customerIdElement.textContent =
+          data.customerId || "-";
+
+
+        // =====================================================
+        // MEMBER SINCE
+        // =====================================================
+
+        let formattedDate =
+          "-";
+
+
+        if (data.registeredDate) {
+
+          const date =
+            new Date(
+              data.registeredDate
+            );
+
+
+          formattedDate =
+            date.toLocaleDateString(
+              "en-US",
+              {
+                month: "short",
+                year: "numeric"
+              }
+            );
+
+        }
+
+
+        memberSinceElement.textContent =
+          formattedDate;
+
+
+        // =====================================================
+        // LOAD PROFILE PHOTO FROM DATABASE
+        // =====================================================
+
+        if (
+          data.profilePhoto &&
+          data.profilePhoto.trim() !== ""
+        ) {
+
+          profilePhoto.src =
+            data.profilePhoto;
+
+          headerProfilePhoto.src =
+            data.profilePhoto;
+
+        }
+
+
+        // =====================================================
+        // UPDATE LOCAL STORAGE
+        // =====================================================
+
+        customer = {
+
+          ...customer,
+
+          customerId:
+            data.customerId,
+
+          name:
+            data.name,
+
+          email:
+            data.email,
+
+          phone:
+            data.phone,
+
+          registeredDate:
+            data.registeredDate,
+
+          address:
+            data.address || "",
+
+          city:
+            data.city || "",
+
+          postalCode:
+            data.postalCode || "",
+
+          profilePhoto:
+            data.profilePhoto ||
+            customer.profilePhoto ||
+            null
+
+        };
+
+
+        localStorage.setItem(
+          "customer",
+          JSON.stringify(customer)
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Profile loading error:",
+          error
+        );
+
+        alert(
+          "Unable to load customer information."
+        );
+
+      }
+
+    }
+
+
+
+    // =========================================================
+    // EDIT PROFILE
+    // =========================================================
+
+    editButton.addEventListener(
+      "click",
+      function () {
+
+        fullName.removeAttribute(
+          "readonly"
+        );
+
+        emailAddress.removeAttribute(
+          "readonly"
+        );
+
+        phoneNumber.removeAttribute(
+          "readonly"
+        );
+
+        address.removeAttribute(
+          "readonly"
+        );
+
+        city.removeAttribute(
+          "readonly"
+        );
+
+        postalCode.removeAttribute(
+          "readonly"
+        );
+
+
+        fullName.focus();
+
+
+        editButton.textContent =
+          "✏ Editing Profile";
+
+      }
+    );
+
+
+
+    // =========================================================
+    // SAVE PROFILE
+    // =========================================================
+
+    saveButton.addEventListener(
+      "click",
+      async function () {
+
+        const updatedName =
+          fullName.value.trim();
+
+        const updatedEmail =
+          emailAddress.value.trim();
+
+        const updatedPhone =
+          phoneNumber.value.trim();
+
+        const updatedAddress =
+          address.value.trim();
+
+        const updatedCity =
+          city.value.trim();
+
+        const updatedPostalCode =
+          postalCode.value.trim();
+
+
+        // =====================================================
+        // REQUIRED FIELDS
+        // =====================================================
+
+        if (
+          !updatedName ||
+          !updatedEmail ||
+          !updatedPhone
+        ) {
+
+          alert(
+            "Name, email and phone are required."
+          );
+
+          return;
+
+        }
+
+
+        // =====================================================
+        // SEND DATA TO BACKEND
+        // =====================================================
+
+        try {
+
+          const requestData = {
+
+            name:
+              updatedName,
+
+            email:
+              updatedEmail,
+
+            phone:
+              updatedPhone,
+
+            address:
+              updatedAddress,
+
+            city:
+              updatedCity,
+
+            postalCode:
+              updatedPostalCode
+
+          };
+
+
+          // ===================================================
+          // ADD PHOTO ONLY IF NEW PHOTO SELECTED
+          // ===================================================
+
+          if (selectedProfilePhoto) {
+
+            requestData.profilePhoto =
+              selectedProfilePhoto;
+
+          }
+
+
+          const response =
+            await fetch(
+              API_BASE +
+              "/customers/profile/" +
+              customer.customerId,
+              {
+
+                method: "PUT",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                  JSON.stringify(
+                    requestData
+                  )
+
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          // ===================================================
+          // ERROR
+          // ===================================================
+
+          if (!response.ok) {
+
+            alert(
+              data.message ||
+              "Failed to update profile."
+            );
+
+            return;
+
+          }
+
+
+          // ===================================================
+          // UPDATE LOCAL STORAGE
+          // ===================================================
+
+          customer = {
+
+            ...customer,
+
+            name:
+              data.name,
+
+            email:
+              data.email,
+
+            phone:
+              data.phone,
+
+            address:
+              data.address || "",
+
+            city:
+              data.city || "",
+
+            postalCode:
+              data.postalCode || "",
+
+            profilePhoto:
+              data.profilePhoto ||
+              customer.profilePhoto ||
+              null
+
+          };
+
+
+          localStorage.setItem(
+            "customer",
+            JSON.stringify(customer)
+          );
+
+
+          // ===================================================
+          // UPDATE PHOTO
+          // ===================================================
+
+          if (
+            data.profilePhoto &&
+            data.profilePhoto.trim() !== ""
+          ) {
+
+            profilePhoto.src =
+              data.profilePhoto;
+
+            headerProfilePhoto.src =
+              data.profilePhoto;
+
+          }
+
+
+          // Reset selected photo
+
+          selectedProfilePhoto =
+            null;
+
+          photoInput.value =
+            "";
+
+
+          // ===================================================
+          // MAKE INPUTS READONLY AGAIN
+          // ===================================================
+
+          fullName.setAttribute(
+            "readonly",
+            true
+          );
+
+          emailAddress.setAttribute(
+            "readonly",
+            true
+          );
+
+          phoneNumber.setAttribute(
+            "readonly",
+            true
+          );
+
+          address.setAttribute(
+            "readonly",
+            true
+          );
+
+          city.setAttribute(
+            "readonly",
+            true
+          );
+
+          postalCode.setAttribute(
+            "readonly",
+            true
+          );
+
+
+          editButton.textContent =
+            "✏ Edit Profile";
+
+
+          profileUserName.textContent =
+            data.name;
+
+
+          alert(
+            "Profile updated successfully!"
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            "Profile update error:",
+            error
+          );
+
+          alert(
+            "Cannot connect to the server."
+          );
+
+        }
+
+      }
+    );
+
+
+
+    // =========================================================
+    // LOAD PROFILE WHEN PAGE OPENS
+    // =========================================================
+
+    loadCustomerProfile();
+
+  </script>
+
+</body>
+
+</html>

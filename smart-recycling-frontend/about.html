@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - SRMMS</title>
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <div class="container">
+
+      <!-- Header Navigation Bar -->
+      <nav class="navbar">
+        <div class="brand">
+          <div class="brand-icon">♻</div>
+          <div>
+            <span>SRMMS</span>
+            <small class="brand-tagline">Recycle Today • Greener Tomorrow</small>
+          </div>
+        </div>
+        <ul class="nav-links">
+          <li><a href="home.html">Home</a></li>
+          <li><a href="about.html" class="active">About Us</a></li>
+          <li><a href="categories.html">Categories</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="auth-buttons">
+          <a href="all-login.html" class="btn btn-login">Login</a>
+          <a href="register.html" class="btn btn-register">Register</a>
+        </div>
+      </nav>
+
+      <!-- About Banner Header -->
+      <section class="about-hero">
+        <div class="about-hero-content">
+          <h1>About <span>SRMMS</span></h1>
+          <p>Innovating waste management through smart technology, community rewards, and sustainable eco-action.</p>
+        </div>
+      </section>
+
+      <!-- Mission & Vision Cards Section -->
+      <section class="about-section">
+        <div class="about-grid">
+
+          <div class="about-card">
+            <div class="about-card-icon">🎯</div>
+            <h3>Our Mission</h3>
+            <p>To revolutionize recycling accessibility through smart automated reverse-vending tech, encouraging sustainable daily habits by providing instant monetary and reward incentives.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-card-icon">🌱</div>
+            <h3>Our Vision</h3>
+            <p>To build a zero-waste future across Sri Lanka and beyond, empowering educational institutions, local municipalities, and citizens to achieve environmental sustainability together.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-card-icon">💡</div>
+            <h3>Our Innovation</h3>
+            <p>Combining IoT hardware sensors with a seamless software platform that automatically measures weight, segregates waste, and credits digital reward points to user profiles.</p>
+          </div>
+
+        </div>
+        <!-- Why Choose SRMMS Section -->
+    <div class="why-choose-section">
+      <h2 class="section-title"> </h2>
+      <h2 class="section-title"> </h2>
+      <h2 class="section-title"> </h2>
+      <h2 class="section-title">Why Choose SRMMS?</h2>
+
+      <div class="why-choose-grid">
+        <!-- Card 1 -->
+        <div class="feature-card">
+          <div class="icon-circle">♻</div>
+          <h4></h4>
+          <h4></h4>
+          <h4>Easy to Use</h4>
+          <p>Simple and convenient recycling process</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="feature-card">
+          <div class="icon-circle">⚙</div>
+          <h4></h4>
+          <h4></h4>
+          <h4>Rewards & Points</h4>
+          <p>Get rewarded for your contribution</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="feature-card">
+          <div class="icon-circle">📋</div>
+          <h4></h4>
+          <h4></h4>
+          <h4>Transparent</h4>
+          <p>Track your transactions and rewards</p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="feature-card">
+          <div class="icon-circle">🛡</div>
+          <h4></h4>
+          <h4></h4>
+          <h4>Environment Friendly</h4>
+          <p>Reduce waste, protect our planet</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+      </section>
+
+     
+
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-container">
+
+      <!-- Logo / About -->
+      <div class="footer-brand">
+        <div class="brand-title">
+          <span class="recycle-icon">♻</span>
+          <div>
+            <h3>SRMMS</h3>
+            <p>Recycle Today for a Better Tomorrow</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="home.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="categories.html">Categories</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="footer-contact">
+        <h4>Contact Info</h4>
+        <p>📍 <span id="footerLocation">Sabaragamuwa University of Sri Lanka</span></p>
+        <p>📧 <span id="footerEmail">info@srmms.lk</span></p>
+        <p>📞 <span id="footerPhone">+94 00 000 0000</span></p>
+
+        <div class="social-icons">
+          <a href="#">f</a>
+          <a href="#">◎</a>
+          <a href="#">in</a>
+          <a href="#">▶</a>
+        </div>
+      </div>
+
+      <!-- Decorative Leaf -->
+      <div class="footer-decoration">🌿</div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+      <p>© 2026 SRMMS. All rights reserved.</p>
+      <div class="bottom-social">
+        <a href="#">f</a>
+        <a href="#">◎</a>
+        <a href="#">in</a>
+        <a href="#">▶</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+/* The footer "Contact Info" (location, email, phone) comes from the admin
+   settings: Admin table in the database.
+   The text written in the HTML stays only if the server is off or the
+   admin has not entered that detail yet. */
+
+function setFooterText(id, value) {
+
+  const element = document.getElementById(id);
+
+  if (element && value && value.trim() !== "") {
+    element.textContent = value.trim();
+  }
+}
+
+async function loadFooterContactInfo() {
+
+  try {
+
+    const response = await fetch(
+      "http://localhost:8080/api/contact-info?time=" + new Date().getTime(),
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+
+    const info = await response.json();
+
+    console.log("Contact info from the database:", info);
+
+    setFooterText("footerLocation", info.location);
+    setFooterText("footerEmail", info.email);
+    setFooterText("footerPhone", info.phone);
+
+  } catch (error) {
+
+    // Keep the text already written in the HTML
+    console.error("Contact info loading error:", error);
+  }
+}
+
+loadFooterContactInfo();
+</script>
+
+</body>
+</html>

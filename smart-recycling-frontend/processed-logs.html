@@ -1,0 +1,540 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Processed Logs - SRMMS Staff</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Staff Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS <small class="role-badge-staff">Staff</small></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="staff-dashboard.html">
+              <span class="nav-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="verify-deposits.html">
+              <span class="nav-icon">🔍</span>
+              <span>Verify Deposits</span>
+            </a>
+          </li>
+          <li>
+            <a href="walkin-deposit.html">
+              <span class="nav-icon">➕</span>
+              <span>Walk-in Deposit</span>
+            </a>
+          </li>
+          <li>
+            <a href="assigned-bookings.html">
+              <span class="nav-icon">📅</span>
+              <span>Assigned Bookings</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="processed-logs.html">
+              <span class="nav-icon">📜</span>
+              <span>My Processed Logs</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="staff-logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+
+        <div class="header-right">
+          <div class="user-profile-badge">
+            <div class="user-avatar">
+              <img src="https://i.pravatar.cc/100?img=12" alt="Staff Member">
+            </div>
+            <span class="user-name"></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Inner Wrapper -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page Header Block -->
+        <div class="page-header-block page-header-flex">
+          <div>
+            <h1 class="page-title">My Activity & Transaction Logs</h1>
+            <p class="page-subtitle">Review personal shift processing history, verified deposits, and manual entries.</p>
+          </div>
+        </div>
+
+        <!-- Shift Performance KPI Cards -->
+        <div class="admin-kpi-grid">
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">📋</div>
+            <div class="stat-info">
+              <span class="stat-label">Shift Transactions</span>
+              <div class="stat-value" id="totalTransactions">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">⚖</div>
+            <div class="stat-info">
+              <span class="stat-label">Total Recycled Mass</span>
+              <div class="stat-value" id="totalWeight">0.00 Kg</div>
+              
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">💵</div>
+            <div class="stat-info">
+              <span class="stat-label">Disbursed Payouts</span>
+              <div class="stat-value" id="totalPayout">Rs. 0.00</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">🏅</div>
+            <div class="stat-info">
+              <span class="stat-label">Issued Reward Points</span>
+              <div class="stat-value" id="totalPoints">0</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Filter Controls Bar -->
+        <div class="profile-card-panel filter-bar-panel">
+          <div class="filter-controls-grid">
+
+            <div class="form-group search-group">
+              <label for="searchLog">Search My History</label>
+              <input type="text" id="searchLog"
+                     placeholder="Search Txn ID or Customer..."
+                     class="settings-input">
+            </div>
+
+            <div class="form-group">
+              <label for="filterCategory">Material Category</label>
+              <select id="filterCategory" class="settings-select">
+                <option value="all" selected>All Categories</option>
+                <option value="plastic">Plastic</option>
+                <option value="paper">Paper</option>
+                <option value="metal">Metal</option>
+                <option value="glass">Glass</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="filterEntryType">Entry Source</label>
+              <select id="filterEntryType" class="settings-select">
+                <option value="all" selected>All Sources</option>
+                <option value="walkin">Counter Walk-in</option>
+                <option value="booking">Appointment Booking</option>
+                <option value="kiosk">Kiosk Verification</option>
+              </select>
+            </div>
+
+            <div class="form-group filter-btn-wrap">
+              <button type="button" class="btn-primary-save filter-btn" id="filterButton">
+                Filter Logs
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Processed Logs Table -->
+        <div class="transactions-panel-card">
+          <div class="panel-header-flex">
+            <div>
+              <h2 class="panel-title">Completed Activity Log</h2>
+              <span class="results-count-tag" id="loggedBy">Logged by -</span>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="transactions-table full-history-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Txn ID</th>
+                  <th>Customer</th>
+                  <th>Source</th>
+                  <th>Category</th>
+                  <th>Net Weight</th>
+                  <th>Total Payout</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="logsTableBody">
+                <tr>
+                  <td colspan="9" style="text-align:center;">Loading processed logs...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8080/api";
+
+    // ==========================================
+    // GET LOGGED-IN STAFF DETAILS
+    // ==========================================
+
+    let staff = null;
+
+    try {
+      const savedStaff =
+        localStorage.getItem("staff") ||
+        sessionStorage.getItem("staff");
+
+      staff = savedStaff ? JSON.parse(savedStaff) : null;
+
+    } catch (error) {
+      console.error("Error reading staff details:", error);
+    }
+
+    if (!staff || staff.staffId == null) {
+      alert("Staff login details not found. Please login again.");
+      window.location.href = "login.html";
+    }
+
+    const staffId = staff.staffId;
+
+    // Display staff name
+    document.querySelector(".user-name").textContent =
+      staff.name || "Staff Member";
+
+    document.getElementById("loggedBy").textContent =
+      "Logged by " + (staff.name || "Staff Member");
+
+    // ==========================================
+    // VARIABLES
+    // ==========================================
+
+    let allLogs = [];
+
+    const tableBody = document.getElementById("logsTableBody");
+
+    // ==========================================
+    // FORMAT FUNCTIONS
+    // ==========================================
+
+    function formatDate(dateValue) {
+      if (!dateValue) return "-";
+
+      const date = new Date(dateValue);
+
+      if (isNaN(date.getTime())) return dateValue;
+
+      return date.toLocaleString("en-GB", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function formatMoney(value) {
+      return "Rs. " + Number(value || 0).toLocaleString("en-LK", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, function (char) {
+        const entities = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        };
+
+        return entities[char];
+      });
+    }
+
+    // ==========================================
+    // LOAD STAFF PROCESSED LOGS FROM DATABASE
+    // ==========================================
+
+    async function loadProcessedLogs() {
+
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="9" style="text-align:center;">
+            Loading processed logs...
+          </td>
+        </tr>
+      `;
+
+      try {
+
+        const response = await fetch(
+          `${API_BASE}/walkin/deposits/history/staff/${encodeURIComponent(staffId)}`
+        );
+
+        if (!response.ok) {
+          let errorMessage = "Unable to load processed logs.";
+
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+          } catch (e) {}
+
+          throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+
+        allLogs = Array.isArray(data) ? data : [];
+
+        // Calculate KPI values
+        updateKPIs(allLogs);
+
+        // Display records
+        applyFilters();
+
+      } catch (error) {
+
+        console.error("Processed logs loading error:", error);
+
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="9" style="text-align:center; color:red;">
+              ${escapeHTML(error.message)}
+            </td>
+          </tr>
+        `;
+
+        updateKPIs([]);
+
+      }
+    }
+
+    // ==========================================
+    // UPDATE KPI CARDS
+    // ==========================================
+
+    function updateKPIs(logs) {
+
+      const totalTransactions = logs.length;
+
+      const totalWeight = logs.reduce((sum, log) => {
+        return sum + Number(log.weightKg || 0);
+      }, 0);
+
+      const totalPayout = logs.reduce((sum, log) => {
+        return sum + Number(log.amount || 0);
+      }, 0);
+
+      const totalPoints = logs.reduce((sum, log) => {
+        return sum + Number(log.rewardPoints || 0);
+      }, 0);
+
+      document.getElementById("totalTransactions").textContent =
+        totalTransactions;
+
+      document.getElementById("totalWeight").textContent =
+        totalWeight.toFixed(2) + " Kg";
+
+      document.getElementById("totalPayout").textContent =
+        formatMoney(totalPayout);
+
+      document.getElementById("totalPoints").textContent =
+        totalPoints;
+    }
+
+    // ==========================================
+    // FILTER LOGS
+    // ==========================================
+
+    function applyFilters() {
+
+      const searchValue = document
+        .getElementById("searchLog")
+        .value.trim().toLowerCase();
+
+      const categoryValue = document
+        .getElementById("filterCategory")
+        .value.toLowerCase();
+
+      const sourceValue = document
+        .getElementById("filterEntryType")
+        .value.toLowerCase();
+
+      let filteredLogs = allLogs.filter(log => {
+
+        const transactionNumber =
+          String(log.transactionId ?? log.receiptNo ?? "");
+
+        const customerName =
+          String(log.customerName || "").toLowerCase();
+
+        const receiptNumber =
+          String(log.receiptNo || "").toLowerCase();
+
+        const category =
+          String(log.categoryName || "").toLowerCase();
+
+        const matchesSearch =
+          !searchValue ||
+          transactionNumber.toLowerCase().includes(searchValue) ||
+          customerName.includes(searchValue) ||
+          receiptNumber.includes(searchValue);
+
+        const matchesCategory =
+          categoryValue === "all" ||
+          category.includes(categoryValue);
+
+        // This endpoint currently returns walk-in deposits only.
+        const matchesSource =
+          sourceValue === "all" || sourceValue === "walkin";
+
+        return matchesSearch && matchesCategory && matchesSource;
+      });
+
+      displayLogs(filteredLogs);
+    }
+
+    // ==========================================
+    // DISPLAY TABLE RECORDS
+    // ==========================================
+
+    function displayLogs(logs) {
+
+      if (logs.length === 0) {
+
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="9" style="text-align:center;">
+              No processed records found.
+            </td>
+          </tr>
+        `;
+
+        return;
+      }
+
+      tableBody.innerHTML = logs.map(log => {
+
+        const transactionId =
+          log.transactionId != null
+            ? "TXN-" + log.transactionId
+            : (log.receiptNo || "-");
+
+        const customerName =
+          log.customerName || "Guest";
+
+        const categoryName =
+          log.categoryName || "-";
+
+        const weight =
+          Number(log.weightKg || 0).toFixed(2);
+
+        const amount =
+          formatMoney(log.amount);
+
+        const dateTime =
+          formatDate(log.dateTime);
+
+        return `
+          <tr>
+            <td>${escapeHTML(dateTime)}</td>
+
+            <td>${escapeHTML(transactionId)}</td>
+
+            <td>${escapeHTML(customerName)}</td>
+
+            <td>Counter Walk-in</td>
+
+            <td>${escapeHTML(categoryName)}</td>
+
+            <td>${weight} kg</td>
+
+            <td>${escapeHTML(amount)}</td>
+
+            <td>
+              <span class="status-badge status-completed">
+                Completed
+              </span>
+            </td>
+
+            <td>
+              <span title="Processed successfully">
+                -
+              </span>
+            </td>
+          </tr>
+        `;
+
+      }).join("");
+    }
+
+    // ==========================================
+    // FILTER BUTTON
+    // ==========================================
+
+    document.getElementById("filterButton")
+      .addEventListener("click", applyFilters);
+
+    // Search while typing
+    document.getElementById("searchLog")
+      .addEventListener("input", applyFilters);
+
+    // Automatically filter category/source
+    document.getElementById("filterCategory")
+      .addEventListener("change", applyFilters);
+
+    document.getElementById("filterEntryType")
+      .addEventListener("change", applyFilters);
+
+    // ==========================================
+    // INITIAL LOAD
+    // ==========================================
+
+    if (staff && staff.staffId != null) {
+      loadProcessedLogs();
+    }
+
+  </script>
+
+</body>
+</html>
+```

@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Analytics - SRMMS Admin</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <!-- PDF export libraries (loaded from CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    /* Keep numbers the same size as plain values */
+    .stat-value .stat-num {
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+    }
+
+    /* Filter bar layout + shorter date boxes */
+    .filter-controls-grid.reports-filter-grid {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .reports-filter-grid .form-group {
+      margin: 0;
+    }
+
+    .reports-filter-grid label {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .reports-filter-grid select,
+    .reports-filter-grid input {
+      margin: 0;
+      height: 40px;
+      box-sizing: border-box;
+    }
+
+    #reportType {
+      min-width: 260px;
+    }
+
+    #startDate,
+    #endDate {
+      width: 150px;
+      max-width: 150px;
+    }
+
+    .filter-btn-wrap {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .btn-primary-save:disabled,
+    .btn-outline-edit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .report-empty-msg {
+      text-align: center;
+      color: #666;
+      padding: 15px 0;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Admin Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS <small class="admin-badge">Admin</small></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="admin-dashboard.html">
+              <span class="nav-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="category-rates.html">
+              <span class="nav-icon">🏷</span>
+              <span>Category & Rates</span>
+            </a>
+          </li>
+          <li>
+            <a href="all-transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>All Transactions</span>
+            </a>
+          </li>
+          <li>
+            <a href="appointments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+          <li>
+            <a href="manage-users.html">
+              <span class="nav-icon">👥</span>
+              <span>Manage Users</span>
+            </a>
+          </li>
+          <li>
+             <a href="staff-management.html">
+                <span class="nav-icon">🧑‍💼</span>
+                <span>Staff Management</span>
+             </a>
+            </li>
+          
+          <li>
+              <a href="customer-inquiries.html">
+                  <span class="nav-icon">📩</span>
+                  <span>Customer Inquiries</span>
+              </a>
+          </li>
+
+          <li>
+            <a href="reward-rules.html">
+              <span class="nav-icon">🏅</span>
+              <span>Reward Rules</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="reports.html">
+              <span class="nav-icon">📈</span>
+              <span>Reports</span>
+            </a>
+          </li>
+          <li>
+            <a href="admin-settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+        
+        <div class="header-right">
+          
+          <div class="user-profile-badge">
+            
+            <span class="user-name">System Admin ▾</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Inner Wrapper -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page Header Block -->
+        <div class="page-header-block page-header-flex">
+          <div>
+            <h1 class="page-title">Reports & System Analytics</h1>
+            <p class="page-subtitle">Generate custom operational reports, analyze material breakdown, and export data logs.</p>
+          </div>
+          <div class="export-btn-group">
+            <button class="btn-outline-edit" id="exportPdfBtn">📄 Export PDF</button>
+            <button class="btn-primary-save" id="exportCsvBtn">📊 Export Excel / CSV</button>
+          </div>
+        </div>
+
+        <!-- Filter / Generator Bar Panel -->
+        <div class="profile-card-panel filter-bar-panel">
+          <h2 class="panel-title mb-12">Report Generation Parameters</h2>
+          
+          <div class="filter-controls-grid reports-filter-grid">
+            
+            <div class="form-group">
+              <label for="reportType">Report Type</label>
+              <select id="reportType" class="settings-select">
+                <option value="summary" selected>Transaction & Financial Summary</option>
+                <option value="materials">Category Weight Distribution</option>
+                <option value="rewards">Reward Points & Redemptions</option>
+                <option value="users">Customer Growth & Activity</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="startDate">From Date</label>
+              <input type="date" id="startDate" class="settings-input">
+            </div>
+
+            <div class="form-group">
+              <label for="endDate">To Date</label>
+              <input type="date" id="endDate" class="settings-input">
+            </div>
+
+            <div class="form-group filter-btn-wrap">
+              <button class="btn-primary-save filter-btn" id="generateBtn">⚡ Generate Report</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Report Period Summary Metrics Grid -->
+        <div class="admin-kpi-grid">
+          
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">📋</div>
+            <div class="stat-info">
+              <span class="stat-label">Period Transactions</span>
+              <div class="stat-value"><span class="stat-num" id="kpiTransactions">0</span></div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">⚖</div>
+            <div class="stat-info">
+              <span class="stat-label">Period Weight</span>
+              <div class="stat-value"><span class="stat-num" id="kpiWeight">0.00</span> <span>kg</span></div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">💵</div>
+            <div class="stat-info">
+              <span class="stat-label">Period Payout</span>
+              <div class="stat-value">Rs. <span class="stat-num" id="kpiPayout">0.00</span></div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">🏅</div>
+            <div class="stat-info">
+              <span class="stat-label">Points Issued</span>
+              <div class="stat-value"><span class="stat-num" id="kpiPoints">0</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Category Weight Breakdown & Summary Data Table -->
+        <div class="admin-middle-grid">
+          
+          <!-- Category Weight Summary Card -->
+          <div class="profile-card-panel">
+            <h2 class="panel-title">Collected Weight by Category</h2>
+            
+            <div class="category-progress-list" id="categoryProgressList">
+              <div class="report-empty-msg">Loading...</div>
+            </div>
+          </div>
+
+          <!-- Top Customers -->
+          <div class="profile-card-panel">
+            <h2 class="panel-title">Top Customer Contributors</h2>
+
+            <table class="admin-mini-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Weight Recycled</th>
+                  <th>Value Earned</th>
+                </tr>
+              </thead>
+              <tbody id="topCustomersBody">
+                <tr>
+                  <td colspan="3" style="text-align:center;">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- Detailed Generated Data Preview -->
+        <div class="transactions-panel-card">
+          <div class="panel-header-flex">
+            <div>
+              <h2 class="panel-title" id="previewTitle">Report Preview Log</h2>
+              <span class="results-count-tag" id="previewPeriodTag">Loading...</span>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="transactions-table full-history-table">
+              <thead>
+                <tr id="previewHeadRow">
+                  <th>Loading...</th>
+                </tr>
+              </thead>
+              <tbody id="previewBody">
+                <tr>
+                  <td style="text-align:center;">Loading report...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+    const reportTypeEl = document.getElementById("reportType");
+    const startDateEl = document.getElementById("startDate");
+    const endDateEl = document.getElementById("endDate");
+    const generateBtn = document.getElementById("generateBtn");
+
+    /* The last report that was generated (used for the exports) */
+    let currentReport = null;
+
+
+    /* =====================================================
+       HELPERS
+    ====================================================== */
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+    function fmtNum(value, decimals) {
+
+        return (parseFloat(value) || 0).toLocaleString("en-US", {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        });
+
+    }
+
+    /* yyyy-mm-dd from a LOCAL date (avoids the UTC day-shift) */
+    function toInputDate(d) {
+
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+
+        return y + "-" + m + "-" + day;
+
+    }
+
+    function formatLongDate(inputDate) {
+
+        const parts = inputDate.split("-");
+
+        const d = new Date(
+            parseInt(parts[0]),
+            parseInt(parts[1]) - 1,
+            parseInt(parts[2])
+        );
+
+        return d.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit"
+        });
+
+    }
+
+    function formatDateTime(d) {
+        return d.toLocaleString("en-US");
+    }
+
+    function setDefaultDates() {
+
+        const today = new Date();
+        const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+        startDateEl.value = toInputDate(firstOfMonth);
+        endDateEl.value = toInputDate(today);
+
+    }
+
+
+    /* =====================================================
+       CELL FORMATTING (by column type)
+    ====================================================== */
+
+    /* Text shown on screen / in the PDF */
+    function plainCell(value, type) {
+
+        if (value === null || value === undefined) {
+            return "-";
+        }
+
+        if (type === "kg") return fmtNum(value, 2) + " kg";
+        if (type === "money") return "Rs. " + fmtNum(value, 2);
+        if (type === "int") return fmtNum(value, 0);
+        if (type === "percent") return fmtNum(value, 1) + "%";
+
+        return String(value);
+
+    }
+
+    /* Clean values for the CSV file */
+    function rawCell(value, type) {
+
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        if (type === "kg" || type === "money") return (parseFloat(value) || 0).toFixed(2);
+        if (type === "int") return String(Math.round(parseFloat(value) || 0));
+        if (type === "percent") return (parseFloat(value) || 0).toFixed(1);
+
+        return String(value);
+
+    }
+
+    /* Adds the unit to CSV headers so plain numbers stay clear */
+    function csvHeaderLabel(col) {
+
+        if (col.type === "kg" && col.label.indexOf("(kg)") === -1) {
+            return col.label + " (kg)";
+        }
+
+        if (col.type === "money" && col.label.indexOf("Rs.") === -1) {
+            return col.label + " (Rs.)";
+        }
+
+        if (col.type === "percent") {
+            return col.label + " (%)";
+        }
+
+        return col.label;
+
+    }
+
+
+    /* =====================================================
+       RENDER THE REPORT ON THE PAGE
+    ====================================================== */
+
+    function renderKpis(k) {
+
+        document.getElementById("kpiTransactions").textContent =
+            fmtNum(k.transactions, 0);
+
+        document.getElementById("kpiWeight").textContent =
+            fmtNum(k.weight, 2);
+
+        document.getElementById("kpiPayout").textContent =
+            fmtNum(k.payout, 2);
+
+        document.getElementById("kpiPoints").textContent =
+            fmtNum(k.points, 0);
+
+    }
+
+    function renderCategories(list) {
+
+        const container = document.getElementById("categoryProgressList");
+
+        if (!list || list.length === 0) {
+
+            container.innerHTML =
+                '<div class="report-empty-msg">No recycled material in this period.</div>';
+
+            return;
+
+        }
+
+        container.innerHTML = "";
+
+        list.forEach(function(c) {
+
+            const pct = parseFloat(c.percentage) || 0;
+
+            const item = document.createElement("div");
+
+            item.className = "progress-item";
+
+            item.innerHTML =
+                '<div class="progress-labels">' +
+                    "<span><strong>" + escapeHtml(c.category) + "</strong> (" + fmtNum(c.weight, 2) + " kg)</span>" +
+                    '<span class="rate-highlight">' + fmtNum(pct, 1) + "%</span>" +
+                "</div>" +
+                '<div class="progress-bar-track">' +
+                    '<div class="progress-bar-fill" style="width: ' + pct + '%;"></div>' +
+                "</div>";
+
+            container.appendChild(item);
+
+        });
+
+    }
+
+    function renderTopCustomers(list) {
+
+        const body = document.getElementById("topCustomersBody");
+
+        if (!list || list.length === 0) {
+
+            body.innerHTML =
+                '<tr><td colspan="3" style="text-align:center;">No customer activity in this period.</td></tr>';
+
+            return;
+
+        }
+
+        body.innerHTML = "";
+
+        list.forEach(function(c) {
+
+            const tr = document.createElement("tr");
+
+            tr.innerHTML =
+                "<td><strong>" + escapeHtml(c.name) + "</strong></td>" +
+                "<td>" + fmtNum(c.weight, 2) + " kg</td>" +
+                '<td class="rate-highlight">Rs. ' + fmtNum(c.value, 2) + "</td>";
+
+            body.appendChild(tr);
+
+        });
+
+    }
+
+    function renderPreview(preview) {
+
+        const headRow = document.getElementById("previewHeadRow");
+        const body = document.getElementById("previewBody");
+
+        const columns = preview.columns || [];
+        const rows = preview.rows || [];
+
+        headRow.innerHTML = columns.map(function(col) {
+            return "<th>" + escapeHtml(col.label) + "</th>";
+        }).join("");
+
+        if (rows.length === 0) {
+
+            body.innerHTML =
+                '<tr><td colspan="' + columns.length +
+                '" style="text-align:center;">No records found for the selected period.</td></tr>';
+
+            return;
+
+        }
+
+        body.innerHTML = "";
+
+        rows.forEach(function(row) {
+
+            const tr = document.createElement("tr");
+
+            let html = "";
+
+            columns.forEach(function(col, i) {
+
+                const plain = plainCell(row[i], col.type);
+
+                let content = col.type === "text" ? escapeHtml(plain) : plain;
+
+                if (col.bold) {
+                    content = "<strong>" + content + "</strong>";
+                }
+
+                html += "<td" + (col.highlight ? ' class="rate-highlight"' : "") + ">" +
+                        content + "</td>";
+
+            });
+
+            tr.innerHTML = html;
+
+            body.appendChild(tr);
+
+        });
+
+    }
+
+    function renderReport() {
+
+        const r = currentReport;
+
+        renderKpis(r.data.kpis);
+        renderCategories(r.data.categoryBreakdown);
+        renderTopCustomers(r.data.topCustomers);
+        renderPreview(r.data.preview);
+
+        document.getElementById("previewTitle").textContent =
+            "Report Preview Log - " + r.typeLabel;
+
+        document.getElementById("previewPeriodTag").textContent =
+            "Filtered period: " + formatLongDate(r.params.from) +
+            " – " + formatLongDate(r.params.to);
+
+    }
+
+    function showLoadError(message) {
+
+        document.getElementById("previewHeadRow").innerHTML = "<th>Report</th>";
+
+        document.getElementById("previewBody").innerHTML =
+            '<tr><td style="text-align:center; color:red;">' +
+            escapeHtml(message) + "</td></tr>";
+
+        document.getElementById("previewPeriodTag").textContent = "Report not available";
+
+    }
+
+
+    /* =====================================================
+       GENERATE REPORT  (from the DB via /api/admin/reports)
+    ====================================================== */
+
+    async function generateReport(isManual) {
+
+        const type = reportTypeEl.value;
+        const from = startDateEl.value;
+        const to = endDateEl.value;
+
+        if (!from || !to) {
+            alert("Please select both From Date and To Date.");
+            return;
+        }
+
+        if (from > to) {
+            alert("From Date cannot be later than To Date.");
+            return;
+        }
+
+        const originalText = generateBtn.textContent;
+
+        generateBtn.disabled = true;
+        generateBtn.textContent = "Generating...";
+
+        try {
+
+            const response = await fetch(
+                API_BASE + "/admin/reports?type=" + encodeURIComponent(type) +
+                "&from=" + encodeURIComponent(from) +
+                "&to=" + encodeURIComponent(to)
+            );
+
+            if (!response.ok) {
+
+                let message = "Failed to generate report.";
+
+                if (response.status === 404) {
+
+                    message = "Report service not found. Please add ReportController and restart the backend.";
+
+                } else {
+
+                    const text = await response.text();
+
+                    if (text && text.length < 200 && text.charAt(0) !== "{") {
+                        message = text;
+                    }
+
+                }
+
+                showLoadError(message);
+
+                if (isManual) {
+                    alert(message);
+                }
+
+                return;
+
+            }
+
+            const data = await response.json();
+
+            currentReport = {
+                params: { type: type, from: from, to: to },
+                typeLabel: reportTypeEl.options[reportTypeEl.selectedIndex].textContent,
+                data: data,
+                generatedAt: new Date()
+            };
+
+            renderReport();
+
+            if (isManual) {
+                alert("Report generated successfully!");
+            }
+
+        } catch (error) {
+
+            console.error("Report generation error:", error);
+
+            showLoadError("Cannot connect to the server.");
+
+            if (isManual) {
+                alert("Cannot connect to the server.");
+            }
+
+        } finally {
+
+            generateBtn.disabled = false;
+            generateBtn.textContent = originalText;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       EXPORT HELPERS
+    ====================================================== */
+
+    function ensureReadyForExport() {
+
+        if (!currentReport) {
+            alert("Please generate a report first.");
+            return false;
+        }
+
+        const p = currentReport.params;
+
+        if (
+            p.type !== reportTypeEl.value ||
+            p.from !== startDateEl.value ||
+            p.to !== endDateEl.value
+        ) {
+
+            alert("The report type or dates were changed. Please click Generate Report first, then export.");
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    function getKpiRows(kpis, raw) {
+
+        if (raw) {
+
+            return [
+                ["Period Transactions", rawCell(kpis.transactions, "int")],
+                ["Period Weight (kg)", rawCell(kpis.weight, "kg")],
+                ["Period Payout (Rs.)", rawCell(kpis.payout, "money")],
+                ["Points Issued", rawCell(kpis.points, "int")]
+            ];
+
+        }
+
+        return [
+            ["Period Transactions", plainCell(kpis.transactions, "int")],
+            ["Period Weight", plainCell(kpis.weight, "kg")],
+            ["Period Payout", plainCell(kpis.payout, "money")],
+            ["Points Issued", plainCell(kpis.points, "int")]
+        ];
+
+    }
+
+    function getTopCustomerRows(list, raw) {
+
+        return (list || []).map(function(c) {
+
+            if (raw) {
+                return [c.name, rawCell(c.weight, "kg"), rawCell(c.value, "money")];
+            }
+
+            return [c.name, plainCell(c.weight, "kg"), plainCell(c.value, "money")];
+
+        });
+
+    }
+
+    function downloadFile(filename, content, mime) {
+
+        const blob = new Blob([content], { type: mime });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = filename;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
+
+    }
+
+    function exportFileName(extension) {
+
+        const p = currentReport.params;
+
+        return "srmms_report_" + p.type + "_" + p.from + "_to_" + p.to + "." + extension;
+
+    }
+
+
+    /* =====================================================
+       EXPORT EXCEL / CSV
+    ====================================================== */
+
+    function csvEscape(value) {
+
+        const s = String(value === null || value === undefined ? "" : value);
+
+        if (/[",\n\r]/.test(s)) {
+            return '"' + s.replace(/"/g, '""') + '"';
+        }
+
+        return s;
+
+    }
+
+    function csvLine(values) {
+        return values.map(csvEscape).join(",");
+    }
+
+    function exportCsv() {
+
+        if (!ensureReadyForExport()) {
+            return;
+        }
+
+        const r = currentReport;
+        const preview = r.data.preview;
+        const columns = preview.columns || [];
+        const rows = preview.rows || [];
+
+        const lines = [];
+
+        lines.push(csvLine(["SRMMS - Reports & System Analytics"]));
+        lines.push(csvLine(["Report", r.typeLabel]));
+        lines.push(csvLine(["Period", r.params.from + " to " + r.params.to]));
+        lines.push(csvLine(["Generated", formatDateTime(r.generatedAt)]));
+        lines.push("");
+
+        lines.push(csvLine(["Summary"]));
+        lines.push(csvLine(["Metric", "Value"]));
+
+        getKpiRows(r.data.kpis, true).forEach(function(row) {
+            lines.push(csvLine(row));
+        });
+
+        lines.push("");
+
+        lines.push(csvLine(["Report Preview Log"]));
+        lines.push(csvLine(columns.map(csvHeaderLabel)));
+
+        rows.forEach(function(row) {
+
+            lines.push(csvLine(columns.map(function(col, i) {
+                return rawCell(row[i], col.type);
+            })));
+
+        });
+
+        lines.push("");
+
+        lines.push(csvLine(["Top Customer Contributors"]));
+        lines.push(csvLine(["Customer", "Weight Recycled (kg)", "Value Earned (Rs.)"]));
+
+        getTopCustomerRows(r.data.topCustomers, true).forEach(function(row) {
+            lines.push(csvLine(row));
+        });
+
+        /* BOM so Excel reads the file as UTF-8 */
+
+        downloadFile(
+            exportFileName("csv"),
+            "\uFEFF" + lines.join("\r\n"),
+            "text/csv;charset=utf-8;"
+        );
+
+    }
+
+
+    /* =====================================================
+       EXPORT PDF
+    ====================================================== */
+
+    function exportPdf() {
+
+        if (!ensureReadyForExport()) {
+            return;
+        }
+
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+
+            alert("The PDF library could not be loaded. Please check your internet connection and reload the page.");
+            return;
+
+        }
+
+        const r = currentReport;
+        const preview = r.data.preview;
+        const columns = preview.columns || [];
+        const rows = preview.rows || [];
+
+        const doc = new window.jspdf.jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        if (typeof doc.autoTable !== "function") {
+
+            alert("The PDF table library could not be loaded. Please check your internet connection and reload the page.");
+            return;
+
+        }
+
+        const green = [22, 101, 52];
+
+        doc.setFontSize(16);
+        doc.text("SRMMS - Reports & System Analytics", 14, 16);
+
+        doc.setFontSize(11);
+        doc.text("Report: " + r.typeLabel, 14, 24);
+        doc.text("Period: " + r.params.from + " to " + r.params.to, 14, 30);
+        doc.text("Generated: " + formatDateTime(r.generatedAt), 14, 36);
+
+        doc.autoTable({
+            startY: 42,
+            head: [["Metric", "Value"]],
+            body: getKpiRows(r.data.kpis, false),
+            theme: "grid",
+            headStyles: { fillColor: green },
+            styles: { fontSize: 10 }
+        });
+
+        function addSection(title, head, body) {
+
+            let y = doc.lastAutoTable.finalY + 10;
+
+            if (y > 250) {
+                doc.addPage();
+                y = 16;
+            }
+
+            doc.setFontSize(12);
+            doc.text(title, 14, y);
+
+            const tableBody = body.length > 0
+                ? body
+                : [[{
+                    content: "No records found for the selected period.",
+                    colSpan: head.length,
+                    styles: { halign: "center" }
+                }]];
+
+            doc.autoTable({
+                startY: y + 3,
+                head: [head],
+                body: tableBody,
+                theme: "grid",
+                headStyles: { fillColor: green },
+                styles: { fontSize: 9 }
+            });
+
+        }
+
+        addSection(
+            "Report Preview Log",
+            columns.map(function(col) { return col.label; }),
+            rows.map(function(row) {
+
+                return columns.map(function(col, i) {
+                    return plainCell(row[i], col.type);
+                });
+
+            })
+        );
+
+        addSection(
+            "Top Customer Contributors",
+            ["Customer", "Weight Recycled", "Value Earned"],
+            getTopCustomerRows(r.data.topCustomers, false)
+        );
+
+        doc.save(exportFileName("pdf"));
+
+    }
+
+
+    /* =====================================================
+       EVENT LISTENERS
+    ====================================================== */
+
+    generateBtn.addEventListener("click", function() {
+        generateReport(true);
+    });
+
+    document.getElementById("exportPdfBtn").addEventListener(
+        "click", exportPdf
+    );
+
+    document.getElementById("exportCsvBtn").addEventListener(
+        "click", exportCsv
+    );
+
+
+    /* =====================================================
+       PAGE LOAD
+       (default period = 1st of this month up to today)
+    ====================================================== */
+
+    setDefaultDates();
+    generateReport(false);
+
+  </script>
+
+</body>
+</html>

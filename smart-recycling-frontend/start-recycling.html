@@ -1,0 +1,2070 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Start Recycling - SRMMS</title>
+
+  <link rel="stylesheet" href="src/dashboard.css">
+
+
+  <style>
+
+    /* ================= SUCCESS OVERLAY ================= */
+
+    .success-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .success-overlay.show {
+      display: flex;
+    }
+
+    .success-box {
+      background: white;
+      width: 420px;
+      max-width: 90%;
+      padding: 35px;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .success-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      background: #22c55e;
+      color: white;
+      font-size: 42px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .success-box h2 {
+      margin: 10px 0;
+      color: #166534;
+      font-size: 25px;
+    }
+
+    .success-box p {
+      color: #666;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .success-btn {
+      border: none;
+      background: #22c55e;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .success-btn:hover {
+      background: #16a34a;
+    }
+
+
+    /* ================= CONFIRM BUTTON ================= */
+
+    .confirm-btn {
+      display: none;
+      margin-top: 15px;
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #166534;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .confirm-btn:hover {
+      background: #166534;
+    }
+
+
+    /* ================= CATEGORY LOADING / EMPTY STATE ================= */
+
+    .categories-status-msg {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #666;
+      padding: 20px;
+      font-size: 15px;
+    }
+
+  </style>
+
+</head>
+
+
+<body class="dashboard-body">
+
+
+  <div class="dashboard-container">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-header">
+
+        <span class="brand-logo-icon">
+          ♻
+        </span>
+
+        <span class="brand-name">
+          SRMMS
+        </span>
+
+      </div>
+
+
+      <nav class="sidebar-nav">
+
+        <ul>
+
+
+          <li>
+
+            <a href="customer-dashboard.html">
+
+              <span class="nav-icon">
+                🏠
+              </span>
+
+              <span>
+                Dashboard
+              </span>
+
+            </a>
+
+          </li>
+
+
+          <li class="active">
+
+            <a href="start-recycling.html">
+
+              <span class="nav-icon">
+                ♻
+              </span>
+
+              <span>
+                Start Recycling
+              </span>
+
+            </a>
+
+          </li>
+          <li>
+            <a href="customer-appoinments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+
+
+          <li>
+
+            <a href="transactions.html">
+
+              <span class="nav-icon">
+                📋
+              </span>
+
+              <span>
+                Transactions
+              </span>
+
+            </a>
+
+          </li>
+
+
+          <li>
+
+            <a href="rewards.html">
+
+              <span class="nav-icon">
+                🏅
+              </span>
+
+              <span>
+                Rewards
+              </span>
+
+            </a>
+
+          </li>
+
+
+          <li>
+
+            <a href="profile.html">
+
+              <span class="nav-icon">
+                👤
+              </span>
+
+              <span>
+                Profile
+              </span>
+
+            </a>
+
+          </li>
+
+
+          <li>
+
+            <a href="settings.html">
+
+              <span class="nav-icon">
+                ⚙
+              </span>
+
+              <span>
+                Settings
+              </span>
+
+            </a>
+
+          </li>
+
+
+          <li class="logout-item">
+
+            <a href="admin-logout.html">
+
+              <span class="nav-icon">
+                ↪
+              </span>
+
+              <span>
+                Logout
+              </span>
+
+            </a>
+
+          </li>
+
+
+        </ul>
+
+      </nav>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+      <!-- TOP HEADER -->
+
+      <header class="top-header">
+
+        <button class="menu-toggle">
+          ☰
+        </button>
+
+
+        <div class="header-right">
+
+
+         
+
+
+          <div class="user-profile-badge">
+
+
+            <div class="user-avatar">
+
+              <img
+                id="headerProfilePhoto"
+                src="https://i.pravatar.cc/100?img=47"
+                alt="User">
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+      </header>
+
+
+
+      <!-- ================= PAGE CONTENT ================= -->
+
+      <div class="dashboard-wrapper">
+
+
+        <div class="recycling-card-panel">
+
+
+          <h1 class="page-title">
+            Start Recycling
+          </h1>
+
+
+
+          <!-- ================= STEPPER ================= -->
+
+          <div class="stepper-wrapper">
+
+
+            <!-- STEP 1 -->
+
+            <div
+              class="step-item"
+              id="step1">
+
+              <div class="step-number">
+                1
+              </div>
+
+              <span class="step-label">
+                Select Category
+              </span>
+
+            </div>
+
+
+            <div class="step-line"></div>
+
+
+            <!-- STEP 2 -->
+
+            <div
+              class="step-item"
+              id="step2">
+
+              <div class="step-number">
+                2
+              </div>
+
+              <span class="step-label">
+                Enter Weight
+              </span>
+
+            </div>
+
+
+            <div class="step-line"></div>
+
+
+            <!-- STEP 3 -->
+
+            <div
+              class="step-item"
+              id="step3">
+
+              <div class="step-number">
+                3
+              </div>
+
+              <span class="step-label">
+                Summary
+              </span>
+
+            </div>
+
+
+            <div class="step-line"></div>
+
+
+            <!-- STEP 4 -->
+
+            <div
+              class="step-item"
+              id="step4">
+
+              <div class="step-number">
+                4
+              </div>
+
+              <span class="step-label">
+                Confirm
+              </span>
+
+            </div>
+
+
+          </div>
+
+
+
+          <!-- ================= CATEGORY SECTION ================= -->
+
+          <h2 class="section-title">
+            Select Recyclable Category
+          </h2>
+
+
+          <div
+            class="categories-grid"
+            id="categoriesGrid">
+
+            <div class="categories-status-msg" id="categoriesStatusMsg">
+              Loading categories...
+            </div>
+
+          </div>
+
+
+
+          <!-- ================= WEIGHT + SUMMARY ================= -->
+
+          <div class="recycling-row">
+
+
+            <!-- WEIGHT SECTION -->
+
+            <div class="weight-section">
+
+
+              <h2 class="section-title">
+                Enter Weight
+              </h2>
+
+
+              <div class="weight-input-card">
+
+
+                <label
+                  for="weightInput"
+                  class="weight-label">
+
+                  Weight (kg)
+
+                </label>
+
+
+                <div class="weight-input-wrapper">
+
+
+                  <input
+                    type="number"
+                    id="weightInput"
+                    value=""
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter weight">
+
+
+                  <span class="unit-badge">
+                    kg
+                  </span>
+
+
+                </div>
+
+              </div>
+
+
+
+              <!-- BUTTONS -->
+
+              <div class="action-buttons">
+
+
+                <button
+                  type="button"
+                  class="btn btn-cancel"
+                  id="cancelBtn">
+
+                  Cancel
+
+                </button>
+
+
+                <button
+                  type="button"
+                  class="btn btn-next"
+                  id="nextBtn">
+
+                  Next
+
+                </button>
+
+
+              </div>
+
+
+
+              <!-- CONFIRM BUTTON -->
+
+              <button
+                type="button"
+                class="confirm-btn"
+                id="confirmBtn">
+
+                Confirm Recycling
+
+              </button>
+
+
+            </div>
+
+
+
+            <!-- ESTIMATED VALUE SECTION -->
+
+            <div class="summary-section">
+
+
+              <div class="estimation-card">
+
+
+                <h3 class="estimation-title">
+                  Estimated Value
+                </h3>
+
+
+
+                <!-- RATE -->
+
+                <div class="estimation-row">
+
+                  <span class="estimation-label">
+                    Rate (Rs./kg)
+                  </span>
+
+                  <span
+                    class="estimation-value"
+                    id="rateValue">
+
+                    0.00
+
+                  </span>
+
+                </div>
+
+
+
+                <!-- WEIGHT -->
+
+                <div class="estimation-row">
+
+                  <span class="estimation-label">
+                    Weight (kg)
+                  </span>
+
+                  <span
+                    class="estimation-value"
+                    id="weightValue">
+
+                    0.00
+
+                  </span>
+
+                </div>
+
+
+
+                <!-- TOTAL -->
+
+                <div class="estimation-row total-row">
+
+                  <span class="estimation-label">
+                    Total Value (Rs.)
+                  </span>
+
+                  <span
+                    class="estimation-value total-price"
+                    id="totalValue">
+
+                    0.00
+
+                  </span>
+
+                </div>
+
+
+
+                <!-- REWARD POINTS -->
+
+                <div class="estimation-row reward-row">
+
+                  <span class="estimation-label">
+                    Reward Points
+                  </span>
+
+                  <span
+                    class="estimation-value reward-pts"
+                    id="rewardPoints">
+
+                    0 pts
+
+                  </span>
+
+                </div>
+
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       SUCCESS POPUP
+  ====================================================== -->
+
+  <div
+    class="success-overlay"
+    id="successOverlay">
+
+
+    <div class="success-box">
+
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+
+      <h2>
+        Recycling Successful!
+      </h2>
+
+
+      <p>
+        Your recyclable item has been successfully recorded.
+        You can add another recycling item now.
+      </p>
+
+
+      <button
+        type="button"
+        class="success-btn"
+        id="successDoneBtn">
+
+        Close
+
+      </button>
+
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ====================================================== -->
+
+  <script>
+
+
+    /* =====================================================
+       API
+    ====================================================== */
+
+    const API_BASE =
+      "http://localhost:8080/api";
+
+
+
+    /* =====================================================
+       REWARD RULES (loaded from the DB, set by the admin)
+       Defaults are only used until the real values arrive.
+    ====================================================== */
+
+    let rules = {
+      basePointsPerKg: 10,
+      minTxWeight: 0,
+      bulkBonusWeight: 0,
+      bulkMultiplier: 1,
+      firstTxBonus: 0
+    };
+
+    /* Assume the customer already has a completed transaction until
+       we confirm otherwise, so the first-deposit bonus is never
+       over-promised in the estimate. */
+
+    let hasCompletedTransaction = true;
+
+
+    function formatKg(value) {
+
+      return parseFloat(value).toFixed(2);
+
+    }
+
+
+    /* Same formula the backend uses to award points */
+
+    function computePoints(weight) {
+
+      if (isNaN(weight) || weight <= 0) {
+        return 0;
+      }
+
+      if (weight < rules.minTxWeight) {
+        return 0;
+      }
+
+      let points = weight * rules.basePointsPerKg;
+
+      if (
+        rules.bulkBonusWeight > 0 &&
+        weight >= rules.bulkBonusWeight
+      ) {
+        points = points * rules.bulkMultiplier;
+      }
+
+      let total = Math.floor(points + 1e-9);
+
+      if (!hasCompletedTransaction) {
+        total += rules.firstTxBonus;
+      }
+
+      return total;
+
+    }
+
+
+    /* Returns an error message if the weight breaks a rule, else null */
+
+    function checkWeightRules(weight) {
+
+      if (weight < rules.minTxWeight) {
+
+        return "Minimum weight required for a recycling transaction is " +
+          formatKg(rules.minTxWeight) + " kg. Please enter " +
+          formatKg(rules.minTxWeight) + " kg or more.";
+
+      }
+
+      return null;
+
+    }
+
+
+
+    /* =====================================================
+       CATEGORY ICON LOOKUP
+    ====================================================== */
+
+    const CATEGORY_ICONS = {
+      "plastic": "🧴",
+      "paper": "📄",
+      "metal": "🥫",
+      "glass": "🍾",
+      "e-waste": "🔌",
+      "ewaste": "🔌",
+      "electronics": "🔌",
+      "cardboard": "📦",
+      "organic": "🍃"
+    };
+
+
+    function getCategoryIcon(categoryName) {
+
+      if (!categoryName) {
+        return "♻";
+      }
+
+      const key =
+        categoryName
+          .toLowerCase()
+          .trim();
+
+      return CATEGORY_ICONS[key] || "♻";
+
+    }
+
+
+
+    /* =====================================================
+       GET ELEMENTS
+    ====================================================== */
+
+    const categoriesGrid =
+      document.getElementById(
+        "categoriesGrid"
+      );
+
+
+    const categoriesStatusMsg =
+      document.getElementById(
+        "categoriesStatusMsg"
+      );
+
+
+    const weightInput =
+      document.getElementById(
+        "weightInput"
+      );
+
+
+    const rateValue =
+      document.getElementById(
+        "rateValue"
+      );
+
+
+    const weightValue =
+      document.getElementById(
+        "weightValue"
+      );
+
+
+    const totalValue =
+      document.getElementById(
+        "totalValue"
+      );
+
+
+    const rewardPoints =
+      document.getElementById(
+        "rewardPoints"
+      );
+
+
+    const cancelBtn =
+      document.getElementById(
+        "cancelBtn"
+      );
+
+
+    const nextBtn =
+      document.getElementById(
+        "nextBtn"
+      );
+
+
+    const confirmBtn =
+      document.getElementById(
+        "confirmBtn"
+      );
+
+
+    const successOverlay =
+      document.getElementById(
+        "successOverlay"
+      );
+
+
+    const successDoneBtn =
+      document.getElementById(
+        "successDoneBtn"
+      );
+
+
+
+    /* =====================================================
+       GET STEPS
+    ====================================================== */
+
+    const step1 =
+      document.getElementById(
+        "step1"
+      );
+
+
+    const step2 =
+      document.getElementById(
+        "step2"
+      );
+
+
+    const step3 =
+      document.getElementById(
+        "step3"
+      );
+
+
+    const step4 =
+      document.getElementById(
+        "step4"
+      );
+
+
+
+    /* =====================================================
+       VARIABLES
+    ====================================================== */
+
+    let selectedRate = 0;
+
+    let selectedCategory = "";
+
+    let selectedCategoryId = null;
+
+
+
+    /* =====================================================
+       GET LOGGED-IN CUSTOMER
+    ====================================================== */
+
+    const storedCustomer =
+      localStorage.getItem(
+        "customer"
+      );
+
+
+    if (!storedCustomer) {
+
+      alert(
+        "Customer information not found. Please login again."
+      );
+
+      window.location.href =
+        "login.html";
+
+    }
+
+
+    let customer = null;
+
+
+    try {
+
+      customer =
+        JSON.parse(
+          storedCustomer
+        );
+
+    } catch (error) {
+
+      console.error(
+        "Invalid customer data:",
+        error
+      );
+
+      localStorage.removeItem(
+        "customer"
+      );
+
+      window.location.href =
+        "login.html";
+
+    }
+
+
+
+    /* =====================================================
+       LOAD REWARD RULES FROM DATABASE
+       (reward_rules table, via /api/admin/reward-rules)
+    ====================================================== */
+
+    async function loadRewardRules() {
+
+      try {
+
+        const response =
+          await fetch(
+            API_BASE +
+            "/admin/reward-rules"
+          );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data =
+          await response.json();
+
+        rules = {
+          basePointsPerKg: parseInt(data.basePointsPerKg) || 0,
+          minTxWeight: parseFloat(data.minTxWeight) || 0,
+          bulkBonusWeight: parseFloat(data.bulkBonusWeight) || 0,
+          bulkMultiplier: parseFloat(data.bulkMultiplier) || 1,
+          firstTxBonus: parseInt(data.firstTxBonus) || 0
+        };
+
+        calculateValue();
+
+      } catch (error) {
+
+        console.error(
+          "Reward rules loading error:",
+          error
+        );
+
+      }
+
+    }
+
+
+
+    /* =====================================================
+       CHECK IF THIS IS THE CUSTOMER'S FIRST TRANSACTION
+    ====================================================== */
+
+    async function loadFirstTransactionStatus() {
+
+      if (!customer || !customer.customerId) {
+        return;
+      }
+
+      try {
+
+        const response =
+          await fetch(
+            API_BASE +
+            "/transactions/customer/" +
+            customer.customerId
+          );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const transactions =
+          await response.json();
+
+        if (Array.isArray(transactions)) {
+
+          hasCompletedTransaction =
+            transactions.some(function(tx) {
+
+              return (tx.status || "")
+                .toLowerCase() === "completed";
+
+            });
+
+          calculateValue();
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Transaction history loading error:",
+          error
+        );
+
+      }
+
+    }
+
+
+
+    /* =====================================================
+       LOAD CATEGORIES FROM DATABASE
+       (Recyclable_Category table, via /api/categories/active)
+    ====================================================== */
+
+    async function loadCategories() {
+
+      try {
+
+        const response =
+          await fetch(
+            API_BASE +
+            "/categories/active"
+          );
+
+
+        if (!response.ok) {
+
+          console.error(
+            "Unable to load categories."
+          );
+
+          categoriesStatusMsg.textContent =
+            "Unable to load categories. Please refresh the page.";
+
+          return;
+
+        }
+
+
+        const categories =
+          await response.json();
+
+
+        if (
+          !Array.isArray(categories) ||
+          categories.length === 0
+        ) {
+
+          categoriesStatusMsg.textContent =
+            "No recyclable categories available right now.";
+
+          return;
+
+        }
+
+
+        /* Clear the "Loading..." message */
+
+        categoriesGrid.innerHTML =
+          "";
+
+
+        categories.forEach(
+          function(category) {
+
+            const categoryId =
+              category.categoryId;
+
+            const categoryName =
+              category.categoryName ||
+              category.name;
+
+            const rate =
+              category.ratePerKg;
+
+
+            if (
+              !categoryId ||
+              !categoryName ||
+              rate === undefined ||
+              rate === null
+            ) {
+
+              return;
+
+            }
+
+
+            const rateNumber =
+              parseFloat(rate);
+
+
+            /* ---- BUILD CARD ---- */
+
+            const card =
+              document.createElement(
+                "div"
+              );
+
+            card.className =
+              "category-card";
+
+            card.dataset.category =
+              categoryName;
+
+            card.dataset.rate =
+              rateNumber;
+
+            card.dataset.categoryId =
+              categoryId;
+
+
+            const iconDiv =
+              document.createElement(
+                "div"
+              );
+
+            iconDiv.className =
+              "category-icon";
+
+            iconDiv.textContent =
+              getCategoryIcon(categoryName);
+
+
+            const nameDiv =
+              document.createElement(
+                "div"
+              );
+
+            nameDiv.className =
+              "category-name";
+
+            nameDiv.textContent =
+              categoryName;
+
+
+            const rateDiv =
+              document.createElement(
+                "div"
+              );
+
+            rateDiv.className =
+              "category-rate";
+
+            rateDiv.textContent =
+              "Rs. " +
+              rateNumber.toFixed(2) +
+              " / kg";
+
+
+            card.appendChild(iconDiv);
+            card.appendChild(nameDiv);
+            card.appendChild(rateDiv);
+
+
+            /* ---- CLICK BEHAVIOUR ---- */
+
+            card.addEventListener(
+              "click",
+              function() {
+
+
+                document
+                  .querySelectorAll(".category-card")
+                  .forEach(function(item) {
+
+                    item.classList.remove(
+                      "active"
+                    );
+
+                  });
+
+
+                card.classList.add(
+                  "active"
+                );
+
+
+                selectedCategory =
+                  categoryName;
+
+
+                selectedRate =
+                  rateNumber;
+
+
+                selectedCategoryId =
+                  parseInt(categoryId);
+
+
+                rateValue.textContent =
+                  selectedRate.toFixed(2);
+
+
+                step1.classList.add(
+                  "active"
+                );
+
+
+                calculateValue();
+
+              }
+            );
+
+
+            categoriesGrid.appendChild(
+              card
+            );
+
+          }
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Category loading error:",
+          error
+        );
+
+        categoriesStatusMsg.textContent =
+          "Cannot connect to the server to load categories.";
+
+      }
+
+    }
+
+
+
+    /* =====================================================
+       CALCULATE ESTIMATED VALUE
+    ====================================================== */
+
+    function calculateValue() {
+
+
+      let weight =
+        parseFloat(
+          weightInput.value
+        );
+
+
+      if (
+        isNaN(weight) ||
+        weight < 0
+      ) {
+
+        weight = 0;
+
+      }
+
+
+      weightValue.textContent =
+        weight.toFixed(2);
+
+
+      const total =
+        selectedRate *
+        weight;
+
+
+      totalValue.textContent =
+        total.toFixed(2);
+
+
+      /* Points follow the rules saved by the admin */
+
+      rewardPoints.textContent =
+        computePoints(weight) + " pts";
+
+    }
+
+
+
+    /* =====================================================
+       WEIGHT INPUT
+    ====================================================== */
+
+    weightInput.addEventListener(
+      "input",
+      function() {
+
+
+        calculateValue();
+
+
+        const weight =
+          parseFloat(
+            weightInput.value
+          );
+
+
+        if (
+          !isNaN(weight) &&
+          weight > 0
+        ) {
+
+
+          if (
+            selectedCategory !== ""
+          ) {
+
+            step1.classList.add(
+              "active"
+            );
+
+          }
+
+
+          step2.classList.add(
+            "active"
+          );
+
+
+          step3.classList.add(
+            "active"
+          );
+
+
+        } else {
+
+
+          step2.classList.remove(
+            "active"
+          );
+
+
+          step3.classList.remove(
+            "active"
+          );
+
+
+          step4.classList.remove(
+            "active"
+          );
+
+        }
+
+      }
+    );
+
+
+
+    /* =====================================================
+       NEXT BUTTON
+    ====================================================== */
+
+    nextBtn.addEventListener(
+      "click",
+      function() {
+
+
+        const weight =
+          parseFloat(
+            weightInput.value
+          );
+
+
+        /* CHECK CATEGORY */
+
+        if (
+          selectedCategory === ""
+        ) {
+
+          alert(
+            "Please select a recyclable category."
+          );
+
+          return;
+
+        }
+
+
+        /* CHECK CATEGORY ID */
+
+        if (
+          !selectedCategoryId
+        ) {
+
+          alert(
+            "Category information could not be loaded. Please refresh the page and try again."
+          );
+
+          return;
+
+        }
+
+
+        /* CHECK WEIGHT */
+
+        if (
+          isNaN(weight) ||
+          weight <= 0
+        ) {
+
+          alert(
+            "Please enter a valid weight."
+          );
+
+
+          weightInput.focus();
+
+
+          return;
+
+        }
+
+
+        /* CHECK REWARD RULES (e.g. minimum weight) */
+
+        const ruleError =
+          checkWeightRules(weight);
+
+        if (ruleError) {
+
+          alert(ruleError);
+
+          weightInput.focus();
+
+          return;
+
+        }
+
+
+        /* ALL STEPS GREEN */
+
+        step1.classList.add(
+          "active"
+        );
+
+
+        step2.classList.add(
+          "active"
+        );
+
+
+        step3.classList.add(
+          "active"
+        );
+
+
+        step4.classList.add(
+          "active"
+        );
+
+
+        /* HIDE NEXT */
+
+        nextBtn.style.display =
+          "none";
+
+
+        /* SHOW CONFIRM */
+
+        confirmBtn.style.display =
+          "block";
+
+      }
+    );
+
+
+
+    /* =====================================================
+       CONFIRM RECYCLING
+    ====================================================== */
+
+    confirmBtn.addEventListener(
+      "click",
+      async function() {
+
+
+        const weight =
+          parseFloat(
+            weightInput.value
+          );
+
+
+        /* CHECK CUSTOMER */
+
+        if (
+          !customer ||
+          !customer.customerId
+        ) {
+
+          alert(
+            "Customer information not found. Please login again."
+          );
+
+          window.location.href =
+            "login.html";
+
+          return;
+
+        }
+
+
+        /* CHECK CATEGORY */
+
+        if (
+          !selectedCategory ||
+          !selectedCategoryId
+        ) {
+
+          alert(
+            "Please select a recyclable category."
+          );
+
+          return;
+
+        }
+
+
+        /* CHECK WEIGHT */
+
+        if (
+          isNaN(weight) ||
+          weight <= 0
+        ) {
+
+          alert(
+            "Please enter a valid weight."
+          );
+
+          return;
+
+        }
+
+
+        /* CHECK REWARD RULES AGAIN (weight may have been edited
+           after pressing Next) */
+
+        const ruleError =
+          checkWeightRules(weight);
+
+        if (ruleError) {
+
+          alert(ruleError);
+
+          return;
+
+        }
+
+
+        /* ================================================
+           DISABLE BUTTON WHILE SAVING
+        ================================================= */
+
+        confirmBtn.disabled =
+          true;
+
+        confirmBtn.textContent =
+          "Saving...";
+
+
+        try {
+
+
+          /* ==============================================
+             CREATE TRANSACTION REQUEST
+          ============================================== */
+
+          const requestData = {
+
+            customerId:
+              parseInt(
+                customer.customerId
+              ),
+
+            staffId:
+              1,
+
+            categoryId:
+              selectedCategoryId,
+
+            weightKg:
+              weight
+
+          };
+
+
+          console.log(
+            "Transaction request:",
+            requestData
+          );
+
+
+          /* ==============================================
+             SEND TO BACKEND
+          ============================================== */
+
+          const response =
+            await fetch(
+              API_BASE +
+              "/transactions",
+              {
+
+                method: "POST",
+
+                headers: {
+
+                  "Content-Type":
+                    "application/json"
+
+                },
+
+                body:
+                  JSON.stringify(
+                    requestData
+                  )
+
+              }
+            );
+
+
+          /* ==============================================
+             READ RESPONSE
+          ============================================== */
+
+          const responseText =
+            await response.text();
+
+
+          let data = null;
+
+
+          try {
+
+            data =
+              JSON.parse(
+                responseText
+              );
+
+          } catch (error) {
+
+            data =
+              responseText;
+
+          }
+
+
+          /* ==============================================
+             CHECK BACKEND RESULT
+             (rule violations come back here as a message)
+          ============================================== */
+
+          if (!response.ok) {
+
+            console.error(
+              "Transaction save error:",
+              data
+            );
+
+
+            alert(
+              typeof data === "string"
+                ? data
+                : (
+                    data.message ||
+                    "Failed to save recycling transaction."
+                  )
+            );
+
+
+            return;
+
+          }
+
+
+          /* ==============================================
+             SUCCESS
+          ============================================== */
+
+          console.log(
+            "Transaction saved successfully:",
+            data
+          );
+
+
+          /* First deposit bonus has now been used */
+
+          hasCompletedTransaction = true;
+
+
+          /* Make sure Step 4 is green */
+
+          step1.classList.add(
+            "active"
+          );
+
+          step2.classList.add(
+            "active"
+          );
+
+          step3.classList.add(
+            "active"
+          );
+
+          step4.classList.add(
+            "active"
+          );
+
+
+          /* Show success message */
+
+          successOverlay.classList.add(
+            "show"
+          );
+
+
+        } catch (error) {
+
+
+          console.error(
+            "Transaction request error:",
+            error
+          );
+
+
+          alert(
+            "Cannot connect to the server."
+          );
+
+
+        } finally {
+
+
+          /* Enable button again */
+
+          confirmBtn.disabled =
+            false;
+
+
+          confirmBtn.textContent =
+            "Confirm Recycling";
+
+        }
+
+      }
+    );
+
+
+
+    /* =====================================================
+       RESET FORM
+    ====================================================== */
+
+    function resetRecyclingForm() {
+
+
+      /* Reset category */
+
+      document
+        .querySelectorAll(".category-card")
+        .forEach(function(card) {
+
+          card.classList.remove(
+            "active"
+          );
+
+        });
+
+
+      /* Reset variables */
+
+      selectedRate = 0;
+
+      selectedCategory = "";
+
+      selectedCategoryId = null;
+
+
+      /* Reset weight */
+
+      weightInput.value =
+        "";
+
+
+      /* Reset estimation */
+
+      rateValue.textContent =
+        "0.00";
+
+
+      weightValue.textContent =
+        "0.00";
+
+
+      totalValue.textContent =
+        "0.00";
+
+
+      rewardPoints.textContent =
+        "0 pts";
+
+
+      /* Reset steps */
+
+      step1.classList.remove(
+        "active"
+      );
+
+
+      step2.classList.remove(
+        "active"
+      );
+
+
+      step3.classList.remove(
+        "active"
+      );
+
+
+      step4.classList.remove(
+        "active"
+      );
+
+
+      /* Show Next button again */
+
+      nextBtn.style.display =
+        "block";
+
+
+      /* Hide Confirm button */
+
+      confirmBtn.style.display =
+        "none";
+
+    }
+
+
+
+    /* =====================================================
+       SUCCESS → ADD NEW RECYCLING
+    ====================================================== */
+
+    successDoneBtn.addEventListener(
+      "click",
+      function() {
+
+
+        /* Close success popup */
+
+        successOverlay.classList.remove(
+          "show"
+        );
+
+
+        /* Clear everything */
+
+        resetRecyclingForm();
+
+
+        /* Focus on category section */
+
+        window.scrollTo({
+
+          top: 0,
+
+          behavior: "smooth"
+
+        });
+
+      }
+    );
+
+
+
+    /* =====================================================
+       CANCEL BUTTON
+    ====================================================== */
+
+    cancelBtn.addEventListener(
+      "click",
+      function() {
+
+        resetRecyclingForm();
+
+      }
+    );
+
+
+
+    /* =====================================================
+       LOAD PROFILE PHOTO
+    ====================================================== */
+
+    async function loadProfilePhoto() {
+
+
+      const storedCustomer =
+        localStorage.getItem(
+          "customer"
+        );
+
+
+      if (!storedCustomer) {
+        return;
+      }
+
+
+      try {
+
+
+        const customerData =
+          JSON.parse(
+            storedCustomer
+          );
+
+
+        if (
+          !customerData.customerId
+        ) {
+
+          return;
+
+        }
+
+
+        const response =
+          await fetch(
+            API_BASE +
+            "/customers/" +
+            customerData.customerId
+          );
+
+
+        if (!response.ok) {
+          return;
+        }
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          data.profilePhoto &&
+          data.profilePhoto.trim() !== ""
+        ) {
+
+
+          const photoElements =
+            document.querySelectorAll(
+              ".user-avatar img, #headerProfilePhoto, .profile-avatar-img"
+            );
+
+
+          photoElements.forEach(
+            function(img) {
+
+              img.src =
+                data.profilePhoto;
+
+            }
+          );
+
+
+        }
+
+
+      } catch (error) {
+
+
+        console.error(
+          "Profile photo loading error:",
+          error
+        );
+
+
+      }
+
+    }
+
+
+
+    /* =====================================================
+       PAGE LOAD
+    ====================================================== */
+
+    loadCategories();
+
+    loadRewardRules();
+
+    loadFirstTransactionStatus();
+
+    loadProfilePhoto();
+
+
+  </script>
+
+
+</body>
+
+</html>

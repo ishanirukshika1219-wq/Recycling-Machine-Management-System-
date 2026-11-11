@@ -1,0 +1,603 @@
+<!-- transactions.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Transactions - SRMMS</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    /* Force the number span inside stat-value / metric-value to
+       match the size of plain (unwrapped) values like "30.00".
+       Only the trailing unit span ("kg" / "pts") stays small. */
+    .stat-value .stat-num,
+    .metric-value .stat-num {
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="customer-dashboard.html">
+              <span class="nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="start-recycling.html">
+              <span class="nav-icon">♻</span>
+              <span>Start Recycling</span>
+            </a>
+          </li>
+           <li>
+            <a href="customer-appoinments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>Transactions</span>
+            </a>
+          </li>
+          <li>
+            <a href="rewards.html">
+              <span class="nav-icon">🏅</span>
+              <span>Rewards</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <span class="nav-icon">👤</span>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="admin-logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+        
+        <div class="header-right">
+          
+          <div class="user-profile-badge">
+            <div class="user-avatar">
+              <img src="https://i.pravatar.cc/100?img=47" alt="Ishani">
+            </div>
+            
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Inner Content -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page Header & Subtitle -->
+        <div class="page-header-block">
+          <h1 class="page-title">My Transactions</h1>
+          <p class="page-subtitle">View your recycling history and track your rewards.</p>
+        </div>
+
+        <!-- Top Stat Cards Bar -->
+        <div class="transactions-stats-grid">
+          
+          <!-- Total Recycled Card -->
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">♻</div>
+            <div class="stat-info">
+              <span class="stat-label">Total Recycled (kg)</span>
+              <div class="stat-value"><span class="stat-num" id="statTotalRecycled">0.00</span> <span>kg</span></div>
+            </div>
+          </div>
+
+          <!-- Total Earned Card -->
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">💵</div>
+            <div class="stat-info">
+              <span class="stat-label">Total Earned (Rs.)</span>
+              <div class="stat-value" id="statTotalEarned">0.00</div>
+            </div>
+          </div>
+
+          <!-- Total Points Card -->
+          <div class="stat-card">
+            <div class="stat-icon green-bg-icon">⭐</div>
+            <div class="stat-info">
+              <span class="stat-label">Total Points</span>
+              <div class="stat-value"><span class="stat-num" id="statTotalPoints">0</span> <span>pts</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Transactions Panel Container -->
+        <div class="transactions-panel-card">
+
+          <!-- Filter & Search Controls Bar -->
+          <div class="table-filters-bar">
+            
+            <div class="search-input-group">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="searchTxInput" placeholder="Search by Transaction ID...">
+            </div>
+
+            <div class="select-dropdown-wrapper">
+              <select id="categoryFilter">
+                <option value="">All Categories</option>
+              </select>
+            </div>
+
+            <div class="select-dropdown-wrapper">
+              <select id="statusFilter">
+                <option value="">All Status</option>
+                <option value="completed">Completed</option>
+                <option value="pending">Pending</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn-search-filter" id="searchFilterBtn">
+              <span>🔍</span> Search
+            </button>
+
+          </div>
+
+          <!-- Transactions Table -->
+          <div class="table-responsive">
+            <table class="transactions-table full-history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Transaction ID</th>
+                  <th>Category</th>
+                  <th>Weight (kg)</th>
+                  <th>Amount (Rs.)</th>
+                  <th>Points</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="transactionsTableBody">
+                <tr>
+                  <td colspan="8" style="text-align:center; color:#666;">Loading transactions...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Footer -->
+          <div class="pagination-footer">
+            <button class="page-nav-btn">&lt;</button>
+            <button class="page-num-btn active">1</button>
+            <button class="page-num-btn">2</button>
+            <button class="page-nav-btn">&gt;</button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+    let allTransactions = [];
+
+    function formatMoney(num) {
+        return num.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    /* =====================================================
+       LOAD CATEGORY DROPDOWN OPTIONS FROM DB
+       (Recyclable_Category table, via /api/categories/active)
+    ====================================================== */
+
+    async function loadCategoryFilterOptions() {
+
+        try {
+
+            const response = await fetch(
+                API_BASE + "/categories/active"
+            );
+
+            if (!response.ok) {
+                console.error("Unable to load categories for filter.");
+                return;
+            }
+
+            const categories = await response.json();
+
+            if (!Array.isArray(categories)) {
+                return;
+            }
+
+            const categoryFilter =
+                document.getElementById("categoryFilter");
+
+            categories.forEach(function(category) {
+
+                const categoryName =
+                    category.categoryName || category.name;
+
+                if (!categoryName) {
+                    return;
+                }
+
+                const option = document.createElement("option");
+
+                option.value = categoryName.toLowerCase();
+                option.textContent = categoryName;
+
+                categoryFilter.appendChild(option);
+
+            });
+
+        } catch (error) {
+
+            console.error("Category filter loading error:", error);
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD TRANSACTIONS FROM DB
+       (recycling_transaction + transaction_item tables,
+       via /api/transactions/customer/{customerId}/details)
+    ====================================================== */
+
+    async function loadTransactions() {
+
+        const storedCustomer = localStorage.getItem("customer");
+
+        if (!storedCustomer) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        let customer;
+
+        try {
+            customer = JSON.parse(storedCustomer);
+        } catch (error) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        if (!customer.customerId) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                API_BASE + "/transactions/customer/" + customer.customerId + "/details"
+            );
+
+            if (!response.ok) {
+
+                document.getElementById("transactionsTableBody").innerHTML =
+                    '<tr><td colspan="8" style="text-align:center; color:#666;">Unable to load transactions.</td></tr>';
+
+                return;
+
+            }
+
+            const transactions = await response.json();
+
+            allTransactions = Array.isArray(transactions) ? transactions : [];
+
+            /* Sort newest first */
+
+            allTransactions.sort(function(a, b) {
+                return new Date(b.transactionDate) - new Date(a.transactionDate);
+            });
+
+            renderStats(allTransactions);
+            renderTable(allTransactions);
+
+        } catch (error) {
+
+            console.error("Transaction loading error:", error);
+
+            document.getElementById("transactionsTableBody").innerHTML =
+                '<tr><td colspan="8" style="text-align:center; color:#666;">Cannot connect to the server.</td></tr>';
+
+        }
+
+    }
+
+
+    function renderStats(transactions) {
+
+        let totalWeight = 0;
+        let totalEarned = 0;
+        let totalPoints = 0;
+
+        transactions.forEach(function(tx) {
+            totalWeight += parseFloat(tx.totalWeight) || 0;
+            totalEarned += parseFloat(tx.totalValue) || 0;
+            totalPoints += parseInt(tx.rewardPoints) || 0;
+        });
+
+        document.getElementById("statTotalRecycled").textContent =
+            totalWeight.toFixed(2);
+
+        document.getElementById("statTotalEarned").textContent =
+            formatMoney(totalEarned);
+
+        document.getElementById("statTotalPoints").textContent =
+            totalPoints.toLocaleString("en-US");
+
+    }
+
+
+    /* Builds the human-readable "TXN-000003" label for a transaction */
+
+    function buildTxIdLabel(transactionId) {
+
+        return "TXN-" + String(transactionId).padStart(6, "0");
+
+    }
+
+
+    /* Strips everything except letters/digits, lowercased,
+       so "TXN-000003", "txn 000003", "txn000003" all normalize
+       to the same string for comparison. */
+
+    function normalizeForSearch(value) {
+
+        return String(value)
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, "");
+
+    }
+
+
+    function renderTable(transactions) {
+
+        const tbody = document.getElementById("transactionsTableBody");
+
+        tbody.innerHTML = "";
+
+        if (transactions.length === 0) {
+
+            tbody.innerHTML =
+                '<tr><td colspan="8" style="text-align:center; color:#666;">No matching transactions found.</td></tr>';
+
+            return;
+
+        }
+
+        transactions.forEach(function(tx) {
+
+            const dateStr = tx.transactionDate
+                ? new Date(tx.transactionDate).toISOString().split("T")[0]
+                : "-";
+
+            const txIdLabel =
+                buildTxIdLabel(tx.transactionId);
+
+            const statusClass =
+                (tx.status || "").toLowerCase() === "completed"
+                    ? "status-completed"
+                    : "status-pending";
+
+            const row = document.createElement("tr");
+
+            row.innerHTML =
+                "<td>" + dateStr + "</td>" +
+                '<td class="tx-id">' + txIdLabel + "</td>" +
+                "<td>" + (tx.categoryName || "-") + "</td>" +
+                "<td>" + (parseFloat(tx.totalWeight) || 0).toFixed(2) + "</td>" +
+                "<td>" + formatMoney(parseFloat(tx.totalValue) || 0) + "</td>" +
+                "<td>" + (parseInt(tx.rewardPoints) || 0) + "</td>" +
+                '<td><span class="status-pill ' + statusClass + '">' +
+                    (tx.status || "Completed") +
+                "</span></td>" +
+                '<td><button type="button" class="btn-action-view">👁 View</button></td>';
+
+            row.querySelector(".btn-action-view").addEventListener(
+                "click",
+                function() {
+
+                    alert(
+                        "Transaction: " + txIdLabel +
+                        "\nDate: " + dateStr +
+                        "\nCategory: " + (tx.categoryName || "-") +
+                        "\nWeight: " + (parseFloat(tx.totalWeight) || 0).toFixed(2) + " kg" +
+                        "\nAmount: Rs. " + formatMoney(parseFloat(tx.totalValue) || 0) +
+                        "\nPoints: " + (parseInt(tx.rewardPoints) || 0) +
+                        "\nStatus: " + (tx.status || "Completed")
+                    );
+
+                }
+            );
+
+            tbody.appendChild(row);
+
+        });
+
+    }
+
+
+    /* =====================================================
+       SEARCH / CATEGORY / STATUS FILTER
+       (all three combine together - AND logic)
+    ====================================================== */
+
+    function applyFilters() {
+
+        const rawSearch =
+            document.getElementById("searchTxInput").value;
+
+        const normalizedSearch =
+            normalizeForSearch(rawSearch);
+
+        const categoryTerm =
+            document.getElementById("categoryFilter")
+                .value.trim().toLowerCase();
+
+        const statusTerm =
+            document.getElementById("statusFilter")
+                .value.trim().toLowerCase();
+
+        const filtered = allTransactions.filter(function(tx) {
+
+            const normalizedLabel =
+                normalizeForSearch(buildTxIdLabel(tx.transactionId));
+
+            const matchesSearch =
+                normalizedSearch === "" ||
+                normalizedLabel.includes(normalizedSearch);
+
+            const matchesCategory =
+                categoryTerm === "" ||
+                (tx.categoryName || "").toLowerCase() === categoryTerm;
+
+            const matchesStatus =
+                statusTerm === "" ||
+                (tx.status || "").toLowerCase() === statusTerm;
+
+            return matchesSearch && matchesCategory && matchesStatus;
+
+        });
+
+        renderStats(filtered);
+        renderTable(filtered);
+
+    }
+
+
+    /* Search button */
+
+    document.getElementById("searchFilterBtn").addEventListener(
+        "click",
+        applyFilters
+    );
+
+    /* Press Enter inside the search box, or type live */
+
+    document.getElementById("searchTxInput").addEventListener(
+        "keyup",
+        applyFilters
+    );
+
+    /* Also filter live as soon as a dropdown is changed,
+       so the user doesn't have to click Search every time */
+
+    document.getElementById("categoryFilter").addEventListener(
+        "change",
+        applyFilters
+    );
+
+    document.getElementById("statusFilter").addEventListener(
+        "change",
+        applyFilters
+    );
+
+
+    async function loadProfilePhoto() {
+
+    const storedCustomer =
+        localStorage.getItem("customer");
+
+    if (!storedCustomer) {
+        return;
+    }
+
+    try {
+
+        const customer =
+            JSON.parse(storedCustomer);
+
+        if (!customer.customerId) {
+            return;
+        }
+
+        const response =
+            await fetch(
+                "http://localhost:8080/api/customers/" +
+                customer.customerId
+            );
+
+        if (!response.ok) {
+            return;
+        }
+
+        const data =
+            await response.json();
+
+        if (
+            data.profilePhoto &&
+            data.profilePhoto.trim() !== ""
+        ) {
+
+            const photoElements =
+                document.querySelectorAll(
+                    ".user-avatar img, #headerProfilePhoto, .profile-avatar-img"
+                );
+
+            photoElements.forEach(function(img) {
+                img.src = data.profilePhoto;
+            });
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Profile photo loading error:",
+            error
+        );
+
+    }
+}
+
+loadTransactions();
+loadCategoryFilterOptions();
+loadProfilePhoto();
+  </script>
+
+</body>
+</html>

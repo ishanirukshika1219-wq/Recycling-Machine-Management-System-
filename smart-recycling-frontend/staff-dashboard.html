@@ -1,0 +1,1322 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Dashboard - SRMMS</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    .empty-message {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+
+    .error-message {
+      text-align: center;
+      padding: 25px;
+      color: #d32f2f;
+    }
+
+    .staff-search-panel {
+      margin-bottom: 24px;
+    }
+
+    .staff-search-form {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .staff-search-form .form-group {
+      margin: 0;
+    }
+
+    .staff-search-form .search-group {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .staff-search-form label {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .staff-search-form input,
+    .staff-search-form select {
+      height: 40px;
+      box-sizing: border-box;
+    }
+
+    .staff-search-results {
+      margin-top: 18px;
+    }
+
+    .action-buttons-wrap {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .search-info {
+      margin-top: 10px;
+      color: #666;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body class="dashboard-body">
+
+<div class="dashboard-container">
+
+  <!-- STAFF SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <span class="brand-logo-icon">♻</span>
+
+      <span class="brand-name">
+        SRMMS
+        <small class="role-badge-staff">Staff</small>
+      </span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+
+        <li class="active">
+          <a href="staff-dashboard.html">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="verify-deposits.html">
+            <span class="nav-icon">🔍</span>
+            <span>Verify Deposits</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="walkin-deposit.html">
+            <span class="nav-icon">➕</span>
+            <span>Walk-in Deposit</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="assigned-bookings.html">
+            <span class="nav-icon">📅</span>
+            <span>Assigned Bookings</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="processed-logs.html">
+            <span class="nav-icon">📜</span>
+            <span>My Processed Logs</span>
+          </a>
+        </li>
+
+        <li class="logout-item">
+          <a href="staff-logout.html">
+            <span class="nav-icon">↪</span>
+            <span>Logout</span>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+
+      <button class="menu-toggle">☰</button>
+
+      <div class="header-right">
+
+        <div class="user-profile-badge">
+
+          <div class="user-avatar">
+            <img
+              src="https://i.pravatar.cc/100?img=12"
+              alt="Staff Member">
+          </div>
+          
+
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- DASHBOARD WRAPPER -->
+    <div class="dashboard-wrapper">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header-block page-header-flex">
+
+        <div>
+          <h1 class="page-title">
+            Operator Control Panel
+          </h1>
+
+          <p class="page-subtitle">
+            Search customer appointments, process confirmed bookings, and complete recycling transactions.
+          </p>
+        </div>
+
+        <button
+          class="btn-primary-save"
+          id="newWalkinBtn">
+          + New Walk-in Entry
+        </button>
+
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="admin-kpi-grid">
+
+        <div class="stat-card">
+          <div class="stat-icon green-bg-icon">⏳</div>
+
+          <div class="stat-info">
+            <span class="stat-label">
+              Awaiting Admin Confirmation
+            </span>
+
+            <div class="stat-value" id="statPending">0</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green-bg-icon">📅</div>
+
+          <div class="stat-info">
+            <span class="stat-label">
+              Today's Bookings
+            </span>
+
+            <div class="stat-value" id="statToday">0</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green-bg-icon">📌</div>
+
+          <div class="stat-info">
+            <span class="stat-label">
+              Upcoming Confirmed
+            </span>
+
+            <div class="stat-value" id="statUpcoming">0</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green-bg-icon">✅</div>
+
+          <div class="stat-info">
+            <span class="stat-label">
+              Completed Today
+            </span>
+
+            <div class="stat-value" id="statCompleted">0</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STAFF APPOINTMENT SEARCH -->
+      <div class="profile-card-panel staff-search-panel">
+
+        <h2 class="panel-title">
+          Find Customer Appointment
+        </h2>
+
+        <p class="setting-panel-desc">
+          Search using Booking ID or Customer ID to find a confirmed appointment.
+        </p>
+
+        <div class="staff-search-form">
+
+          <div class="form-group search-group">
+            <label for="staffAppointmentSearch">
+              Booking ID / Customer ID
+            </label>
+
+            <input
+              type="text"
+              id="staffAppointmentSearch"
+              class="settings-input"
+              placeholder="e.g. BKG-00001 or CUST-000001">
+          </div>
+
+          <div class="form-group">
+            <label for="staffStatusFilter">Status</label>
+
+            <select
+              id="staffStatusFilter"
+              class="settings-select">
+
+              <option value="all">All</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="completed">Completed</option>
+              <option value="pending">Pending</option>
+              <option value="cancelled">Cancelled</option>
+
+            </select>
+          </div>
+
+          <div class="form-group">
+            <button
+              type="button"
+              id="searchAppointmentBtn"
+              class="btn-primary-save">
+              Search
+            </button>
+          </div>
+
+          <div class="form-group">
+            <button
+              type="button"
+              id="clearAppointmentSearchBtn"
+              class="btn-primary-save">
+              Clear
+            </button>
+          </div>
+
+        </div>
+
+        <div class="search-info" id="searchInfo">
+          Search for a booking or customer to view the appointment.
+        </div>
+
+        <div class="table-responsive staff-search-results">
+
+          <table class="transactions-table full-history-table">
+
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="searchResultsBody">
+              <tr>
+                <td colspan="7" style="text-align:center;">
+                  Enter a Booking ID or Customer ID to search.
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+      <!-- TODAY'S APPOINTMENTS -->
+      <div class="transactions-panel-card mb-24">
+
+        <div class="panel-header-flex">
+
+          <div>
+            <h2 class="panel-title">
+              Today's Appointments
+            </h2>
+
+            <span class="results-count-tag" id="todayCountTag">
+              Loading...
+            </span>
+          </div>
+
+        </div>
+
+        <div class="table-responsive">
+
+          <table class="transactions-table full-history-table">
+
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Booking ID</th>
+                <th>Customer</th>
+                <th>Category</th>
+                <th>Notes</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="todayTableBody">
+              <tr>
+                <td colspan="7" style="text-align:center;">
+                  Loading appointments...
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+            <!-- WALK-IN DEPOSIT HISTORY -->
+      <div class="profile-card-panel">
+
+        <div class="panel-header-flex">
+
+          <div>
+            <h2 class="panel-title">
+              Manual Walk-in Deposit History
+            </h2>
+
+            <p class="setting-panel-desc">
+              View deposits recorded directly at the collection counter.
+            </p>
+
+            <span class="results-count-tag" id="walkInHistoryInfo">
+              Loading...
+            </span>
+          </div>
+
+          <div class="action-buttons-wrap">
+
+            <button
+              type="button"
+              class="btn-primary-save"
+              id="refreshWalkInHistoryBtn">
+              ↻ Refresh
+            </button>
+
+            
+
+          </div>
+
+        </div>
+
+        <div class="table-responsive">
+
+          <table class="transactions-table full-history-table">
+
+            <thead>
+              <tr>
+                <th>Receipt No</th>
+                <th>Customer</th>
+                <th>Category</th>
+                <th>Weight (kg)</th>
+                <th>Amount (Rs.)</th>
+                <th>Payout Type</th>
+                <th>Staff</th>
+                <th>Date & Time</th>
+              </tr>
+            </thead>
+
+            <tbody id="walkInHistoryBody">
+
+              <tr>
+                <td colspan="8" class="empty-message">
+                  Loading walk-in deposit history...
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+
+/* =====================================================
+   CONFIGURATION
+===================================================== */
+
+const API_BASE = "http://localhost:8080/api";
+
+let allAppointments = [];
+
+
+/* =====================================================
+   STAFF LOGIN DETAILS
+===================================================== */
+
+function getStaff() {
+
+    const staffData =
+        localStorage.getItem("staff") ||
+        sessionStorage.getItem("staff");
+
+    if (!staffData) {
+        window.location.href = "staff-login.html";
+        return null;
+    }
+
+    try {
+
+        const staff = JSON.parse(staffData);
+
+        if (!staff || !staff.staffId) {
+            localStorage.removeItem("staff");
+            sessionStorage.removeItem("staff");
+
+            window.location.href = "staff-login.html";
+            return null;
+        }
+
+        return staff;
+
+    } catch (error) {
+
+        localStorage.removeItem("staff");
+        sessionStorage.removeItem("staff");
+
+        window.location.href = "staff-login.html";
+        return null;
+    }
+}
+
+const staff = getStaff();
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function escapeHtml(text) {
+
+    const div = document.createElement("div");
+
+    div.textContent =
+        text == null ? "" : String(text);
+
+    return div.innerHTML;
+}
+
+
+function normalizeText(value) {
+
+    return String(value == null ? "" : value)
+        .toLowerCase()
+        .trim();
+}
+
+
+function todayIso() {
+
+    const d = new Date();
+
+    return d.getFullYear() + "-" +
+        String(d.getMonth() + 1).padStart(2, "0") + "-" +
+        String(d.getDate()).padStart(2, "0");
+}
+
+
+function formatBookingId(id) {
+
+    if (id === null || id === undefined) {
+        return "-";
+    }
+
+    return "BKG-" + String(id).padStart(5, "0");
+}
+
+
+function formatCustomerId(id) {
+
+    if (id === null || id === undefined) {
+        return "";
+    }
+
+    return "CUST-" + String(id).padStart(6, "0");
+}
+
+
+function formatTime(t) {
+
+    if (!t) {
+        return "-";
+    }
+
+    const parts = String(t).split(":");
+
+    let h = parseInt(parts[0], 10);
+
+    const m = parts[1] || "00";
+
+    const suffix = h >= 12 ? "PM" : "AM";
+
+    h = h % 12 || 12;
+
+    return String(h).padStart(2, "0") +
+        ":" + m + " " + suffix;
+}
+
+
+function formatDate(dateValue) {
+
+    if (!dateValue) {
+        return "-";
+    }
+
+    const parts = String(dateValue).split("-");
+
+    if (parts.length === 3) {
+        return parts[1] + "/" + parts[2] + "/" + parts[0];
+    }
+
+    return String(dateValue);
+}
+
+
+function statusClass(status) {
+
+    const s = normalizeText(status);
+
+    if (s === "confirmed") {
+        return "status-verified";
+    }
+
+    if (s === "completed") {
+        return "status-completed";
+    }
+
+    if (s === "cancelled" || s === "canceled") {
+        return "status-cancelled";
+    }
+
+    return "status-pending";
+}
+
+
+async function readError(response, fallback) {
+
+    try {
+
+        const err = await response.json();
+
+        if (err && err.message) {
+            return err.message;
+        }
+
+    } catch (e) {
+        // Ignore response parsing errors.
+    }
+
+    return fallback;
+}
+
+
+/* =====================================================
+   LOAD APPOINTMENTS FROM DATABASE
+===================================================== */
+
+async function loadDashboard() {
+
+    const tbody = document.getElementById("todayTableBody");
+
+    try {
+
+        const response = await fetch(API_BASE + "/appointments");
+
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        allAppointments = Array.isArray(data) ? data : [];
+
+        updateMetrics();
+        renderTodayAppointments();
+
+        // Page load weddi appointments okkoma pennanawa
+        renderSearchResults(allAppointments);
+
+    } catch (error) {
+
+        console.error("Staff dashboard loading error:", error);
+
+        tbody.innerHTML =
+            '<tr><td colspan="7" class="error-message">' +
+            'Cannot connect to the server. Please check the backend.' +
+            '</td></tr>';
+
+        document.getElementById("todayCountTag").textContent =
+            "Unable to load";
+
+        document.getElementById("searchResultsBody").innerHTML =
+            '<tr><td colspan="7" class="error-message">' +
+            'Cannot load appointments.' +
+            '</td></tr>';
+    }
+}
+
+
+/* =====================================================
+   UPDATE KPI METRICS
+===================================================== */
+
+function updateMetrics() {
+
+    const today = todayIso();
+
+    const pending = allAppointments.filter(function(a) {
+
+        return normalizeText(a.status) === "pending";
+
+    }).length;
+
+
+    const todayList = allAppointments.filter(function(a) {
+
+        return (
+            String(a.appointmentDate) === today &&
+            normalizeText(a.status) !== "cancelled" &&
+            normalizeText(a.status) !== "canceled"
+        );
+
+    });
+
+
+    const upcoming = allAppointments.filter(function(a) {
+
+        return (
+            normalizeText(a.status) === "confirmed" &&
+            String(a.appointmentDate) >= today
+        );
+
+    }).length;
+
+
+    const completedToday = todayList.filter(function(a) {
+
+        return normalizeText(a.status) === "completed";
+
+    }).length;
+
+
+    document.getElementById("statPending").textContent = pending;
+
+    document.getElementById("statToday").textContent =
+        todayList.length;
+
+    document.getElementById("statUpcoming").textContent =
+        upcoming;
+
+    document.getElementById("statCompleted").textContent =
+        completedToday;
+}
+
+
+/* =====================================================
+   RENDER TODAY'S APPOINTMENTS
+===================================================== */
+
+function renderTodayAppointments() {
+
+    const tbody =
+        document.getElementById("todayTableBody");
+
+    const today = todayIso();
+
+    const todayList = allAppointments.filter(function(a) {
+
+        return (
+            String(a.appointmentDate) === today &&
+            normalizeText(a.status) !== "cancelled" &&
+            normalizeText(a.status) !== "canceled"
+        );
+
+    });
+
+
+    todayList.sort(function(a, b) {
+
+        return String(a.appointmentTime)
+            .localeCompare(String(b.appointmentTime));
+
+    });
+
+
+    document.getElementById("todayCountTag").textContent =
+        todayList.length +
+        (todayList.length === 1
+            ? " appointment today"
+            : " appointments today");
+
+
+    if (todayList.length === 0) {
+
+        tbody.innerHTML =
+            '<tr>' +
+            '<td colspan="7" class="empty-message">' +
+            'No appointments scheduled for today.' +
+            '</td>' +
+            '</tr>';
+
+        return;
+    }
+
+
+    tbody.innerHTML = "";
+
+
+    todayList.forEach(function(a) {
+
+        const status = a.status || "Pending";
+
+        const canComplete =
+            normalizeText(status) === "confirmed";
+
+        const row = document.createElement("tr");
+
+
+        row.innerHTML =
+
+            "<td>" +
+            formatTime(a.appointmentTime) +
+            "</td>" +
+
+            "<td>" +
+            formatBookingId(a.appointmentId) +
+            "</td>" +
+
+            "<td>" +
+            "<strong>" +
+            escapeHtml(a.customerName || "Customer") +
+            "</strong><br>" +
+            '<small class="text-muted">' +
+            formatCustomerId(a.customerId) +
+            "</small>" +
+            "</td>" +
+
+            "<td>" +
+            escapeHtml(a.categoryName || "-") +
+            "</td>" +
+
+            "<td>" +
+            escapeHtml(a.notes || "-") +
+            "</td>" +
+
+            "<td>" +
+            '<span class="status-pill ' +
+            statusClass(status) +
+            '">' +
+            escapeHtml(status) +
+            '</span>' +
+            "</td>" +
+
+            "<td>" +
+
+            (
+                canComplete
+                    ? '<button type="button" class="btn-action-approve" data-id="' +
+                      escapeHtml(a.appointmentId) +
+                      '">Mark Completed</button>'
+                    : (
+                        normalizeText(status) === "completed"
+                            ? "Completed"
+                            : "-"
+                    )
+            ) +
+
+            "</td>";
+
+
+        tbody.appendChild(row);
+
+    });
+
+
+    tbody.querySelectorAll(".btn-action-approve")
+        .forEach(function(btn) {
+
+            btn.addEventListener("click", function() {
+
+                completeAppointment(
+                    btn.getAttribute("data-id")
+                );
+
+            });
+
+        });
+}
+
+
+/* =====================================================
+   SEARCH APPOINTMENTS
+===================================================== */
+
+function searchAppointments() {
+
+    const query = normalizeText(
+        document.getElementById("staffAppointmentSearch").value
+    );
+
+    const statusFilter = normalizeText(
+        document.getElementById("staffStatusFilter").value
+    );
+
+    const results = allAppointments.filter(a => {
+
+        const appointmentId = String(a.appointmentId);
+        const customerId = String(a.customerId);
+
+        const statusMatch =
+            statusFilter === "all" ||
+            normalizeText(a.status) === statusFilter;
+
+        let searchMatch = true;
+
+        if (query !== "") {
+
+            const isBooking = query.startsWith("bkg-");
+            const isCustomer = query.startsWith("cust-");
+
+            const numericQuery = query
+                .replace(/^(bkg-|cust-)/, "")
+                .replace(/^0+(?=\d)/, "");
+
+            const bookingMatch =
+                appointmentId === numericQuery;
+
+            const customerMatch =
+                customerId === numericQuery;
+
+            if (isBooking) {
+                searchMatch = bookingMatch;
+            } else if (isCustomer) {
+                searchMatch = customerMatch;
+            } else {
+                searchMatch = bookingMatch || customerMatch;
+            }
+        }
+
+        return statusMatch && searchMatch;
+    });
+
+    renderSearchResults(results);
+}
+
+
+/* =====================================================
+   RENDER SEARCH RESULTS
+===================================================== */
+
+function renderSearchResults(results) {
+
+    const tbody =
+        document.getElementById("searchResultsBody");
+
+
+    document.getElementById("searchInfo").textContent =
+        results.length +
+        (results.length === 1
+            ? " appointment found."
+            : " appointments found.");
+
+
+    if (results.length === 0) {
+
+        tbody.innerHTML =
+            '<tr>' +
+            '<td colspan="7" class="empty-message">' +
+            'No appointment found for this search.' +
+            '</td>' +
+            '</tr>';
+
+        return;
+    }
+
+
+    tbody.innerHTML = "";
+
+
+    results.forEach(function(a) {
+
+        const status = a.status || "Pending";
+
+        const canComplete =
+            normalizeText(status) === "confirmed";
+
+        const row = document.createElement("tr");
+
+
+        row.innerHTML =
+
+            "<td>" +
+            formatBookingId(a.appointmentId) +
+            "</td>" +
+
+            "<td>" +
+            "<strong>" +
+            escapeHtml(a.customerName || "Customer") +
+            "</strong><br>" +
+            '<small class="text-muted">' +
+            formatCustomerId(a.customerId) +
+            "</small>" +
+            "</td>" +
+
+            "<td>" +
+            formatDate(a.appointmentDate) +
+            "</td>" +
+
+            "<td>" +
+            formatTime(a.appointmentTime) +
+            "</td>" +
+
+            "<td>" +
+            escapeHtml(a.categoryName || "-") +
+            "</td>" +
+
+            "<td>" +
+            '<span class="status-pill ' +
+            statusClass(status) +
+            '">' +
+            escapeHtml(status) +
+            '</span>' +
+            "</td>" +
+
+            "<td>" +
+
+            (
+                canComplete
+                    ? '<button type="button" class="btn-action-approve" data-search-id="' +
+                      escapeHtml(a.appointmentId) +
+                      '">Mark Completed</button>'
+                    : (
+                        normalizeText(status) === "completed"
+                            ? "Completed"
+                            : "-"
+                    )
+            ) +
+
+            "</td>";
+
+
+        tbody.appendChild(row);
+
+    });
+
+
+    tbody.querySelectorAll("button[data-search-id]")
+        .forEach(function(btn) {
+
+            btn.addEventListener("click", function() {
+
+                completeAppointment(
+                    btn.getAttribute("data-search-id")
+                );
+
+            });
+
+        });
+}
+
+
+/* =====================================================
+   COMPLETE APPOINTMENT
+===================================================== */
+
+async function completeAppointment(id) {
+
+    if (!staff) {
+        alert("Please log in again.");
+        window.location.href = "staff-login.html";
+        return;
+    }
+
+
+    if (!confirm("Mark this appointment as completed?")) {
+        return;
+    }
+
+
+    const body = {
+        status: "Completed",
+        staffId: staff.staffId,
+        staffName: staff.name || staff.email
+    };
+
+
+    try {
+
+        const response = await fetch(
+
+            API_BASE + "/appointments/" + id + "/status",
+
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(body)
+            }
+        );
+
+
+        if (!response.ok) {
+
+            alert(
+                await readError(
+                    response,
+                    "Could not update the appointment."
+                )
+            );
+
+            return;
+        }
+
+
+        alert("Appointment completed successfully.");
+
+        await loadDashboard();
+
+
+    } catch (error) {
+
+        console.error("Complete error:", error);
+
+        alert("Cannot connect to the server.");
+
+    }
+}
+
+
+/* =====================================================
+   SEARCH EVENTS
+===================================================== */
+
+document.getElementById("searchAppointmentBtn")
+    .addEventListener("click", searchAppointments);
+
+
+document.getElementById("staffAppointmentSearch")
+    .addEventListener("keypress", function(event) {
+
+        if (event.key === "Enter") {
+            event.preventDefault();
+            searchAppointments();
+        }
+
+    });
+
+
+document.getElementById("staffStatusFilter")
+    .addEventListener("change", function() {
+
+        const query =
+            document.getElementById("staffAppointmentSearch")
+                .value.trim();
+
+        if (query !== "") {
+            searchAppointments();
+        }
+
+    });
+
+
+/* =====================================================
+   CLEAR SEARCH
+===================================================== */
+
+document.getElementById("clearAppointmentSearchBtn")
+.addEventListener("click", function () {
+
+    // Search box එක පමණක් clear කිරීම
+    document.getElementById("staffAppointmentSearch").value = "";
+
+    // Status filter එකත් All කරන්න
+    document.getElementById("staffStatusFilter").value = "all";
+
+    // Database එකෙන් auto-load වූ සියලු appointments නැවත පෙන්වීම
+    renderSearchResults(allAppointments);
+});
+
+/* =====================================================
+   WALK-IN DEPOSIT HISTORY
+===================================================== */
+
+async function loadWalkInHistory() {
+
+    const tbody = document.getElementById("walkInHistoryBody");
+    const info = document.getElementById("walkInHistoryInfo");
+
+    try {
+
+        const response = await fetch(
+            API_BASE + "/walkin/deposits/history"
+        );
+
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        const deposits = Array.isArray(data) ? data : [];
+
+        info.textContent =
+            deposits.length +
+            (deposits.length === 1
+                ? " deposit recorded"
+                : " deposits recorded");
+
+
+        if (deposits.length === 0) {
+
+            tbody.innerHTML =
+                '<tr>' +
+                '<td colspan="8" class="empty-message">' +
+                'No manual walk-in deposits found.' +
+                '</td>' +
+                '</tr>';
+
+            return;
+        }
+
+
+        tbody.innerHTML = "";
+
+
+        deposits.forEach(function(item) {
+
+            const row = document.createElement("tr");
+
+            const customerName = item.customerName || "Guest";
+
+            const customerCode = item.customerCode || "Guest";
+
+            const weight = Number(item.weightKg);
+
+            const amount = Number(item.amount);
+
+
+            row.innerHTML =
+
+                '<td><strong>' +
+                escapeHtml(item.receiptNo || "-") +
+                '</strong></td>' +
+
+                '<td>' +
+                '<strong>' +
+                escapeHtml(customerName) +
+                '</strong><br>' +
+                '<small class="text-muted">' +
+                escapeHtml(customerCode) +
+                '</small>' +
+                '</td>' +
+
+                '<td>' +
+                escapeHtml(item.categoryName || "-") +
+                '</td>' +
+
+                '<td>' +
+                (Number.isFinite(weight) ? weight.toFixed(2) : "0.00") +
+                '</td>' +
+
+                '<td>' +
+                (Number.isFinite(amount) ? "Rs. " + amount.toFixed(2) : "Rs. 0.00") +
+                '</td>' +
+
+                '<td>' +
+                escapeHtml(item.payoutLabel || item.payoutType || "-") +
+                '</td>' +
+
+                '<td>' +
+                escapeHtml(item.staffName || "-") +
+                '</td>' +
+
+                '<td>' +
+                escapeHtml(item.dateTime || "-") +
+                '</td>';
+
+            tbody.appendChild(row);
+
+        });
+
+    } catch (error) {
+
+        console.error("Walk-in history error:", error);
+
+        info.textContent = "Unable to load history";
+
+        tbody.innerHTML =
+            '<tr>' +
+            '<td colspan="8" class="error-message">' +
+            'Unable to load walk-in deposit history. Please check the backend.' +
+            '</td>' +
+            '</tr>';
+    }
+}
+
+
+/* =====================================================
+   WALK-IN HISTORY REFRESH
+===================================================== */
+
+document.getElementById("refreshWalkInHistoryBtn")
+    .addEventListener("click", function() {
+
+        loadWalkInHistory();
+
+    });
+
+
+    /* =====================================================
+   INITIAL DASHBOARD LOAD
+===================================================== */
+
+// Load appointments from database
+loadDashboard();
+
+// Load walk-in deposit history
+loadWalkInHistory();
+
+
+/* =====================================================
+   AUTO REFRESH EVERY 30 SECONDS
+===================================================== */
+
+setInterval(function() {
+
+    loadDashboard();
+
+    loadWalkInHistory();
+
+}, 30000);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Staff Management - SRMMS</title>
+
+    <link rel="stylesheet" href="src/dashboard.css">
+
+    <style>
+        .staff-management-content {
+            padding: 25px;
+        }
+
+        .staff-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .staff-summary-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .staff-summary-card span {
+            display: block;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .staff-summary-card strong {
+            font-size: 25px;
+            color:#000000;
+        }
+
+        .staff-panel {
+            background: #fff;
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .staff-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .staff-panel-header h2 {
+            font-size: 19px;
+            margin: 0;
+        }
+
+        .staff-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .staff-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        .staff-table th,
+        .staff-table td {
+            padding: 13px 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .staff-table th {
+            background: #f5f8f5;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .staff-status {
+            display: inline-block;
+            padding: 5px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .staff-status.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .staff-status.inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .staff-status.logged-in {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .staff-action-btn {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .staff-activate-btn {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .staff-deactivate-btn {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .staff-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .staff-refresh-btn {
+            background: #166534;
+            color: white;
+            border: none;
+            padding: 9px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .staff-empty-message {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        .staff-error-message {
+            color: #dc2626;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .staff-management-content {
+                padding: 15px;
+            }
+
+            .staff-panel {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+            <span class="brand-logo-icon">♻</span>
+
+            <span class="brand-name">
+                SRMMS
+                <small class="admin-badge">Admin</small>
+            </span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+
+                <li>
+                    <a href="admin-dashboard.html">
+                        <span class="nav-icon">📊</span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="category-rates.html">
+                        <span class="nav-icon">🏷</span>
+                        <span>Category & Rates</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="all-transactions.html">
+                        <span class="nav-icon">📋</span>
+                        <span>All Transactions</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="appointments.html">
+                        <span class="nav-icon">📅</span>
+                        <span>Appointments</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="manage-users.html">
+                        <span class="nav-icon">👥</span>
+                        <span>Manage Users</span>
+                    </a>
+                </li>
+
+                 <li class="active">
+                    <a href="staff-management.html">
+                        <span class="nav-icon">🧑‍💼</span>
+                        <span>Staff Management</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="customer-inquiries.html">
+                        <span class="nav-icon">📩</span>
+                        <span>Customer Inquiries</span>
+                    </a>
+                </li>
+
+               
+
+                <li>
+                    <a href="reward-rules.html">
+                        <span class="nav-icon">🏅</span>
+                        <span>Reward Rules</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="reports.html">
+                        <span class="nav-icon">📈</span>
+                        <span>Reports</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="admin-settings.html">
+                        <span class="nav-icon">⚙</span>
+                        <span>Settings</span>
+                    </a>
+                </li>
+
+                <li class="logout-item">
+                    <a href="admin-logout.html">
+                        <span class="nav-icon">↪</span>
+                        <span>Logout</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header class="top-header">
+
+            <button class="menu-toggle">☰</button>
+
+            <div class="header-right">
+                <div class="user-profile-badge">
+                    <span class="user-name">System Admin ▾</span>
+                </div>
+            </div>
+
+        </header>
+
+        <div class="dashboard-wrapper staff-management-content">
+
+            <div class="page-header-block">
+                <h1 class="page-title">Staff Management</h1>
+
+                <p class="page-subtitle">
+                    View staff details, account status, login activity
+                    and completed appointments.
+                </p>
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="staff-summary-grid">
+
+                <div class="staff-summary-card">
+                    <span>Total Staff</span>
+                    <strong id="totalStaff">0</strong>
+                </div>
+
+                <div class="staff-summary-card">
+                    <span>Active Staff</span>
+                    <strong id="activeStaff">0</strong>
+                </div>
+
+                <div class="staff-summary-card">
+                    <span>Currently Logged In</span>
+                    <strong id="loggedInStaff">0</strong>
+                </div>
+
+                <div class="staff-summary-card">
+                    <span>Total Completed Appointments</span>
+                    <strong id="totalCompleted">0</strong>
+                </div>
+
+            </div>
+
+            <!-- STAFF DETAILS -->
+            <div class="staff-panel">
+
+                <div class="staff-panel-header">
+
+                    <h2>Staff Details</h2>
+
+                    <button class="staff-refresh-btn"
+                            onclick="loadStaffManagement()">
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+                <div class="staff-table-wrapper">
+
+                    <table class="staff-table">
+
+                        <thead>
+                            <tr>
+                                <th>Staff ID</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Last Logout</th>
+                                <th>Session Duration</th>
+                                <th>Completed Appointments</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="staffTableBody">
+                            <tr>
+                                <td colspan="10" class="staff-empty-message">
+                                    Loading staff details...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- LOGIN HISTORY -->
+            <div class="staff-panel">
+
+                <div class="staff-panel-header">
+                    <h2>Staff Login History</h2>
+                </div>
+
+                <div class="staff-table-wrapper">
+
+                    <table class="staff-table">
+
+                        <thead>
+                            <tr>
+                                <th>Staff ID</th>
+                                <th>Staff Name</th>
+                                <th>Login Time</th>
+                                <th>Logout Time</th>
+                                <th>Session Duration</th>
+                                <th>Session Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="historyTableBody">
+                            <tr>
+                                <td colspan="6" class="staff-empty-message">
+                                    Loading login history...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+
+const API_BASE = "http://localhost:8080/api";
+
+document.addEventListener("DOMContentLoaded", function() {
+    loadStaffManagement();
+});
+
+async function loadStaffManagement() {
+
+    const staffBody = document.getElementById("staffTableBody");
+    const historyBody = document.getElementById("historyTableBody");
+
+    staffBody.innerHTML = `
+        <tr>
+            <td colspan="10" class="staff-empty-message">
+                Loading staff details...
+            </td>
+        </tr>
+    `;
+
+    historyBody.innerHTML = `
+        <tr>
+            <td colspan="6" class="staff-empty-message">
+                Loading login history...
+            </td>
+        </tr>
+    `;
+
+    try {
+
+        const response = await fetch(
+            API_BASE + "/staff/management",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+            throw new Error("Unable to load staff information.");
+        }
+
+        const data = await response.json();
+
+        const staff = data.staff || [];
+        const history = data.history || [];
+
+        displayStaff(staff);
+        displayHistory(history);
+        updateSummary(staff);
+
+    } catch (error) {
+
+        console.error("Staff management error:", error);
+
+        staffBody.innerHTML = `
+            <tr>
+                <td colspan="10" class="staff-error-message">
+                    Failed to load staff details. Check the backend connection.
+                </td>
+            </tr>
+        `;
+
+        historyBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="staff-error-message">
+                    Failed to load login history.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+// DISPLAY STAFF DETAILS
+function displayStaff(staff) {
+
+    const tableBody = document.getElementById("staffTableBody");
+
+    tableBody.innerHTML = "";
+
+    if (!staff.length) {
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="10" class="staff-empty-message">
+                    No staff members found.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    staff.forEach(function(item) {
+
+        const isActive =
+            (item.status || "").toLowerCase() === "active";
+
+        const statusClass = isActive ? "active" : "inactive";
+
+        const statusLabel = isActive ? "Active" : "Inactive";
+
+        const actionButton = isActive
+            ? `<button class="staff-action-btn staff-deactivate-btn"
+                       onclick="changeStaffStatus(${item.staffId}, 'Inactive')">
+                    Deactivate
+               </button>`
+            : `<button class="staff-action-btn staff-activate-btn"
+                       onclick="changeStaffStatus(${item.staffId}, 'Active')">
+                    Activate
+               </button>`;
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${escapeHtml(item.staffId)}</td>
+
+            <td><strong>${escapeHtml(item.name || "-")}</strong></td>
+
+            <td>${escapeHtml(item.username || "-")}</td>
+
+            <td>${escapeHtml(item.email || "-")}</td>
+
+            <td>
+                <span class="staff-status ${statusClass}">
+                    ${statusLabel}
+                </span>
+            </td>
+
+            <td>${formatDateTime(item.lastLogin)}</td>
+
+            <td>${formatDateTime(item.lastLogout)}</td>
+
+            <td>${escapeHtml(item.lastSessionDuration || "-")}</td>
+
+            <td>${Number(item.completedAppointments || 0)}</td>
+
+            <td>${actionButton}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+
+// DISPLAY LOGIN HISTORY
+function displayHistory(history) {
+
+    const tableBody = document.getElementById("historyTableBody");
+
+    tableBody.innerHTML = "";
+
+    if (!history.length) {
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="staff-empty-message">
+                    No login history available.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    history.forEach(function(item) {
+
+        const isLoggedIn = item.sessionStatus === "Logged In";
+
+        const statusClass = isLoggedIn ? "logged-in" : "active";
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${escapeHtml(item.staffId)}</td>
+
+            <td>${escapeHtml(item.staffName || "-")}</td>
+
+            <td>${formatDateTime(item.loginAt)}</td>
+
+            <td>${formatDateTime(item.logoutAt)}</td>
+
+            <td>${escapeHtml(item.duration || "-")}</td>
+
+            <td>
+                <span class="staff-status ${statusClass}">
+                    ${escapeHtml(item.sessionStatus || "-")}
+                </span>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+
+// SUMMARY CARDS
+function updateSummary(staff) {
+
+    const total = staff.length;
+
+    const active = staff.filter(function(item) {
+        return (item.status || "").toLowerCase() === "active";
+    }).length;
+
+    const loggedIn = staff.filter(function(item) {
+        return item.currentlyLoggedIn === true;
+    }).length;
+
+    const completed = staff.reduce(function(total, item) {
+        return total + Number(item.completedAppointments || 0);
+    }, 0);
+
+    document.getElementById("totalStaff").textContent = total;
+    document.getElementById("activeStaff").textContent = active;
+    document.getElementById("loggedInStaff").textContent = loggedIn;
+    document.getElementById("totalCompleted").textContent = completed;
+}
+
+// ACTIVATE / DEACTIVATE STAFF
+async function changeStaffStatus(staffId, status) {
+
+    const action = status === "Active" ? "activate" : "deactivate";
+
+    if (!confirm("Are you sure you want to " + action + " this staff account?")) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            API_BASE + "/staff/" + staffId + "/status",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: status
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            alert(data.message || "Unable to update staff status.");
+            return;
+        }
+
+        alert(data.message || "Staff status updated successfully.");
+
+        loadStaffManagement();
+
+    } catch (error) {
+
+        console.error("Status update error:", error);
+        alert("Cannot connect to the server.");
+    }
+}
+
+// DATE FORMAT
+function formatDateTime(value) {
+
+    if (!value) {
+        return "-";
+    }
+
+    const date = new Date(value);
+
+    if (isNaN(date.getTime())) {
+        return "-";
+    }
+
+    return date.toLocaleString("en-GB", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    });
+}
+
+// HTML ESCAPE
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// SIDEBAR MENU
+document.querySelector(".menu-toggle")
+    ?.addEventListener("click", function() {
+
+        document.querySelector(".sidebar")
+            ?.classList.toggle("active");
+    });
+
+</script>
+
+</body>
+</html>

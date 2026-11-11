@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reward Rules & Redemptions - SRMMS Admin</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    .btn-primary-save:disabled,
+    .btn-action-approve:disabled,
+    .btn-action-reject:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Admin Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS <small class="admin-badge">Admin</small></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="admin-dashboard.html">
+              <span class="nav-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="category-rates.html">
+              <span class="nav-icon">🏷</span>
+              <span>Category & Rates</span>
+            </a>
+          </li>
+          <li>
+            <a href="all-transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>All Transactions</span>
+            </a>
+          </li>
+          <li>
+            <a href="appointments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+          <li>
+            <a href="manage-users.html">
+              <span class="nav-icon">👥</span>
+              <span>Manage Users</span>
+            </a>
+          </li>
+          <li>
+             <a href="staff-management.html">
+                <span class="nav-icon">🧑‍💼</span>
+                <span>Staff Management</span>
+             </a>
+            </li>
+          
+          <li>
+              <a href="customer-inquiries.html">
+                  <span class="nav-icon">📩</span>
+                  <span>Customer Inquiries</span>
+              </a>
+          </li>
+
+          <li class="active">
+            <a href="reward-rules.html">
+              <span class="nav-icon">🏅</span>
+              <span>Reward Rules</span>
+            </a>
+          </li>
+          <li>
+            <a href="reports.html">
+              <span class="nav-icon">📈</span>
+              <span>Reports</span>
+            </a>
+          </li>
+          <li>
+            <a href="admin-settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+        
+        <div class="header-right">
+          
+          <div class="user-profile-badge">
+           
+            <span class="user-name">System Admin ▾</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Inner Wrapper -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page Header -->
+        <div class="page-header-block page-header-flex">
+          <div>
+            <h1 class="page-title">Reward Rules & Redemptions</h1>
+            <p class="page-subtitle">Configure point earning rates, bonus triggers, and process customer redemption claims.</p>
+          </div>
+          <button class="btn-primary-save" id="saveRulesBtn">💾 Save Rule Changes</button>
+        </div>
+
+        <!-- Upper Grid: Rule Configuration Panels -->
+        <div class="reward-rules-grid">
+
+          <!-- Card 1: Base Point Rules -->
+          <div class="profile-card-panel">
+            <h2 class="panel-title">Base Points Earning Setup</h2>
+            
+            <form class="profile-form" onsubmit="return false;">
+              <div class="form-group">
+                <label for="basePointsPerKg">Base Points Issued per 1 kg</label>
+                <input type="number" id="basePointsPerKg" min="0" step="1" placeholder="e.g. 10">
+                <small class="input-help-text" id="helpBasePoints">Standard conversion rate.</small>
+              </div>
+
+              <div class="form-group">
+                <label for="minTxWeight">Minimum Weight Threshold (kg)</label>
+                <input type="number" step="0.1" min="0" id="minTxWeight">
+                <small class="input-help-text">Minimum weight required in a transaction to earn points.</small>
+              </div>
+
+              <div class="form-group">
+                <label for="pointsConversionRate">Redemption Rate (Rs. per Point)</label>
+                <input type="number" step="0.01" min="0" id="pointsConversionRate">
+                <small class="input-help-text" id="helpRedemptionRate">Store reward value per point.</small>
+              </div>
+            </form>
+          </div>
+
+          <!-- Card 2: Bonus & Tier Multipliers -->
+          <div class="profile-card-panel">
+            <h2 class="panel-title">Bonus Triggers & Multipliers</h2>
+            
+            <form class="profile-form" onsubmit="return false;">
+              <div class="form-group">
+                <label for="bulkBonusWeight">Bulk Recycle Bonus Threshold (kg)</label>
+                <input type="number" min="0" step="0.1" id="bulkBonusWeight">
+                <small class="input-help-text">Transactions above this weight receive a multiplier bonus.</small>
+              </div>
+
+              <div class="form-group">
+                <label for="multiplierRate">Bulk Multiplier Rate</label>
+                <select id="multiplierRate" class="settings-select">
+                  <option value="1.2">1.2x (20% Extra Points)</option>
+                  <option value="1.5">1.5x (50% Extra Points)</option>
+                  <option value="2.0">2.0x (Double Points)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="firstTransactionBonus">New Account First Deposit Bonus</label>
+                <input type="number" min="0" step="1" id="firstTransactionBonus">
+                <small class="input-help-text">Welcome points awarded on a user's first completed transaction.</small>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Lower Panel: Customer Redemptions Queue -->
+        <div class="transactions-panel-card">
+          <div class="panel-header-flex">
+            <div>
+              <h2 class="panel-title">Customer Redemption Requests</h2>
+              <span class="results-count-tag" id="redemptionCountTag">Pending verification & payout approvals</span>
+            </div>
+            <div class="table-search-box">
+              <input type="text" id="searchRedemption" placeholder="Search customer ID..." class="table-search-input">
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="transactions-table full-history-table">
+              <thead>
+                <tr>
+                  <th>Requested Date</th>
+                  <th>Redemption ID</th>
+                  <th>Customer ID</th>
+                  <th>Points Used</th>
+                  <th>Reward Description</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="redemptionsTableBody">
+                <tr>
+                  <td colspan="7" style="text-align:center;">Loading redemption requests...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+    let allRedemptions = [];
+
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+    function normalizeForSearch(value) {
+        return String(value).toLowerCase().replace(/[^a-z0-9]/g, "");
+    }
+
+    function buildCustIdLabel(customerId) {
+        return "CUST-" + String(customerId).padStart(6, "0");
+    }
+
+    function buildRedemptionLabel(id) {
+        return "RDM-" + String(id).padStart(4, "0");
+    }
+
+    function statusToClass(status) {
+
+        const s = (status || "").toLowerCase();
+
+        if (s === "approved") return "status-completed";
+        if (s === "rejected") return "status-cancelled";
+
+        return "status-pending";
+    }
+
+
+    /* =====================================================
+       LOAD RULES FROM DB
+       (reward_rules table, via /api/admin/reward-rules)
+    ====================================================== */
+
+    function setMultiplier(value) {
+
+        const select = document.getElementById("multiplierRate");
+
+        const formatted = parseFloat(value).toFixed(1);
+
+        let found = false;
+
+        for (let i = 0; i < select.options.length; i++) {
+
+            if (parseFloat(select.options[i].value).toFixed(1) === formatted) {
+                select.selectedIndex = i;
+                found = true;
+                break;
+            }
+
+        }
+
+        /* Value saved earlier isn't in the dropdown - add it so it still shows */
+
+        if (!found) {
+
+            const option = document.createElement("option");
+
+            option.value = formatted;
+            option.textContent = formatted + "x";
+
+            select.appendChild(option);
+            select.value = formatted;
+
+        }
+
+    }
+
+    function updateHelpTexts() {
+
+        const basePoints =
+            parseInt(document.getElementById("basePointsPerKg").value) || 0;
+
+        const rate =
+            parseFloat(document.getElementById("pointsConversionRate").value) || 0;
+
+        document.getElementById("helpBasePoints").textContent =
+            "Standard conversion rate (1 kg recycled = " + basePoints + " Points).";
+
+        document.getElementById("helpRedemptionRate").textContent =
+            "100 Points = Rs. " + (rate * 100).toFixed(2) + " store reward value.";
+
+    }
+
+    async function loadRules() {
+
+        try {
+
+            const response = await fetch(API_BASE + "/admin/reward-rules");
+
+            if (!response.ok) {
+                console.error("Unable to load reward rules.");
+                return;
+            }
+
+            const rule = await response.json();
+
+            document.getElementById("basePointsPerKg").value =
+                rule.basePointsPerKg;
+
+            document.getElementById("minTxWeight").value =
+                rule.minTxWeight;
+
+            document.getElementById("pointsConversionRate").value =
+                rule.redemptionRate;
+
+            document.getElementById("bulkBonusWeight").value =
+                rule.bulkBonusWeight;
+
+            document.getElementById("firstTransactionBonus").value =
+                rule.firstTxBonus;
+
+            setMultiplier(rule.bulkMultiplier);
+
+            updateHelpTexts();
+
+        } catch (error) {
+
+            console.error("Reward rules loading error:", error);
+
+        }
+
+    }
+
+
+    /* =====================================================
+       SAVE RULES TO DB
+    ====================================================== */
+
+    async function saveRules() {
+
+        const basePointsPerKg =
+            parseInt(document.getElementById("basePointsPerKg").value);
+
+        const minTxWeight =
+            parseFloat(document.getElementById("minTxWeight").value);
+
+        const redemptionRate =
+            parseFloat(document.getElementById("pointsConversionRate").value);
+
+        const bulkBonusWeight =
+            parseFloat(document.getElementById("bulkBonusWeight").value);
+
+        const bulkMultiplier =
+            parseFloat(document.getElementById("multiplierRate").value);
+
+        const firstTxBonus =
+            parseInt(document.getElementById("firstTransactionBonus").value);
+
+        if (
+            isNaN(basePointsPerKg) || basePointsPerKg < 0 ||
+            isNaN(minTxWeight) || minTxWeight < 0 ||
+            isNaN(redemptionRate) || redemptionRate < 0 ||
+            isNaN(bulkBonusWeight) || bulkBonusWeight < 0 ||
+            isNaN(bulkMultiplier) || bulkMultiplier < 0 ||
+            isNaN(firstTxBonus) || firstTxBonus < 0
+        ) {
+
+            alert("Please enter valid (zero or greater) values in all fields.");
+            return;
+
+        }
+
+        const saveBtn = document.getElementById("saveRulesBtn");
+
+        const originalText = saveBtn.textContent;
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Saving...";
+
+        try {
+
+            const response = await fetch(
+                API_BASE + "/admin/reward-rules",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        basePointsPerKg: basePointsPerKg,
+                        minTxWeight: minTxWeight,
+                        redemptionRate: redemptionRate,
+                        bulkBonusWeight: bulkBonusWeight,
+                        bulkMultiplier: bulkMultiplier,
+                        firstTxBonus: firstTxBonus
+                    })
+                }
+            );
+
+            if (!response.ok) {
+
+                const text = await response.text();
+                alert(text || "Failed to save rule changes.");
+
+                return;
+
+            }
+
+            /* Reload from the DB so the page shows exactly what was saved */
+
+            await loadRules();
+
+            alert("Rule changes saved successfully!");
+
+        } catch (error) {
+
+            console.error("Reward rules saving error:", error);
+            alert("Cannot connect to the server.");
+
+        } finally {
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD REDEMPTION REQUESTS FROM DB
+       (reward_redemption table, via
+       /api/admin/reward-rules/redemptions)
+    ====================================================== */
+
+    async function loadRedemptions() {
+
+        const tbody = document.getElementById("redemptionsTableBody");
+
+        try {
+
+            const response =
+                await fetch(API_BASE + "/admin/reward-rules/redemptions");
+
+            if (!response.ok) {
+
+                tbody.innerHTML =
+                    '<tr><td colspan="7" style="text-align:center; color:red;">Failed to load redemption requests.</td></tr>';
+
+                return;
+
+            }
+
+            const redemptions = await response.json();
+
+            allRedemptions = Array.isArray(redemptions) ? redemptions : [];
+
+            applyRedemptionSearch();
+
+        } catch (error) {
+
+            console.error("Redemptions loading error:", error);
+
+            tbody.innerHTML =
+                '<tr><td colspan="7" style="text-align:center; color:red;">Cannot connect to the server.</td></tr>';
+
+        }
+
+    }
+
+
+    function applyRedemptionSearch() {
+
+        const searchTerm =
+            normalizeForSearch(document.getElementById("searchRedemption").value);
+
+        const filtered = allRedemptions.filter(function(r) {
+
+            if (searchTerm === "") {
+                return true;
+            }
+
+            return (
+                normalizeForSearch(buildCustIdLabel(r.customerId)).includes(searchTerm) ||
+                normalizeForSearch(String(r.customerId)).includes(searchTerm)
+            );
+
+        });
+
+        renderRedemptions(filtered);
+
+    }
+
+
+    function renderRedemptions(list) {
+
+        const tbody = document.getElementById("redemptionsTableBody");
+
+        if (list.length === 0) {
+
+            tbody.innerHTML =
+                '<tr><td colspan="7" style="text-align:center;">No redemption requests found.</td></tr>';
+
+            return;
+
+        }
+
+        tbody.innerHTML = "";
+
+        list.forEach(function(r) {
+
+            const dateStr = r.redemptionDate
+                ? new Date(r.redemptionDate).toISOString().split("T")[0]
+                : "-";
+
+            const isPending = (r.status || "").toLowerCase() === "pending";
+
+            const row = document.createElement("tr");
+
+            let actionsHtml;
+
+            if (isPending) {
+
+                actionsHtml =
+                    '<div class="action-buttons-wrap">' +
+                        '<button type="button" class="btn-action-approve">Approve</button>' +
+                        '<button type="button" class="btn-action-reject">Reject</button>' +
+                    '</div>';
+
+            } else {
+
+                actionsHtml =
+                    '<button type="button" class="btn-action-view">View Logs</button>';
+
+            }
+
+            row.innerHTML =
+                "<td>" + dateStr + "</td>" +
+                '<td class="tx-id">' + buildRedemptionLabel(r.redemptionId) + "</td>" +
+                "<td>" + buildCustIdLabel(r.customerId) + "</td>" +
+                "<td><strong>" + (parseInt(r.pointsUsed) || 0).toLocaleString("en-US") + " pts</strong></td>" +
+                "<td>" + escapeHtml(r.itemName || "-") + "</td>" +
+                '<td><span class="status-pill ' + statusToClass(r.status) + '">' + escapeHtml(r.status || "Pending") + "</span></td>" +
+                "<td>" + actionsHtml + "</td>";
+
+            if (isPending) {
+
+                const approveBtn = row.querySelector(".btn-action-approve");
+                const rejectBtn = row.querySelector(".btn-action-reject");
+
+                approveBtn.addEventListener(
+                    "click",
+                    function() {
+                        handleRedemptionAction(r.redemptionId, "approve", [approveBtn, rejectBtn]);
+                    }
+                );
+
+                rejectBtn.addEventListener(
+                    "click",
+                    function() {
+                        handleRedemptionAction(r.redemptionId, "reject", [approveBtn, rejectBtn]);
+                    }
+                );
+
+            } else {
+
+                row.querySelector(".btn-action-view").addEventListener(
+                    "click",
+                    function() {
+
+                        alert(
+                            "Redemption: " + buildRedemptionLabel(r.redemptionId) +
+                            "\nCustomer: " + buildCustIdLabel(r.customerId) +
+                            "\nDate: " + dateStr +
+                            "\nReward: " + (r.itemName || "-") +
+                            "\nPoints Used: " + (parseInt(r.pointsUsed) || 0) +
+                            "\nStatus: " + (r.status || "-")
+                        );
+
+                    }
+                );
+
+            }
+
+            tbody.appendChild(row);
+
+        });
+
+    }
+
+
+    /* =====================================================
+       APPROVE / REJECT A REDEMPTION
+       (reuses the existing /api/rewards/redemptions endpoints;
+       reject refunds the points to the customer)
+    ====================================================== */
+
+    async function handleRedemptionAction(redemptionId, action, buttons) {
+
+        buttons.forEach(function(btn) {
+            btn.disabled = true;
+        });
+
+        try {
+
+            const response = await fetch(
+                API_BASE + "/rewards/redemptions/" + redemptionId + "/" + action,
+                { method: "POST" }
+            );
+
+            if (!response.ok) {
+
+                const text = await response.text();
+                alert(text || "Failed to update redemption.");
+
+                buttons.forEach(function(btn) {
+                    btn.disabled = false;
+                });
+
+                return;
+
+            }
+
+            await loadRedemptions();
+
+        } catch (error) {
+
+            console.error("Redemption action error:", error);
+            alert("Cannot connect to the server.");
+
+            buttons.forEach(function(btn) {
+                btn.disabled = false;
+            });
+
+        }
+
+    }
+
+
+    /* =====================================================
+       EVENT LISTENERS
+    ====================================================== */
+
+    document.getElementById("saveRulesBtn").addEventListener(
+        "click", saveRules
+    );
+
+    document.getElementById("searchRedemption").addEventListener(
+        "input", applyRedemptionSearch
+    );
+
+    document.getElementById("basePointsPerKg").addEventListener(
+        "input", updateHelpTexts
+    );
+
+    document.getElementById("pointsConversionRate").addEventListener(
+        "input", updateHelpTexts
+    );
+
+
+    /* =====================================================
+       PAGE LOAD
+    ====================================================== */
+
+    loadRules();
+    loadRedemptions();
+
+  </script>
+
+</body>
+</html>

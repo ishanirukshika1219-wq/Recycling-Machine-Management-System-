@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walk-in Deposit - SRMMS Staff</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+
+    /* ---------- messages ---------- */
+
+    .page-message {
+      display: none;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .page-message.success { display: block; background: #e7f6ed; color: #1d6b3e; }
+    .page-message.error   { display: block; background: #fdecec; color: #a42626; }
+
+    .verify-result {
+      display: none;
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    .verify-result.ok    { display: block; background: #e7f6ed; color: #1d6b3e; }
+    .verify-result.error { display: block; background: #fdecec; color: #a42626; }
+
+    .guest-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .calc-note {
+      margin: 10px 0 0;
+      font-size: 13px;
+      color: #a42626;
+      min-height: 18px;
+    }
+
+    /* ---------- today's entries ---------- */
+
+    .entry-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eef0f2;
+      font-size: 13px;
+    }
+    .entry-row:last-child { border-bottom: none; }
+    .entry-row small { color: #6b7280; display: block; margin-top: 2px; }
+    .entry-empty { text-align: center; color: #6b7280; padding: 16px 0; font-size: 14px; }
+
+    /* ---------- receipt ---------- */
+
+    .receipt-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 24px 12px;
+    }
+    .receipt-overlay.open { display: block; }
+
+    .receipt-paper {
+      width: 80mm;
+      max-width: 100%;
+      margin: 0 auto;
+      background: #fff;
+      color: #111;
+      padding: 14px 12px;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      border-radius: 6px;
+    }
+    .receipt-paper h3 { margin: 0; text-align: center; font-size: 18px; letter-spacing: 1px; }
+    .receipt-paper .center { text-align: center; }
+    .receipt-paper .muted { color: #555; font-size: 11px; }
+    .receipt-paper hr { border: none; border-top: 1px dashed #444; margin: 8px 0; }
+    .receipt-paper .line { display: flex; justify-content: space-between; gap: 8px; }
+    .receipt-paper .line span:last-child { text-align: right; }
+    .receipt-paper .total { font-weight: bold; font-size: 14px; }
+
+    .receipt-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 14px auto 0;
+      width: 80mm;
+      max-width: 100%;
+    }
+
+    .receipt-buttons button {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-print { background: #2e9e5b; color: #fff; }
+    .btn-close-receipt { background: #fff; color: #333; }
+
+    /* only the receipt is printed */
+    @media print {
+      body * { visibility: hidden; }
+      #receiptOverlay, #receiptOverlay * { visibility: visible; }
+      #receiptOverlay { position: absolute; inset: 0 auto auto 0; background: none; padding: 0; overflow: visible; }
+      .receipt-paper { width: 80mm; margin: 0; border-radius: 0; }
+      .receipt-buttons { display: none !important; }
+    }
+
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Staff Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS <small class="role-badge-staff">Staff</small></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="staff-dashboard.html">
+              <span class="nav-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="verify-deposits.html">
+              <span class="nav-icon">🔍</span>
+              <span>Verify Deposits</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="walkin-deposit.html">
+              <span class="nav-icon">➕</span>
+              <span>Walk-in Deposit</span>
+            </a>
+          </li>
+          <li>
+            <a href="assigned-bookings.html">
+              <span class="nav-icon">📅</span>
+              <span>Assigned Bookings</span>
+            </a>
+          </li>
+          <li>
+            <a href="processed-logs.html">
+              <span class="nav-icon">📜</span>
+              <span>My Processed Logs</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="staff-logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+
+        <div class="header-right">
+
+          <div class="user-profile-badge">
+            <div class="user-avatar">
+              <img src="https://i.pravatar.cc/100?img=12" alt="Staff Member">
+            </div>
+            
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Inner Wrapper -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page Header Block -->
+        <div class="page-header-block page-header-flex">
+          <div>
+            <h1 class="page-title">New Walk-In Counter Deposit</h1>
+            <p class="page-subtitle">Record manual recyclable drop-offs for registered or guest customers.</p>
+          </div>
+        </div>
+
+        <!-- Walk-In Grid Layout -->
+        <div class="walkin-grid">
+
+          <!-- Left Column: Entry Form -->
+          <div class="profile-card-panel">
+            <h2 class="panel-title">Deposit Form</h2>
+
+            <!-- success / error message -->
+            <div id="pageMessage" class="page-message" role="alert"></div>
+
+            <form class="profile-form" id="depositForm" novalidate>
+
+              <!-- Customer Selection Block -->
+              <div class="form-group">
+                <label for="walkinCustomerLookup" id="lookupLabel">Customer ID / Phone Number</label>
+                <div class="input-with-button">
+                  <input type="text" id="walkinCustomerLookup" placeholder="e.g. CUST-001245 or 0771234567" class="settings-input">
+                  <button type="button" class="btn-outline-edit" id="verifyAccountBtn">Verify Account</button>
+                </div>
+
+                <div id="verifyResult" class="verify-result"></div>
+
+                <label class="guest-row">
+                  <input type="checkbox" id="guestWalkin">
+                  <span>Guest Walk-in (customer is not registered)</span>
+                </label>
+                <small class="text-muted">Guests are recorded and get a receipt, but they do not earn reward points.</small>
+              </div>
+
+              <!-- Category & Rate Block (from the database) -->
+              <div class="form-group">
+                <label for="depositMaterial">Material Category</label>
+                <select id="depositMaterial" class="settings-select">
+                  <option value="">Loading categories...</option>
+                </select>
+              </div>
+
+              <!-- Scale Weight Entry -->
+              <div class="form-group">
+                <label for="depositScaleWeight">Measured Weight (kg)</label>
+                <input type="number" step="0.01" min="0" id="depositScaleWeight" placeholder="Enter scale reading in kg" value="" class="settings-input">
+              </div>
+
+              <!-- Payment Method Selection -->
+              <div class="form-group">
+                <label for="payoutType">Payout Preference</label>
+                <select id="payoutType" class="settings-select">
+                  <option value="cash" selected>Instant Counter Cash Payout</option>
+                  <option value="points">Convert Entirely to Reward Points</option>
+                  <option value="wallet">Direct Credit to SRMMS Digital Wallet</option>
+                </select>
+              </div>
+
+              <!-- Form Action Buttons -->
+              <div class="verify-action-buttons">
+                <button type="submit" class="btn-primary-save verify-approve-btn" id="processBtn">
+                  ⚡ Process Deposit & Print Receipt
+                </button>
+                <button type="reset" class="btn-danger-outline" id="clearBtn">
+                  Clear Form
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- Right Column: Live Calculation Summary & Recent Receipts -->
+          <div class="walkin-sidebar-column">
+
+            <!-- Live Calculation Summary Card -->
+            <div class="profile-card-panel summary-highlight-card">
+              <h2 class="panel-title">Calculation Breakdown</h2>
+
+              <div class="calc-breakdown-list">
+                <div class="calc-row">
+                  <span>Selected Category Rate:</span>
+                  <strong id="calcRate">-</strong>
+                </div>
+
+                <div class="calc-row">
+                  <span>Entered Weight:</span>
+                  <strong id="calcWeight">-</strong>
+                </div>
+
+                <div class="calc-row">
+                  <span>Base Cash Value:</span>
+                  <strong id="calcValue">-</strong>
+                </div>
+
+                <div class="calc-row">
+                  <span>Earned Reward Points:</span>
+                  <strong class="rate-highlight" id="calcPoints">-</strong>
+                </div>
+
+                <hr class="calc-divider">
+
+                <div class="calc-row calc-total-row">
+                  <span>Total Amount Due:</span>
+                  <span class="total-price-tag" id="calcTotal">-</span>
+                </div>
+
+                <p class="calc-note" id="calcNote"></p>
+              </div>
+            </div>
+
+            <!-- Quick Counter Logs Panel -->
+            <div class="profile-card-panel">
+              <h2 class="panel-title mb-16">Today's Counter Entries</h2>
+
+              <div id="todayEntries">
+                <div class="entry-empty">Loading...</div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <!-- ================= RECEIPT (printed) ================= -->
+
+  <div id="receiptOverlay" class="receipt-overlay">
+
+    <div class="receipt-paper" id="receiptPaper"></div>
+
+    <div class="receipt-buttons">
+      <button type="button" class="btn-print" id="printAgainBtn">🖨 Print Receipt</button>
+      <button type="button" class="btn-close-receipt" id="closeReceiptBtn">Close</button>
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+
+    // =====================================================
+// STAFF (read from localStorage OR sessionStorage)
+// =====================================================
+
+let staff = null;
+
+try {
+    const rawStaff =
+        localStorage.getItem("staff") ||
+        sessionStorage.getItem("staff");
+
+    staff = rawStaff ? JSON.parse(rawStaff) : null;
+
+} catch (error) {
+    console.error("Cannot read staff details:", error);
+    staff = null;
+}
+
+// Check whether staff is logged in
+if (!staff || staff.staffId == null) {
+
+    alert("Staff login details not found. Please login again.");
+
+    window.location.href = "login.html";
+
+}
+
+
+    // =====================================================
+    // ELEMENTS + STATE
+    // =====================================================
+
+    const form = document.getElementById("depositForm");
+    const pageMessage = document.getElementById("pageMessage");
+    const lookupInput = document.getElementById("walkinCustomerLookup");
+    const lookupLabel = document.getElementById("lookupLabel");
+    const verifyBtn = document.getElementById("verifyAccountBtn");
+    const verifyResult = document.getElementById("verifyResult");
+    const guestCheckbox = document.getElementById("guestWalkin");
+    const categorySelect = document.getElementById("depositMaterial");
+    const weightInput = document.getElementById("depositScaleWeight");
+    const payoutSelect = document.getElementById("payoutType");
+    const processBtn = document.getElementById("processBtn");
+
+    const receiptOverlay = document.getElementById("receiptOverlay");
+    const receiptPaper = document.getElementById("receiptPaper");
+
+    let verifiedCustomer = null;     // { customerId, customerCode, name, ... }
+    let previewTimer = null;
+    let contactInfo = {};            // phone / location for the receipt (Admin table)
+
+
+    // =====================================================
+    // HELPERS
+    // =====================================================
+
+    function escapeHtml(text) {
+
+      const div = document.createElement("div");
+
+      div.textContent = text == null ? "" : String(text);
+
+      return div.innerHTML;
+
+    }
+
+    function formatMoney(value) {
+
+      const n = parseFloat(value);
+
+      if (isNaN(n)) {
+        return "-";
+      }
+
+      return "Rs. " + n.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+    }
+
+    function formatDateTime(iso) {
+
+      const d = iso ? new Date(iso) : new Date();
+
+      if (isNaN(d.getTime())) {
+        return "-";
+      }
+
+      return d.toLocaleDateString("en-GB") + " " +
+             d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+
+    }
+
+    function formatTime(iso) {
+
+      const d = new Date(iso);
+
+      if (isNaN(d.getTime())) {
+        return "";
+      }
+
+      return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+
+    }
+
+    function showMessage(text, type) {
+
+      pageMessage.textContent = text;
+      pageMessage.className = "page-message " + type;
+
+      pageMessage.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+    }
+
+    function hideMessage() {
+
+      pageMessage.textContent = "";
+      pageMessage.className = "page-message";
+
+    }
+
+    function showVerify(text, type) {
+
+      verifyResult.textContent = text;
+      verifyResult.className = "verify-result " + type;
+
+    }
+
+    function hideVerify() {
+
+      verifyResult.textContent = "";
+      verifyResult.className = "verify-result";
+
+    }
+
+    async function readJson(response) {
+
+      try {
+        return await response.json();
+      } catch (error) {
+        return {};
+      }
+
+    }
+
+
+    // =====================================================
+    // CATEGORIES (rates come from the database)
+    // =====================================================
+
+    async function loadCategories() {
+
+      try {
+
+        const response = await fetch(API_BASE + "/categories/active");
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        const categories = await response.json();
+
+        categorySelect.innerHTML = "";
+
+        if (!Array.isArray(categories) || categories.length === 0) {
+
+          categorySelect.innerHTML = '<option value="">No active categories</option>';
+
+          return;
+
+        }
+
+        categories.forEach(function(c) {
+
+          const option = document.createElement("option");
+
+          option.value = c.categoryId;
+          option.textContent = c.categoryName + " (" + formatMoney(c.ratePerKg) + " / kg)";
+
+          categorySelect.appendChild(option);
+
+        });
+
+        updatePreview();
+
+      } catch (error) {
+
+        console.error("Category loading error:", error);
+
+        categorySelect.innerHTML = '<option value="">Cannot load categories</option>';
+
+        showMessage("Cannot load the categories. Check that the backend is running.", "error");
+
+      }
+
+    }
+
+
+    // =====================================================
+    // CONTACT INFO FOR THE RECEIPT (Admin table)
+    // =====================================================
+
+    async function loadContactInfo() {
+
+      try {
+
+        const response = await fetch(API_BASE + "/contact-info?time=" + new Date().getTime());
+
+        if (response.ok) {
+          contactInfo = await response.json();
+        }
+
+      } catch (error) {
+        contactInfo = {};
+      }
+
+    }
+
+
+    // =====================================================
+    // VERIFY ACCOUNT
+    // =====================================================
+
+    async function verifyAccount() {
+
+      hideMessage();
+
+      const query = lookupInput.value.trim();
+
+      if (guestCheckbox.checked) {
+        return false;
+      }
+
+      if (!query) {
+
+        verifiedCustomer = null;
+
+        showVerify("Enter a customer ID or phone number first.", "error");
+
+        return false;
+
+      }
+
+      verifyBtn.disabled = true;
+      verifyBtn.textContent = "Checking...";
+
+      try {
+
+        const response = await fetch(
+          API_BASE + "/walkin/customer?query=" + encodeURIComponent(query)
+        );
+
+        const data = await readJson(response);
+
+        if (!response.ok) {
+
+          verifiedCustomer = null;
+
+          showVerify(data.message || "Customer not found.", "error");
+
+          updatePreview();
+
+          return false;
+
+        }
+
+        verifiedCustomer = data;
+
+        showVerify(
+          "✔ " + data.name + " (" + data.customerCode + ")" +
+          (data.phone ? " · " + data.phone : ""),
+          "ok"
+        );
+
+        updatePreview();
+
+        return true;
+
+      } catch (error) {
+
+        console.error("Verify error:", error);
+
+        verifiedCustomer = null;
+
+        showVerify("Cannot connect to the server.", "error");
+
+        return false;
+
+      } finally {
+
+        verifyBtn.disabled = guestCheckbox.checked;
+        verifyBtn.textContent = "Verify Account";
+
+      }
+
+    }
+
+    verifyBtn.addEventListener("click", verifyAccount);
+
+    // typing a different ID / phone cancels the old verification
+    lookupInput.addEventListener("input", function() {
+
+      verifiedCustomer = null;
+
+      hideVerify();
+
+      updatePreview();
+
+    });
+
+    lookupInput.addEventListener("keydown", function(event) {
+
+      if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        verifyAccount();
+
+      }
+
+    });
+
+
+    // =====================================================
+    // GUEST WALK-IN
+    // =====================================================
+
+    guestCheckbox.addEventListener("change", function() {
+
+      verifiedCustomer = null;
+
+      hideVerify();
+
+      if (guestCheckbox.checked) {
+
+        lookupLabel.textContent = "Guest Name (optional)";
+        lookupInput.placeholder = "e.g. Nimal Perera";
+        lookupInput.value = "";
+        verifyBtn.disabled = true;
+
+      } else {
+
+        lookupLabel.textContent = "Customer ID / Phone Number";
+        lookupInput.placeholder = "e.g. CUST-001245 or 0771234567";
+        lookupInput.value = "";
+        verifyBtn.disabled = false;
+
+      }
+
+      updatePreview();
+
+    });
+
+
+    // =====================================================
+    // LIVE CALCULATION BREAKDOWN
+    // =====================================================
+
+    function clearPreview() {
+
+      document.getElementById("calcRate").textContent = "-";
+      document.getElementById("calcWeight").textContent = "-";
+      document.getElementById("calcValue").textContent = "-";
+      document.getElementById("calcPoints").textContent = "-";
+      document.getElementById("calcTotal").textContent = "-";
+      document.getElementById("calcNote").textContent = "";
+
+    }
+
+    function updatePreview() {
+
+      clearTimeout(previewTimer);
+
+      previewTimer = setTimeout(runPreview, 250);
+
+    }
+
+    async function runPreview() {
+
+      const categoryId = categorySelect.value;
+      const weight = weightInput.value.trim();
+
+      if (!categoryId || !weight || parseFloat(weight) <= 0) {
+
+        clearPreview();
+
+        return;
+
+      }
+
+      let url =
+        API_BASE + "/walkin/preview?categoryId=" + encodeURIComponent(categoryId) +
+        "&weightKg=" + encodeURIComponent(weight) +
+        "&guest=" + (guestCheckbox.checked ? "true" : "false");
+
+      if (verifiedCustomer && !guestCheckbox.checked) {
+        url += "&customerId=" + encodeURIComponent(verifiedCustomer.customerId);
+      }
+
+      try {
+
+        const response = await fetch(url);
+
+        const data = await readJson(response);
+
+        if (!response.ok || data.valid === false) {
+
+          clearPreview();
+
+          document.getElementById("calcNote").textContent =
+            data.message || "Cannot calculate.";
+
+          return;
+
+        }
+
+        document.getElementById("calcRate").textContent = formatMoney(data.ratePerKg) + " / kg";
+        document.getElementById("calcWeight").textContent = parseFloat(data.weightKg).toFixed(2) + " kg";
+        document.getElementById("calcValue").textContent = formatMoney(data.amount);
+
+        document.getElementById("calcPoints").textContent =
+          guestCheckbox.checked
+            ? "0 (guest)"
+            : (verifiedCustomer ? data.rewardPoints + " pts" : "Verify account");
+
+        document.getElementById("calcTotal").textContent = formatMoney(data.amount);
+        document.getElementById("calcNote").textContent = "";
+
+      } catch (error) {
+
+        console.error("Preview error:", error);
+
+      }
+
+    }
+
+    categorySelect.addEventListener("change", updatePreview);
+    weightInput.addEventListener("input", updatePreview);
+
+
+    // =====================================================
+    // TODAY'S COUNTER ENTRIES
+    // =====================================================
+
+    async function loadToday() {
+
+      const box = document.getElementById("todayEntries");
+
+      try {
+
+        const response = await fetch(API_BASE + "/walkin/deposits/today");
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        const list = await response.json();
+
+        if (!Array.isArray(list) || list.length === 0) {
+
+          box.innerHTML = '<div class="entry-empty">No counter entries yet today.</div>';
+
+          return;
+
+        }
+
+        box.innerHTML = "";
+
+        list.forEach(function(d) {
+
+          const row = document.createElement("div");
+
+          row.className = "entry-row";
+
+          row.innerHTML =
+            "<div><strong>" + escapeHtml(d.customerName || "Guest") + "</strong>" +
+              "<small>" + escapeHtml(d.categoryName) + " · " +
+              (parseFloat(d.weightKg) || 0).toFixed(2) + " kg · " +
+              escapeHtml(d.receiptNo) + "</small></div>" +
+            '<div style="text-align:right"><strong>' + escapeHtml(formatMoney(d.amount)) + "</strong>" +
+              "<small>" + escapeHtml(formatTime(d.dateTime)) + "</small></div>";
+
+          box.appendChild(row);
+
+        });
+
+      } catch (error) {
+
+        console.error("Today's entries error:", error);
+
+        box.innerHTML = '<div class="entry-empty">Cannot load today\'s entries.</div>';
+
+      }
+
+    }
+
+
+    // =====================================================
+    // RECEIPT
+    // =====================================================
+
+    function buildReceipt(d) {
+
+      const phone = (contactInfo.phone || "").trim();
+      const location = (contactInfo.location || "").trim();
+
+      let html = "";
+
+      html += "<h3>SRMMS</h3>";
+      html += '<div class="center muted">Smart Recycling Machine Management System</div>';
+
+      if (location) {
+        html += '<div class="center muted">' + escapeHtml(location) + "</div>";
+      }
+
+      if (phone) {
+        html += '<div class="center muted">Tel: ' + escapeHtml(phone) + "</div>";
+      }
+
+      html += "<hr>";
+      html += '<div class="center"><strong>DEPOSIT RECEIPT</strong></div>';
+      html += "<hr>";
+
+      html += '<div class="line"><span>Receipt No</span><span>' + escapeHtml(d.receiptNo) + "</span></div>";
+      html += '<div class="line"><span>Date</span><span>' + escapeHtml(formatDateTime(d.dateTime)) + "</span></div>";
+      html += '<div class="line"><span>Served by</span><span>' + escapeHtml(d.staffName || "-") + "</span></div>";
+
+      html += "<hr>";
+
+      html += '<div class="line"><span>Customer</span><span>' + escapeHtml(d.customerName || "Guest") + "</span></div>";
+
+      if (!d.guest && d.customerCode) {
+        html += '<div class="line"><span>Customer ID</span><span>' + escapeHtml(d.customerCode) + "</span></div>";
+      } else {
+        html += '<div class="line"><span>Type</span><span>Guest Walk-in</span></div>';
+      }
+
+      html += "<hr>";
+
+      html += '<div class="line"><span>Material</span><span>' + escapeHtml(d.categoryName) + "</span></div>";
+      html += '<div class="line"><span>Rate / kg</span><span>' + escapeHtml(formatMoney(d.ratePerKg)) + "</span></div>";
+      html += '<div class="line"><span>Weight</span><span>' + (parseFloat(d.weightKg) || 0).toFixed(2) + " kg</span></div>";
+
+      html += "<hr>";
+
+      html += '<div class="line total"><span>TOTAL</span><span>' + escapeHtml(formatMoney(d.amount)) + "</span></div>";
+      html += '<div class="line"><span>Payout</span><span>' + escapeHtml(d.payoutLabel) + "</span></div>";
+
+      if (!d.guest) {
+        html += '<div class="line"><span>Points earned</span><span>' + (d.rewardPoints || 0) + " pts</span></div>";
+      }
+
+      html += "<hr>";
+      html += '<div class="center">Thank you for recycling!</div>';
+      html += '<div class="center muted">Keep this receipt for your records.</div>';
+
+      return html;
+
+    }
+
+    function openReceipt(deposit) {
+
+      receiptPaper.innerHTML = buildReceipt(deposit);
+
+      receiptOverlay.classList.add("open");
+
+      // give the browser a moment to draw the receipt, then open the print window
+      setTimeout(function() {
+        window.print();
+      }, 400);
+
+    }
+
+    document.getElementById("printAgainBtn").addEventListener("click", function() {
+      window.print();
+    });
+
+    document.getElementById("closeReceiptBtn").addEventListener("click", function() {
+      receiptOverlay.classList.remove("open");
+    });
+
+
+    // =====================================================
+    // PROCESS DEPOSIT & PRINT RECEIPT
+    // =====================================================
+
+    function resetFormState() {
+
+      form.reset();
+
+      verifiedCustomer = null;
+
+      lookupLabel.textContent = "Customer ID / Phone Number";
+      lookupInput.placeholder = "e.g. CUST-001245 or 0771234567";
+      verifyBtn.disabled = false;
+
+      hideVerify();
+      clearPreview();
+
+      // the category list keeps its choices; select the first one again
+      if (categorySelect.options.length > 0) {
+        categorySelect.selectedIndex = 0;
+      }
+
+    }
+
+    form.addEventListener("submit", async function(event) {
+
+      event.preventDefault();
+
+      hideMessage();
+
+      const isGuest = guestCheckbox.checked;
+      const weight = parseFloat(weightInput.value);
+
+      // ----- checks -----
+
+      if (!isGuest && !verifiedCustomer) {
+
+        if (!lookupInput.value.trim()) {
+
+          showMessage("Enter the customer ID / phone number, or choose Guest Walk-in.", "error");
+
+          return;
+
+        }
+
+        // the staff did not press "Verify Account": do it now
+        const ok = await verifyAccount();
+
+        if (!ok) {
+
+          showMessage("The customer account could not be verified.", "error");
+
+          return;
+
+        }
+
+      }
+
+      if (!categorySelect.value) {
+
+        showMessage("Select a material category.", "error");
+
+        return;
+
+      }
+
+      if (!weight || weight <= 0) {
+
+        showMessage("Enter the measured weight in kg.", "error");
+
+        return;
+
+      }
+
+      // ----- send -----
+
+      processBtn.disabled = true;
+      processBtn.textContent = "Processing...";
+
+      try {
+
+        const response = await fetch(API_BASE + "/walkin/deposits", {
+
+          method: "POST",
+
+          headers: { "Content-Type": "application/json" },
+
+          body: JSON.stringify({
+
+            guest: isGuest,
+            guestName: isGuest ? lookupInput.value.trim() : "",
+            customerId: isGuest ? null : verifiedCustomer.customerId,
+            categoryId: parseInt(categorySelect.value, 10),
+            weightKg: weight,
+            payoutType: payoutSelect.value,
+            staffId: staff.staffId,
+            staffName: staff.name
+
+          })
+
+        });
+
+        const data = await readJson(response);
+
+        if (!response.ok) {
+
+          showMessage(data.message || "The deposit could not be processed.", "error");
+
+          return;
+
+        }
+
+        // ----- success -----
+
+        showMessage(
+          "Deposit processed successfully! Receipt " + data.receiptNo +
+          " (" + formatMoney(data.amount) + ").",
+          "success"
+        );
+
+        resetFormState();
+
+        loadToday();
+
+        openReceipt(data);
+
+      } catch (error) {
+
+        console.error("Process error:", error);
+
+        showMessage("Cannot connect to the server. Check that the backend is running.", "error");
+
+      } finally {
+
+        processBtn.disabled = false;
+        processBtn.textContent = "⚡ Process Deposit & Print Receipt";
+
+      }
+
+    });
+
+    // "Clear Form" button
+    form.addEventListener("reset", function() {
+
+      setTimeout(function() {
+
+        verifiedCustomer = null;
+
+        lookupLabel.textContent = "Customer ID / Phone Number";
+        lookupInput.placeholder = "e.g. CUST-001245 or 0771234567";
+        verifyBtn.disabled = false;
+
+        hideVerify();
+        hideMessage();
+        clearPreview();
+
+        if (categorySelect.options.length > 0) {
+          categorySelect.selectedIndex = 0;
+        }
+
+      }, 0);
+
+    });
+
+
+    // =====================================================
+    // PAGE LOAD
+    // =====================================================
+
+    loadCategories();
+    loadContactInfo();
+    loadToday();
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Rewards - SRMMS</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    .stat-value .stat-num {
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+    }
+
+    .btn-redeem:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .history-empty-msg {
+      text-align: center;
+      color: #666;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="customer-dashboard.html">
+              <span class="nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="start-recycling.html">
+              <span class="nav-icon">♻</span>
+              <span>Start Recycling</span>
+            </a>
+          </li>
+           <li>
+            <a href="customer-appoinments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+          <li>
+            <a href="transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>Transactions</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="rewards.html">
+              <span class="nav-icon">🏅</span>
+              <span>Rewards</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <span class="nav-icon">👤</span>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="admin-logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+        
+        <div class="header-right">
+          
+          <div class="user-profile-badge">
+            <div class="user-avatar">
+              <img src="https://i.pravatar.cc/100?img=47" alt="Ishani">
+            </div>
+            
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Inner Content -->
+      <div class="dashboard-wrapper">
+
+        <!-- Page Header -->
+        <h1 class="page-title rewards-page-title">My Rewards</h1>
+
+        <!-- Top Stat Cards (Total & Available Points) -->
+        <div class="rewards-stats-grid">
+          
+          <div class="stat-card">
+            <div class="stat-icon yellow-star-icon">⭐</div>
+            <div class="stat-info">
+              <span class="stat-label">Total Points</span>
+              <div class="stat-value"><span class="stat-num" id="rewardsTotalPoints">0</span> <span>pts</span></div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon gold-coins-icon">🪙</div>
+            <div class="stat-info">
+              <span class="stat-label">Available Points</span>
+              <div class="stat-value"><span class="stat-num" id="rewardsAvailablePoints">0</span> <span>pts</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Main Content 2-Column Grid -->
+        <div class="rewards-content-grid">
+
+          <!-- Left Column: Redeem Rewards List -->
+          <div class="rewards-card-panel">
+            <h2 class="panel-title">Redeem Rewards</h2>
+
+            <div class="redeem-list">
+              
+              <!-- Item 1 -->
+              <div class="redeem-item">
+                <div class="item-left">
+                  <div class="item-icon green-voucher-icon">💳</div>
+                  <div class="item-details">
+                    <h3 class="item-title">Cash Voucher - Rs. 100</h3>
+                    <span class="item-requirement">Require 1,000 pts</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn-redeem"
+                  data-item="Cash Voucher - Rs. 100"
+                  data-points="1000">
+                  Redeem
+                </button>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="redeem-item">
+                <div class="item-left">
+                  <div class="item-icon green-voucher-icon">💳</div>
+                  <div class="item-details">
+                    <h3 class="item-title">Cash Voucher - Rs. 250</h3>
+                    <span class="item-requirement">Require 2,000 pts</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn-redeem"
+                  data-item="Cash Voucher - Rs. 250"
+                  data-points="2000">
+                  Redeem
+                </button>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="redeem-item">
+                <div class="item-left">
+                  <div class="item-icon green-gift-icon">🎁</div>
+                  <div class="item-details">
+                    <h3 class="item-title">Eco Gift Pack</h3>
+                    <span class="item-requirement">Require 1,500 pts</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn-redeem"
+                  data-item="Eco Gift Pack"
+                  data-points="1500">
+                  Redeem
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right Column: Redemption History (loaded from DB) -->
+          <div class="rewards-card-panel">
+            <h2 class="panel-title">Redemption History</h2>
+
+            <div class="history-list" id="historyList">
+              <div class="history-empty-msg">Loading history...</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+    let currentAvailablePoints = 0;
+
+
+    function getCustomer() {
+
+        const storedCustomer = localStorage.getItem("customer");
+
+        if (!storedCustomer) {
+            return null;
+        }
+
+        try {
+            return JSON.parse(storedCustomer);
+        } catch (error) {
+            return null;
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD REWARD ACCOUNT (Total / Available points)
+       from reward_account table via /api/rewards/customer/{id}
+    ====================================================== */
+
+    async function loadRewardAccount() {
+
+        const customer = getCustomer();
+
+        if (!customer || !customer.customerId) {
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                API_BASE + "/rewards/customer/" + customer.customerId
+            );
+
+            if (!response.ok) {
+                console.error("Unable to load reward account.");
+                return;
+            }
+
+            const account = await response.json();
+
+            const totalEarned =
+                parseInt(account.totalPointsEarned) || 0;
+
+            const available =
+                parseInt(account.pointsBalance) || 0;
+
+            currentAvailablePoints = available;
+
+            document.getElementById("rewardsTotalPoints").textContent =
+                totalEarned.toLocaleString("en-US");
+
+            document.getElementById("rewardsAvailablePoints").textContent =
+                available.toLocaleString("en-US");
+
+            updateRedeemButtons();
+
+        } catch (error) {
+
+            console.error("Reward account loading error:", error);
+
+        }
+
+    }
+
+
+    /* Disable Redeem buttons the customer doesn't have enough points for */
+
+    function updateRedeemButtons() {
+
+        document.querySelectorAll(".btn-redeem").forEach(function(btn) {
+
+            const required =
+                parseInt(btn.dataset.points) || 0;
+
+            btn.disabled = currentAvailablePoints < required;
+
+        });
+
+    }
+
+
+    /* =====================================================
+       LOAD REDEMPTION HISTORY FROM DB
+       (reward_redemption table, via
+       /api/rewards/redemptions/customer/{customerId})
+    ====================================================== */
+
+    async function loadRedemptionHistory() {
+
+        const customer = getCustomer();
+
+        if (!customer || !customer.customerId) {
+            return;
+        }
+
+        const historyList =
+            document.getElementById("historyList");
+
+        try {
+
+            const response = await fetch(
+                API_BASE + "/rewards/redemptions/customer/" + customer.customerId
+            );
+
+            if (!response.ok) {
+
+                historyList.innerHTML =
+                    '<div class="history-empty-msg">Unable to load redemption history.</div>';
+
+                return;
+
+            }
+
+            const history = await response.json();
+
+            if (!Array.isArray(history) || history.length === 0) {
+
+                historyList.innerHTML =
+                    '<div class="history-empty-msg">No redemptions yet.</div>';
+
+                return;
+
+            }
+
+            historyList.innerHTML = "";
+
+            history.forEach(function(record) {
+
+                const dateStr = record.redemptionDate
+                    ? new Date(record.redemptionDate).toISOString().split("T")[0]
+                    : "-";
+
+                const statusClass =
+                    (record.status || "").toLowerCase() === "approved"
+                        ? "status-approved"
+                        : "status-pending";
+
+                const item = document.createElement("div");
+
+                item.className = "history-item";
+
+                item.innerHTML =
+                    '<div class="history-left">' +
+                        '<span class="history-date">' + dateStr + '</span>' +
+                        '<h3 class="history-title">' + (record.itemName || "-") + '</h3>' +
+                        '<span class="history-points">' +
+                            (parseInt(record.pointsUsed) || 0).toLocaleString("en-US") +
+                            ' pts' +
+                        '</span>' +
+                    '</div>' +
+                    '<span class="status-pill ' + statusClass + '">' +
+                        (record.status || "Approved") +
+                    '</span>';
+
+                historyList.appendChild(item);
+
+            });
+
+        } catch (error) {
+
+            console.error("Redemption history loading error:", error);
+
+            historyList.innerHTML =
+                '<div class="history-empty-msg">Cannot connect to the server.</div>';
+
+        }
+
+    }
+
+
+    /* =====================================================
+       REDEEM BUTTON CLICK
+    ====================================================== */
+
+    document.querySelectorAll(".btn-redeem").forEach(function(btn) {
+
+        btn.addEventListener("click", async function() {
+
+            const customer = getCustomer();
+
+            if (!customer || !customer.customerId) {
+                alert("Customer information not found. Please login again.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const itemName = btn.dataset.item;
+            const pointsRequired = parseInt(btn.dataset.points);
+
+            if (currentAvailablePoints < pointsRequired) {
+                alert("You don't have enough points to redeem this reward.");
+                return;
+            }
+
+            const confirmRedeem = confirm(
+                "Redeem \"" + itemName + "\" for " +
+                pointsRequired.toLocaleString("en-US") + " pts?"
+            );
+
+            if (!confirmRedeem) {
+                return;
+            }
+
+            btn.disabled = true;
+            const originalText = btn.textContent;
+            btn.textContent = "Redeeming...";
+
+            try {
+
+                const response = await fetch(
+                    API_BASE + "/rewards/redeem",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            customerId: parseInt(customer.customerId),
+                            itemName: itemName,
+                            pointsRequired: pointsRequired
+                        })
+                    }
+                );
+
+                const responseText = await response.text();
+
+                let data = null;
+
+                try {
+                    data = JSON.parse(responseText);
+                } catch (error) {
+                    data = responseText;
+                }
+
+                if (!response.ok) {
+
+                    alert(
+                        typeof data === "string"
+                            ? data
+                            : (data.message || "Failed to redeem points.")
+                    );
+
+                    return;
+
+                }
+
+                alert("Reward redeemed successfully!");
+
+                /* Refresh points + history from DB */
+
+                await loadRewardAccount();
+                await loadRedemptionHistory();
+
+            } catch (error) {
+
+                console.error("Redemption request error:", error);
+                alert("Cannot connect to the server.");
+
+            } finally {
+
+                btn.textContent = originalText;
+                updateRedeemButtons();
+
+            }
+
+        });
+
+    });
+
+
+    async function loadProfilePhoto() {
+
+    const storedCustomer =
+        localStorage.getItem("customer");
+
+    if (!storedCustomer) {
+        return;
+    }
+
+    try {
+
+        const customer =
+            JSON.parse(storedCustomer);
+
+        if (!customer.customerId) {
+            return;
+        }
+
+        const response =
+            await fetch(
+                "http://localhost:8080/api/customers/" +
+                customer.customerId
+            );
+
+        if (!response.ok) {
+            return;
+        }
+
+        const data =
+            await response.json();
+
+        if (
+            data.profilePhoto &&
+            data.profilePhoto.trim() !== ""
+        ) {
+
+            const photoElements =
+                document.querySelectorAll(
+                    ".user-avatar img, #headerProfilePhoto, .profile-avatar-img"
+                );
+
+            photoElements.forEach(function(img) {
+                img.src = data.profilePhoto;
+            });
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Profile photo loading error:",
+            error
+        );
+
+    }
+} 
+
+loadRewardAccount();
+loadRedemptionHistory();
+loadProfilePhoto();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SRMMS - Smart Recycling Management System</title>
+
+  <!-- MEKA THAMAI HTML EKA CSS EKATKA CONNECT KARANA LINE EKA -->
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <!-- Top Green Label Tab -->
+
+
+    <!-- Main Outer Container -->
+    <div class="container">
+
+      <!-- Header Navigation Bar -->
+      <nav class="navbar">
+        <div class="brand">
+          <div class="brand-icon">♻</div>
+          <div>
+            <span>SRMMS</span>
+            <small class="brand-tagline">Recycle Today • Greener Tomorrow</small>
+          </div>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="categories.html">Categories</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="auth-buttons">
+          <a href="all-login.html" class="btn btn-login">Login</a>
+          <a href="register.html" class="btn btn-register">Register</a>
+        </div>
+      </nav>
+
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Smart Recycling<br>for a <span>Better Tomorrow</span></h1>
+          <p>Recycle today, earn rewards and help create a cleaner, greener world.</p>
+          <div class="hero-buttons">
+            <a href="login.html" class="btn start-btn">Start Recycling</a>
+            <a href="learn-more.html" class="btn learn-btn">Learn More</a>
+          </div>
+        </div>
+
+        <!-- Right Machine Graphics -->
+
+
+      </section>
+
+      <!-- Bottom Feature Strip -->
+      <div class="features-strip">
+        <div class="feature-item">
+          <div class="feature-icon-circle">♻</div>
+          <div class="feature-details">
+            <h4>Recycle</h4>
+            <p>Bring your recyclable items</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon-circle">⚖</div>
+          <div class="feature-details">
+            <h4>Weigh</h4>
+            <p>Machine measures the weight</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon-circle">💧</div>
+          <div class="feature-details">
+            <h4>Earn</h4>
+            <p>Get paid based on the weight</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon-circle">🎁</div>
+          <div class="feature-details">
+            <h4>Reward</h4>
+            <p>Collect points and redeem rewards</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+
+    <div class="footer-container">
+
+        <!-- Logo / About -->
+        <div class="footer-brand">
+            <div class="brand-title">
+                <span class="recycle-icon">♻</span>
+                <div>
+                    <h3>SRMMS</h3>
+                    <p>Recycle Today • Greener Tomorrow</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Quick Links -->
+        <div class="footer-links">
+            <h4>Quick Links</h4>
+
+            <a href="#">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="categories.html">Categories</a>
+            <a href="how-it-works.html">How It Works</a>
+            <a href="contact.html">Contact</a>
+        </div>
+
+
+        <!-- Contact Information -->
+        <div class="footer-contact">
+            <h4>Contact Info</h4>
+
+            <p>📍 <span id="footerLocation">Sabaragamuwa University of Sri Lanka</span></p>
+            <p>📧 <span id="footerEmail">info@srmmms.lk</span></p>
+            <p>📞 <span id="footerPhone">+94 00 000 0000</span></p>
+
+            <div class="social-icons">
+                <a href="#">f</a>
+                <a href="#">◎</a>
+                <a href="#">in</a>
+                <a href="#">▶</a>
+            </div>
+        </div>
+
+        <!-- Decorative leaf -->
+        <div class="footer-decoration">
+            🌿
+        </div>
+
+    </div>
+
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+        <p>© 2026 SRMMS. All rights reserved.</p>
+
+        <div class="bottom-social">
+            <a href="#">f</a>
+            <a href="#">◎</a>
+            <a href="#">in</a>
+            <a href="#">▶</a>
+        </div>
+    </div>
+
+</footer>
+
+<script>
+/* The footer "Contact Info" (location, email, phone) comes from the admin
+   settings: Admin table in the database.
+   The text written in the HTML stays only if the server is off or the
+   admin has not entered that detail yet. */
+
+function setFooterText(id, value) {
+
+  const element = document.getElementById(id);
+
+  if (element && value && value.trim() !== "") {
+    element.textContent = value.trim();
+  }
+}
+
+async function loadFooterContactInfo() {
+
+  try {
+
+    const response = await fetch(
+      "http://localhost:8080/api/contact-info?time=" + new Date().getTime(),
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+
+    const info = await response.json();
+
+    console.log("Contact info from the database:", info);
+
+    setFooterText("footerLocation", info.location);
+    setFooterText("footerEmail", info.email);
+    setFooterText("footerPhone", info.phone);
+
+  } catch (error) {
+
+    // Keep the text already written in the HTML
+    console.error("Contact info loading error:", error);
+  }
+}
+
+loadFooterContactInfo();
+</script>
+
+</body>
+</html>

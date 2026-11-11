@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - SRMMS</title>
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <div class="container">
+
+      <!-- Navigation Header -->
+      <nav class="navbar">
+        <div class="brand">
+          <div class="brand-icon">♻</div>
+          <div>
+            <span>SRMMS</span>
+            <small class="brand-tagline">Recycle Today • Greener Tomorrow</small>
+          </div>
+        </div>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="categories.html">Categories</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+        <div class="auth-buttons">
+          <a href="all-login.html" class="btn btn-login">Login</a>
+          <a href="register.html" class="btn btn-register">Register</a>
+        </div>
+      </nav>
+
+      <!-- Contact Hero Banner -->
+      <section class="contact-hero">
+        <div class="contact-hero-left">
+          <h1>Get in <span>Touch</span></h1>
+          <p>We're here to help! Have questions, feedback or need support?<br>Feel free to reach out to us.</p>
+        </div>
+        <div class="contact-hero-right">
+          <div class="mail-graphic">
+            <span class="env-bg">✉</span>
+            <span class="env-leaf">🍃</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Contact Grid -->
+      <section class="contact-content-section">
+        <div class="contact-grid">
+
+          <!-- Left Column: Contact Information -->
+          <div class="info-card">
+            <h3>Contact Information</h3>
+
+            <div class="info-item">
+              <div class="info-icon">📞</div>
+              <div class="info-text">
+                <h4>Phone</h4>
+                <p class="highlight-text" id="contactPhone">+94 00 000 0000</p>
+                <small>Mon - Fri, 8:00 AM - 5:00 PM</small>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">✉</div>
+              <div class="info-text">
+                <h4>Email</h4>
+                <p class="highlight-text" id="contactEmail">info@srmms.lk</p>
+                <small>We'll reply within 24 hours</small>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">📍</div>
+              <div class="info-text">
+                <h4>Location</h4>
+                <p class="location-title" id="contactLocation">Sabaragamuwa University of Sri Lanka</p>
+                <small id="contactLocationSub">Belihuloya, Sri Lanka</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Middle Column: Contact Form -->
+          <div class="form-card">
+            <h3>Send Us a Message</h3>
+
+            <form id="contactForm" class="contact-form">
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="fullName">Full Name *</label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    placeholder="Your name"
+                    maxlength="100"
+                    required>
+                </div>
+
+                <div class="form-group">
+                  <label for="email">Email Address *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="your@email.com"
+                    maxlength="150"
+                    required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="subject">Subject *</label>
+                <select id="subject" name="subject" required>
+                  <option value="" disabled selected>Select a subject</option>
+                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Technical Support">Technical Support</option>
+                  <option value="Feedback">Feedback</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="4"
+                  placeholder="Type your message here..."
+                  required></textarea>
+              </div>
+
+              <!-- Form response message -->
+              <div
+                id="contactFormResponse"
+                role="alert"
+                style="display:none; margin-bottom:15px;">
+              </div>
+
+              <button type="submit" class="submit-btn" id="sendMessageButton">
+                <span>✈</span> Send Message
+              </button>
+
+            </form>
+          </div>
+
+          <!-- Right Column: Location Map -->
+          <div class="location-card">
+            <h3>Our Location</h3>
+            <div class="map-box">
+              <iframe
+                id="mapFrame"
+                src="https://maps.google.com/maps?q=Sabaragamuwa%20University%20of%20Sri%20Lanka&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy">
+              </iframe>
+            </div>
+
+            <div class="map-details">
+              <strong id="mapLocationName">Sabaragamuwa University of Sri Lanka</strong>
+              <p id="mapLocationSub">Belihuloya, Sri Lanka</p>
+            </div>
+
+            <a
+              id="directionsLink"
+              href="https://maps.google.com/?q=Sabaragamuwa+University+of+Sri+Lanka"
+              target="_blank"
+              class="directions-btn">
+              <span>📍</span> Get Directions
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="footer contact-footer">
+    <div class="footer-bottom contact-footer-bar">
+
+      <div class="footer-brand flex-brand">
+        <span class="recycle-icon">♻</span>
+        <div>
+          <strong>SRMMS</strong>
+          <p class="brand-tagline">Recycle Today • Greener Tomorrow</p>
+        </div>
+      </div>
+
+      <div class="footer-center-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="categories.html">Categories</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="contact.html">Contact</a>
+        <a href="#">Learn More</a>
+      </div>
+
+      <div class="bottom-social">
+        <a href="#">🌐</a>
+        <a href="#">◎</a>
+        <a href="#">▶</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+    /* -----------------------------------------
+       LOAD CONTACT INFORMATION FROM ADMIN SETTINGS
+    ----------------------------------------- */
+
+    async function loadContactInfo() {
+
+      try {
+
+        const response = await fetch(
+          API_BASE + "/contact-info?time=" + new Date().getTime(),
+          { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        const phone = (data.phone || "").trim();
+        const email = (data.email || "").trim();
+        const location = (data.location || "").trim();
+
+        if (phone) {
+          document.getElementById("contactPhone").textContent = phone;
+        }
+
+        if (email) {
+          document.getElementById("contactEmail").textContent = email;
+        }
+
+        if (location) {
+
+          document.getElementById("contactLocation").textContent = location;
+          document.getElementById("mapLocationName").textContent = location;
+
+          document.getElementById("contactLocationSub").style.display = "none";
+          document.getElementById("mapLocationSub").style.display = "none";
+
+          const query = encodeURIComponent(location);
+
+          document.getElementById("mapFrame").src =
+            "https://maps.google.com/maps?q=" + query +
+            "&t=&z=13&ie=UTF8&iwloc=&output=embed";
+
+          document.getElementById("directionsLink").href =
+            "https://maps.google.com/?q=" + query;
+        }
+
+      } catch (error) {
+
+        console.error("Contact info loading error:", error);
+
+      }
+    }
+
+
+    /* -----------------------------------------
+       SUBMIT CONTACT FORM TO DATABASE
+    ----------------------------------------- */
+
+    document.getElementById("contactForm").addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+        const form = this;
+        const sendButton = document.getElementById("sendMessageButton");
+        const responseBox = document.getElementById("contactFormResponse");
+
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const subject = document.getElementById("subject").value;
+        const message = document.getElementById("message").value.trim();
+
+        responseBox.style.display = "none";
+        responseBox.textContent = "";
+
+        if (!fullName || !email || !subject || !message) {
+
+          showFormMessage(
+            "Please fill in all required fields.",
+            "error"
+          );
+
+          return;
+        }
+
+        const contactData = {
+          fullName: fullName,
+          email: email,
+          subject: subject,
+          message: message
+        };
+
+        sendButton.disabled = true;
+        sendButton.textContent = "Sending...";
+
+        try {
+
+          const response = await fetch(API_BASE + "/contact", {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+
+            body: JSON.stringify(contactData)
+
+          });
+
+          const result = await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+
+            throw new Error(
+              result.message || "Unable to send your message. Please try again."
+            );
+          }
+
+          showFormMessage(
+            "Your message has been sent successfully! Thank you for contacting us.",
+            "success"
+          );
+
+          // Clear all form fields after successful database save
+          form.reset();
+
+        } catch (error) {
+
+          console.error("Contact form submission error:", error);
+
+          showFormMessage(
+            error.message || "Something went wrong. Please try again.",
+            "error"
+          );
+
+        } finally {
+
+          sendButton.disabled = false;
+          sendButton.innerHTML = "<span>✈</span> Send Message";
+
+        }
+
+      }
+    );
+
+
+    /* -----------------------------------------
+       DISPLAY SUCCESS / ERROR MESSAGE
+    ----------------------------------------- */
+
+    function showFormMessage(message, type) {
+
+      const responseBox =
+        document.getElementById("contactFormResponse");
+
+      responseBox.textContent = message;
+      responseBox.style.display = "block";
+      responseBox.style.padding = "12px 15px";
+      responseBox.style.borderRadius = "8px";
+      responseBox.style.fontSize = "14px";
+
+      if (type === "success") {
+
+        responseBox.style.backgroundColor = "#dcfce7";
+        responseBox.style.color = "#166534";
+        responseBox.style.border = "1px solid #86efac";
+
+      } else {
+
+        responseBox.style.backgroundColor = "#fee2e2";
+        responseBox.style.color = "#991b1b";
+        responseBox.style.border = "1px solid #fca5a5";
+
+      }
+    }
+
+
+    // Load existing contact information
+    loadContactInfo();
+
+  </script>
+
+</body>
+</html>

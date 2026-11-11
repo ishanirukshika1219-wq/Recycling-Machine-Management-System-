@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout - SRMMS</title>
+    <link rel="stylesheet" href="src/dashboard.css">
+</head>
+
+<body class="dashboard-body">
+
+<div class="logout-modal-overlay">
+    <div class="logout-modal-card">
+
+        <div class="modal-recycle-icon">♻</div>
+
+        <h2 class="modal-title">Logout</h2>
+
+        <p class="modal-message">
+            Are you sure you want to logout?
+        </p>
+
+        <div class="modal-actions">
+
+            <a href="staff-dashboard.html"
+               class="btn-modal-cancel">
+                Cancel
+            </a>
+
+            <button type="button"
+                    class="btn-modal-logout"
+                    id="logoutButton">
+                Logout
+            </button>
+
+        </div>
+
+        <p id="logoutMessage"
+           style="display:none; margin-top:15px; color:red;">
+        </p>
+
+    </div>
+</div>
+
+<script>
+const API_BASE = "http://localhost:8080/api";
+
+document.getElementById("logoutButton")
+    .addEventListener("click", async function() {
+
+        const button = this;
+        const message = document.getElementById("logoutMessage");
+
+        let staff = null;
+
+        try {
+            staff = JSON.parse(
+                localStorage.getItem("staff") ||
+                sessionStorage.getItem("staff")
+            );
+        } catch (error) {
+            staff = null;
+        }
+
+        button.disabled = true;
+        button.textContent = "Logging out...";
+
+        try {
+
+            if (staff && staff.staffId && staff.loginHistoryId) {
+
+                const response = await fetch(`${API_BASE}/staff/logout`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        staffId: staff.staffId,
+                        loginHistoryId: staff.loginHistoryId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Unable to record logout.");
+                }
+            }
+
+            localStorage.removeItem("staff");
+            sessionStorage.removeItem("staff");
+
+            window.location.href = "home.html";
+
+        } catch (error) {
+
+            console.error("Logout error:", error);
+
+            message.textContent =
+                "Could not record logout time. Please try again.";
+
+            message.style.display = "block";
+
+            button.disabled = false;
+            button.textContent = "Logout";
+        }
+    });
+</script>
+
+</body>
+</html>

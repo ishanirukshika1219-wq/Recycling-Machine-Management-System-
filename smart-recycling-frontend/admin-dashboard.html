@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin Dashboard - SRMMS</title>
+
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    .stat-value .stat-num {
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+    }
+    .admin-alert-empty-msg {
+      text-align: center;
+      color: #666;
+      padding: 15px 0;
+    }
+    .btn-action-approve:disabled,
+    .btn-action-reject:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Force "View All" to look like a proper outline button,
+       in case .btn-outline-edit / .btn-sm aren't styled the
+       same way on this page as on all-transactions.html */
+    #viewAllLink {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #166534;
+      background: #ffffff;
+      border: 1px solid #166534;
+      border-radius: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    #viewAllLink:hover {
+      background: #166534;
+      color: #ffffff;
+    }
+  </style>
+</head>
+
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Admin Sidebar Navigation -->
+    <aside class="sidebar">
+
+      <div class="sidebar-header">
+
+        <span class="brand-logo-icon">♻</span>
+
+        <span class="brand-name">
+          SRMMS
+          <small class="admin-badge">Admin</small>
+        </span>
+
+      </div>
+
+
+      <nav class="sidebar-nav">
+
+        <ul>
+
+          <li class="active">
+            <a href="admin-dashboard.html">
+              <span class="nav-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="category-rates.html">
+              <span class="nav-icon">🏷</span>
+              <span>Category & Rates</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="all-transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>All Transactions</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="appointments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="manage-users.html">
+              <span class="nav-icon">👥</span>
+              <span>Manage Users</span>
+            </a>
+          </li>
+
+            <li>
+             <a href="staff-management.html">
+                <span class="nav-icon">🧑‍💼</span>
+                <span>Staff Management</span>
+             </a>
+            </li>
+
+          
+          <li>
+              <a href="customer-inquiries.html">
+                  <span class="nav-icon">📩</span>
+                  <span>Customer Inquiries</span>
+              </a>
+          </li>
+
+
+
+          <li>
+            <a href="reward-rules.html">
+              <span class="nav-icon">🏅</span>
+              <span>Reward Rules</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="reports.html">
+              <span class="nav-icon">📈</span>
+              <span>Reports</span>
+            </a>
+          </li>
+
+
+          <li>
+            <a href="admin-settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+
+
+          <li class="logout-item">
+            <a href="admin-logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+
+        </ul>
+
+      </nav>
+
+    </aside>
+
+
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+
+        <button class="menu-toggle">
+          ☰
+        </button>
+
+
+        <div class="header-right">
+
+          
+
+
+          <div class="user-profile-badge">
+
+            <span class="user-name">
+              System Admin ▾
+            </span>
+
+          </div>
+
+        </div>
+
+      </header>
+
+
+
+      <!-- Dashboard Content -->
+      <div class="dashboard-wrapper">
+
+
+        <!-- Page Title & Subtitle -->
+        <div class="page-header-block">
+
+          <h1 class="page-title">
+            Admin Overview
+          </h1>
+
+          <p class="page-subtitle">
+            Monitor system activity, manage material rates, and track operations.
+          </p>
+
+        </div>
+
+
+
+        <!-- KPI Metrics Grid (4 Columns) -->
+        <div class="admin-kpi-grid">
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon green-bg-icon">
+              📋
+            </div>
+
+            <div class="stat-info">
+
+              <span class="stat-label">
+                Total Transactions
+              </span>
+
+              <div class="stat-value">
+                <span class="stat-num" id="kpiTotalTransactions">0</span>
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon green-bg-icon">
+              ⚖
+            </div>
+
+            <div class="stat-info">
+
+              <span class="stat-label">
+                Collected Weight
+              </span>
+
+              <div class="stat-value">
+                <span class="stat-num" id="kpiCollectedWeight">0</span> <span>kg</span>
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon green-bg-icon">
+              💵
+            </div>
+
+            <div class="stat-info">
+
+              <span class="stat-label">
+                Total Value Paid
+              </span>
+
+              <div class="stat-value">
+                Rs. <span class="stat-num" id="kpiTotalValue">0</span>
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="stat-card">
+
+            <div class="stat-icon green-bg-icon">
+              👥
+            </div>
+
+            <div class="stat-info">
+
+              <span class="stat-label">
+                Active Users
+              </span>
+
+              <div class="stat-value">
+                <span class="stat-num" id="kpiActiveUsers">0</span>
+              </div>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- Middle Section -->
+        <div class="admin-middle-grid">
+
+
+          <!-- Category & Rates Panel -->
+          <div class="profile-card-panel">
+
+            <div class="panel-header-flex">
+
+              <h2 class="panel-title">
+                Category Rates (Per Kg)
+              </h2>
+
+            </div>
+
+
+            <table class="admin-mini-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>Category</th>
+
+                  <th>Rate (Rs./kg)</th>
+
+                  <th>Status</th>
+
+                  <th>Action</th>
+
+                </tr>
+
+              </thead>
+
+
+              <!--
+                Categories will be loaded
+                automatically from database
+              -->
+
+              <tbody id="dashboardCategoryTableBody">
+
+                <tr>
+
+                  <td
+                    colspan="4"
+                    style="text-align:center;">
+
+                    Loading categories...
+
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+
+          <!-- Pending Redemptions & Alerts (loaded from DB) -->
+          <div class="profile-card-panel">
+
+            <h2 class="panel-title">
+              Pending Reward Redemptions
+            </h2>
+
+
+            <div class="admin-alert-list" id="pendingRedemptionsList">
+
+              <div class="admin-alert-empty-msg">
+                Loading pending redemptions...
+              </div>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- Recent System Transactions Panel -->
+        <div class="transactions-panel-card">
+
+
+          <div class="panel-header-flex">
+
+            <h2 class="panel-title">
+              Recent System Activity
+            </h2>
+
+              <a
+                href="all-transactions.html"
+              id="viewAllLink"
+              class="btn-outline-edit btn-sm">
+
+              View All
+              </a>
+
+
+          </div>
+
+
+
+          <div class="table-responsive">
+
+            <table
+              class="transactions-table full-history-table">
+
+
+              <thead>
+
+                <tr>
+
+                  <th>Date</th>
+
+                  <th>Transaction ID</th>
+
+                  <th>Customer ID</th>
+
+                  <th>Category</th>
+
+                  <th>Weight (kg)</th>
+
+                  <th>Amount (Rs.)</th>
+
+                  <th>Status</th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody id="recentActivityTableBody">
+
+                <tr>
+
+                  <td colspan="7" style="text-align:center;">
+                    Loading recent activity...
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+
+<script>
+
+/* =====================================================
+   API BASE
+===================================================== */
+
+const API_BASE =
+    "http://localhost:8080/api";
+
+const CATEGORY_API_URL =
+    API_BASE + "/categories";
+
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadDashboardCategories();
+        loadAdminStats();
+        loadRecentActivity();
+        loadPendingRedemptions();
+
+    }
+);
+
+
+
+/* =====================================================
+   LOAD CATEGORY DATA FROM DATABASE
+===================================================== */
+
+async function loadDashboardCategories() {
+
+    const tableBody =
+        document.getElementById(
+            "dashboardCategoryTableBody"
+        );
+
+
+    /*
+       Show loading message
+    */
+
+    tableBody.innerHTML = `
+        <tr>
+            <td
+                colspan="4"
+                style="text-align:center;">
+
+                Loading categories...
+
+            </td>
+        </tr>
+    `;
+
+
+    try {
+
+        /*
+           Fetch latest categories
+           directly from Spring Boot
+        */
+
+        const response =
+            await fetch(
+                CATEGORY_API_URL +
+                "?time=" +
+                new Date().getTime(),
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
+            );
+
+
+        /*
+           Check response
+        */
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP Error: " +
+                response.status
+            );
+
+        }
+
+
+        /*
+           Convert response to JSON
+        */
+
+        const categories =
+            await response.json();
+
+
+        /*
+           Display categories
+        */
+
+        displayDashboardCategories(
+            categories
+        );
+
+
+    }
+    catch (error) {
+
+        console.error(
+            "Error loading dashboard categories:",
+            error
+        );
+
+
+        tableBody.innerHTML = `
+            <tr>
+
+                <td
+                    colspan="4"
+                    style="text-align:center; color:red;">
+
+                    Failed to load categories.
+
+                </td>
+
+            </tr>
+        `;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   DISPLAY DATABASE CATEGORIES
+===================================================== */
+
+function displayDashboardCategories(
+    categories
+) {
+
+    const tableBody =
+        document.getElementById(
+            "dashboardCategoryTableBody"
+        );
+
+
+    /*
+       Clear existing rows
+    */
+
+    tableBody.innerHTML = "";
+
+
+    /*
+       If database has no categories
+    */
+
+    if (
+        !categories ||
+        categories.length === 0
+    ) {
+
+        tableBody.innerHTML = `
+            <tr>
+
+                <td
+                    colspan="4"
+                    style="text-align:center;">
+
+                    No categories found.
+
+                </td>
+
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+
+    /*
+       Create table row for
+       every database category
+    */
+
+    categories.forEach(
+        function (category) {
+
+
+            const row =
+                document.createElement("tr");
+
+
+            /*
+               Status
+            */
+
+            let statusClass;
+
+            if (
+                category.status === "Active"
+            ) {
+
+                statusClass =
+                    "status-completed";
+
+            }
+            else {
+
+                statusClass =
+                    "status-cancelled";
+
+            }
+
+
+
+            /*
+               Create row
+            */
+
+            row.innerHTML = `
+
+                <td>
+
+                    <strong>
+                        ${escapeHtml(
+                            category.categoryName
+                        )}
+                    </strong>
+
+                </td>
+
+
+                <td>
+
+                    Rs.
+                    ${Number(
+                        category.ratePerKg
+                    ).toFixed(2)}
+
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="status-pill ${statusClass}">
+
+                        ${escapeHtml(
+                            category.status || "Active"
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="btn-action-view"
+                        onclick="editDashboardCategory(
+                            ${category.categoryId}
+                        )">
+
+                        Edit
+
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tableBody.appendChild(row);
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   LOAD KPI STATS FROM DATABASE
+   (recycling_transaction + customer tables,
+   via /api/admin/stats)
+===================================================== */
+
+async function loadAdminStats() {
+
+    try {
+
+        const response =
+            await fetch(API_BASE + "/admin/stats");
+
+        if (!response.ok) {
+            console.error("Unable to load admin stats.");
+            return;
+        }
+
+        const stats = await response.json();
+
+        document.getElementById("kpiTotalTransactions").textContent =
+            (parseInt(stats.totalTransactions) || 0).toLocaleString("en-US");
+
+        document.getElementById("kpiCollectedWeight").textContent =
+            (parseFloat(stats.collectedWeight) || 0).toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        document.getElementById("kpiTotalValue").textContent =
+            (parseFloat(stats.totalValue) || 0).toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        document.getElementById("kpiActiveUsers").textContent =
+            (parseInt(stats.activeUsers) || 0).toLocaleString("en-US");
+
+    } catch (error) {
+
+        console.error("Admin stats loading error:", error);
+
+    }
+
+}
+
+
+
+/* =====================================================
+   LOAD RECENT SYSTEM ACTIVITY FROM DATABASE
+   (recycling_transaction + transaction_item tables,
+   via /api/admin/recent-transactions)
+===================================================== */
+
+async function loadRecentActivity() {
+
+    const tableBody =
+        document.getElementById("recentActivityTableBody");
+
+    try {
+
+        const response =
+            await fetch(API_BASE + "/admin/recent-transactions?limit=5");
+
+        if (!response.ok) {
+
+            tableBody.innerHTML =
+                '<tr><td colspan="7" style="text-align:center; color:red;">Failed to load recent activity.</td></tr>';
+
+            return;
+
+        }
+
+        const transactions = await response.json();
+
+        if (!Array.isArray(transactions) || transactions.length === 0) {
+
+            tableBody.innerHTML =
+                '<tr><td colspan="7" style="text-align:center;">No transactions found.</td></tr>';
+
+            return;
+
+        }
+
+        tableBody.innerHTML = "";
+
+        transactions.forEach(function(tx) {
+
+            const dateStr = tx.transactionDate
+                ? new Date(tx.transactionDate).toISOString().split("T")[0]
+                : "-";
+
+            const txIdLabel =
+                "TXN-" + String(tx.transactionId).padStart(6, "0");
+
+            const custIdLabel =
+                "CUST-" + String(tx.customerId).padStart(6, "0");
+
+            const statusClass =
+                (tx.status || "").toLowerCase() === "completed"
+                    ? "status-completed"
+                    : "status-cancelled";
+
+            const row = document.createElement("tr");
+
+            row.innerHTML =
+                "<td>" + escapeHtml(dateStr) + "</td>" +
+                '<td class="tx-id">' + escapeHtml(txIdLabel) + "</td>" +
+                "<td>" + escapeHtml(custIdLabel) + "</td>" +
+                "<td>" + escapeHtml(tx.categoryName || "-") + "</td>" +
+                "<td>" + (parseFloat(tx.totalWeight) || 0).toFixed(2) + "</td>" +
+                "<td>" + (parseFloat(tx.totalValue) || 0).toFixed(2) + "</td>" +
+                '<td><span class="status-pill ' + statusClass + '">' +
+                    escapeHtml(tx.status || "Completed") +
+                "</span></td>";
+
+            tableBody.appendChild(row);
+
+        });
+
+    } catch (error) {
+
+        console.error("Recent activity loading error:", error);
+
+        tableBody.innerHTML =
+            '<tr><td colspan="7" style="text-align:center; color:red;">Cannot connect to the server.</td></tr>';
+
+    }
+
+}
+
+
+
+/* =====================================================
+   LOAD PENDING REDEMPTIONS FROM DATABASE
+   (reward_redemption table, via
+   /api/rewards/redemptions/pending)
+===================================================== */
+
+async function loadPendingRedemptions() {
+
+    const listContainer =
+        document.getElementById("pendingRedemptionsList");
+
+    try {
+
+        const response =
+            await fetch(API_BASE + "/rewards/redemptions/pending");
+
+        if (!response.ok) {
+
+            listContainer.innerHTML =
+                '<div class="admin-alert-empty-msg">Failed to load pending redemptions.</div>';
+
+            return;
+
+        }
+
+        const pending = await response.json();
+
+        if (!Array.isArray(pending) || pending.length === 0) {
+
+            listContainer.innerHTML =
+                '<div class="admin-alert-empty-msg">No pending redemptions.</div>';
+
+            return;
+
+        }
+
+        listContainer.innerHTML = "";
+
+        pending.forEach(function(redemption) {
+
+            const custIdLabel =
+                "CUST-" + String(redemption.customerId).padStart(6, "0");
+
+            const item = document.createElement("div");
+
+            item.className = "admin-alert-item";
+
+            item.innerHTML =
+                '<div class="alert-info">' +
+                    "<strong>" + escapeHtml(custIdLabel) + "</strong>" +
+                    "<span>Requested \"" + escapeHtml(redemption.itemName || "-") +
+                        "\" for " +
+                        (parseInt(redemption.pointsUsed) || 0).toLocaleString("en-US") +
+                        " Points</span>" +
+                '</div>' +
+                '<div class="alert-actions">' +
+                    '<button type="button" class="btn-action-approve">Approve</button>' +
+                    '<button type="button" class="btn-action-reject">Reject</button>' +
+                '</div>';
+
+            item.querySelector(".btn-action-approve").addEventListener(
+                "click",
+                function() {
+                    handleRedemptionAction(redemption.redemptionId, "approve", item);
+                }
+            );
+
+            item.querySelector(".btn-action-reject").addEventListener(
+                "click",
+                function() {
+                    handleRedemptionAction(redemption.redemptionId, "reject", item);
+                }
+            );
+
+            listContainer.appendChild(item);
+
+        });
+
+    } catch (error) {
+
+        console.error("Pending redemptions loading error:", error);
+
+        listContainer.innerHTML =
+            '<div class="admin-alert-empty-msg">Cannot connect to the server.</div>';
+
+    }
+
+}
+
+
+async function handleRedemptionAction(redemptionId, action, itemElement) {
+
+    const buttons =
+        itemElement.querySelectorAll("button");
+
+    buttons.forEach(function(btn) {
+        btn.disabled = true;
+    });
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE + "/rewards/redemptions/" + redemptionId + "/" + action,
+                { method: "POST" }
+            );
+
+        if (!response.ok) {
+
+            const text = await response.text();
+            alert(text || "Failed to update redemption.");
+
+            buttons.forEach(function(btn) {
+                btn.disabled = false;
+            });
+
+            return;
+
+        }
+
+        /* Remove the row and refresh stats since points may have changed */
+
+        itemElement.remove();
+
+        loadAdminStats();
+
+        const listContainer =
+            document.getElementById("pendingRedemptionsList");
+
+        if (!listContainer.querySelector(".admin-alert-item")) {
+
+            listContainer.innerHTML =
+                '<div class="admin-alert-empty-msg">No pending redemptions.</div>';
+
+        }
+
+    } catch (error) {
+
+        console.error("Redemption action error:", error);
+        alert("Cannot connect to the server.");
+
+        buttons.forEach(function(btn) {
+            btn.disabled = false;
+        });
+
+    }
+
+}
+
+
+
+/* =====================================================
+   EDIT BUTTON
+===================================================== */
+
+function editDashboardCategory(id) {
+
+    /*
+       Open Category & Rates page
+       with selected category ID.
+
+       category-rates.html can use this ID
+       if needed.
+    */
+
+    window.location.href =
+        "category-rates.html?id=" +
+        id;
+
+}
+
+
+
+/* =====================================================
+   HTML ESCAPE
+===================================================== */
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+/* =====================================================
+   RELOAD DATA WHEN RETURNING TO PAGE
+===================================================== */
+
+window.addEventListener(
+    "pageshow",
+    function () {
+
+        loadDashboardCategories();
+        loadAdminStats();
+        loadRecentActivity();
+        loadPendingRedemptions();
+
+    }
+);
+
+</script>
+
+
+</body>
+</html>

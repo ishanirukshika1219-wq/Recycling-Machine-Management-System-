@@ -1,0 +1,621 @@
+<!-- appointment.html (customer) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Appointment - SRMMS</title>
+  <link rel="stylesheet" href="src/dashboard.css">
+
+  <style>
+    /* Page-specific styles only. Everything else comes from dashboard.css */
+    .appt-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 1000px) { .appt-layout { grid-template-columns: 1fr; } }
+
+    .appt-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+    .appt-card h3 { margin: 0 0 4px; }
+    .appt-card .appt-sub { margin: 0 0 20px; color: #6b7280; font-size: 14px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600; color: #374151; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 11px 12px; border: 1px solid #d1d5db; border-radius: 8px;
+      font-size: 14px; font-family: inherit; background: #fff; box-sizing: border-box;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: 2px solid #2e9e5b; outline-offset: 1px; border-color: #2e9e5b;
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    /* Time slot buttons (only free slots are rendered) */
+    .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media (max-width: 480px) { .slot-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .slot-btn {
+      padding: 10px 6px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff;
+      font-size: 13px; font-weight: 600; color: #374151; cursor: pointer; font-family: inherit;
+    }
+    .slot-btn:hover { border-color: #2e9e5b; }
+    .slot-btn.selected { background: #2e9e5b; border-color: #2e9e5b; color: #fff; }
+
+    .slot-hint { margin: 8px 0 0; font-size: 13px; color: #6b7280; }
+    .slot-hint.warn { color: #a42626; }
+
+    .submit-btn {
+      width: 100%; padding: 13px; border: none; border-radius: 8px; background: #2e9e5b;
+      color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+    .submit-btn:hover { background: #268a4e; }
+    .submit-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    .form-message { margin-top: 14px; padding: 10px 12px; border-radius: 8px; font-size: 14px; display: none; }
+    .form-message.success { display: block; background: #e7f6ed; color: #1d6b3e; }
+    .form-message.error   { display: block; background: #fdecec; color: #a42626; }
+
+    /* Appointment list */
+    .appt-list { list-style: none; margin: 0; padding: 0; }
+    .appt-item {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid #eef0f2;
+    }
+    .appt-item:last-child { border-bottom: none; }
+    .appt-item-main strong { display: block; font-size: 15px; }
+    .appt-item-main span { display: block; font-size: 13px; color: #6b7280; margin-top: 2px; }
+    .appt-item-main .appt-note { margin-top: 6px; font-weight: 600; }
+    .appt-note.note-pending   { color: #b7791f; }
+    .appt-note.note-confirmed { color: #1d6b3e; }
+    .appt-note.note-cancelled { color: #a42626; }
+
+    .appt-item-side { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .cancel-link { background: none; border: none; padding: 0; color: #c0392b; font-size: 13px; cursor: pointer; font-family: inherit; }
+    .cancel-link:hover { text-decoration: underline; }
+
+    .status-confirmed { background: #e7f6ed; color: #1d6b3e; }
+    .status-cancelled { background: #fdecec; color: #a42626; }
+
+    .empty-state { text-align: center; color: #6b7280; padding: 24px 0; font-size: 14px; }
+  </style>
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-logo-icon">♻</span>
+        <span class="brand-name">SRMMS</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="customer-dashboard.html">
+              <span class="nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="start-recycling.html">
+              <span class="nav-icon">♻</span>
+              <span>Start Recycling</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="customer-appoinments.html">
+              <span class="nav-icon">📅</span>
+              <span>Appointments</span>
+            </a>
+          </li>
+          <li>
+            <a href="transactions.html">
+              <span class="nav-icon">📋</span>
+              <span>Transactions</span>
+            </a>
+          </li>
+          <li>
+            <a href="rewards.html">
+              <span class="nav-icon">🏅</span>
+              <span>Rewards</span>
+            </a>
+          </li>
+          <li>
+            <a href="profile.html">
+              <span class="nav-icon">👤</span>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="settings.html">
+              <span class="nav-icon">⚙</span>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li class="logout-item">
+            <a href="logout.html">
+              <span class="nav-icon">↪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle">☰</button>
+
+        <div class="header-right">
+          <div class="user-profile-badge">
+            <div class="user-avatar">
+              <img src="https://i.pravatar.cc/100?img=47" alt="Ishani">
+            </div>
+            
+          </div>
+          
+         
+        </div>
+      </header>
+
+      <div class="dashboard-wrapper">
+
+        <div class="welcome-header">
+          <div class="welcome-text">
+            <h1>Appointments</h1>
+            <p>Book a time to drop off your recyclables at a smart recycling machine.</p>
+          </div>
+        </div>
+
+        <div class="appt-layout">
+
+          <!-- Booking form -->
+          <section class="appt-card">
+            <h3>Book an appointment</h3>
+            <p class="appt-sub">Choose a category and a date to see the free time slots.</p>
+
+            <form id="appointmentForm" novalidate>
+
+              <div class="form-group">
+                <label for="categorySelect">Waste category</label>
+                <select id="categorySelect" required>
+                  <option value="">Select a category</option>
+                  <option value="Plastic">Plastic</option>
+                  <option value="Glass">Glass</option>
+                  <option value="Paper">Paper</option>
+                  <option value="Metal">Metal</option>
+                  
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="appointmentDate">Date</label>
+                <input type="date" id="appointmentDate" required>
+              </div>
+
+              <div class="form-group">
+                <label>Available time slots</label>
+                <div class="slot-grid" id="slotGrid"></div>
+                <p class="slot-hint" id="slotHint">Select a category and a date to see free slots.</p>
+              </div>
+
+              <div class="form-group">
+                <label for="appointmentNotes">Notes (optional)</label>
+                <textarea id="appointmentNotes" maxlength="250" placeholder="Anything the operator should know?"></textarea>
+              </div>
+
+              <button type="submit" class="submit-btn" id="submitBtn">Book appointment</button>
+              <div class="form-message" id="formMessage" role="status"></div>
+
+            </form>
+          </section>
+
+          <!-- My appointments -->
+          <section class="appt-card">
+            <h3>My appointments</h3>
+            <p class="appt-sub">A booking stays Pending until the admin confirms it.</p>
+
+            <ul class="appt-list" id="appointmentList">
+              <li class="empty-state">Loading appointments...</li>
+            </ul>
+          </section>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+
+    const API_BASE = "http://localhost:8080/api";
+
+    /* ---------- LOGIN CHECK (same as dashboard) ---------- */
+
+    const customerData = localStorage.getItem("customer");
+    let customer = null;
+
+    if (!customerData) {
+        window.location.href = "/";
+    } else {
+        try {
+            customer = JSON.parse(customerData);
+        } catch (error) {
+            console.error("Invalid customer login data:", error);
+            localStorage.removeItem("customer");
+            window.location.href = "/";
+        }
+    }
+
+    let selectedSlot = "";
+
+    // Show any hidden JavaScript error on the page (instead of failing silently)
+    window.addEventListener("error", function(e) {
+        const box = document.getElementById("formMessage");
+        if (box) {
+            box.textContent = "Page error: " + e.message + " (line " + e.lineno + ")";
+            box.className = "form-message error";
+        }
+    });
+
+    /* ---------- HELPERS ---------- */
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text == null ? "" : String(text);
+        return div.innerHTML;
+    }
+
+    function showMessage(text, type) {
+        const box = document.getElementById("formMessage");
+        box.textContent = text;
+        box.className = "form-message " + type;
+    }
+
+    function clearMessage() {
+        const box = document.getElementById("formMessage");
+        box.textContent = "";
+        box.className = "form-message";
+    }
+
+    function formatTime(t) {
+        // "14:00" -> "2:00 PM"
+        const parts = String(t).split(":");
+        let h = parseInt(parts[0], 10);
+        const m = parts[1] || "00";
+        const suffix = h >= 12 ? "PM" : "AM";
+        h = h % 12 || 12;
+        return h + ":" + m + " " + suffix;
+    }
+
+    function statusInfo(status) {
+        const s = (status || "").toLowerCase();
+
+        if (s === "confirmed") {
+            return { cls: "status-confirmed", noteCls: "note-confirmed",
+                     note: "Confirmed. Please arrive at your booked time." };
+        }
+        if (s === "completed") {
+            return { cls: "status-confirmed", noteCls: "note-confirmed",
+                     note: "Completed. Thank you for recycling!" };
+        }
+        if (s === "cancelled") {
+            return { cls: "status-cancelled", noteCls: "note-cancelled",
+                     note: "This appointment was cancelled." };
+        }
+        return { cls: "status-pending", noteCls: "note-pending",
+                 note: "Pending. Waiting for admin confirmation." };
+    }
+
+    async function readError(response, fallback) {
+        try {
+            const err = await response.json();
+            if (err && err.message) return err.message;
+        } catch (e) { /* ignore */ }
+        return fallback;
+    }
+
+    /* ---------- DATE: block past dates ---------- */
+
+    function setupDateInput() {
+        const input = document.getElementById("appointmentDate");
+        const today = new Date();
+        input.min = today.getFullYear() + "-" +
+            String(today.getMonth() + 1).padStart(2, "0") + "-" +
+            String(today.getDate()).padStart(2, "0");
+        input.addEventListener("change", loadSlots);
+    }
+
+    /* ---------- AVAILABLE TIME SLOTS (only free ones are shown) ---------- */
+
+    function renderSlots(slots) {
+        const grid = document.getElementById("slotGrid");
+        const hint = document.getElementById("slotHint");
+
+        grid.innerHTML = "";
+        hint.className = "slot-hint";
+
+        if (slots.length === 0) {
+            hint.textContent = "No free slots for this date. Try another date.";
+            hint.className = "slot-hint warn";
+            return;
+        }
+
+        hint.textContent = "Tap a time to select it.";
+
+        slots.forEach(function(slot) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "slot-btn" + (slot === selectedSlot ? " selected" : "");
+            btn.textContent = formatTime(slot);
+
+            btn.addEventListener("click", function() {
+                selectedSlot = slot;
+                grid.querySelectorAll(".slot-btn").forEach(function(b) { b.classList.remove("selected"); });
+                btn.classList.add("selected");
+            });
+
+            grid.appendChild(btn);
+        });
+    }
+
+    async function loadSlots() {
+        const category = document.getElementById("categorySelect").value;
+        const date = document.getElementById("appointmentDate").value;
+        const grid = document.getElementById("slotGrid");
+        const hint = document.getElementById("slotHint");
+
+        selectedSlot = "";
+        grid.innerHTML = "";
+        hint.className = "slot-hint";
+
+        if (!category || !date) {
+            hint.textContent = "Select a category and a date to see free slots.";
+            return;
+        }
+
+        hint.textContent = "Checking availability...";
+
+        try {
+            const response = await fetch(
+                API_BASE + "/appointments/available-slots?category=" +
+                encodeURIComponent(category) + "&date=" + encodeURIComponent(date)
+            );
+
+            if (!response.ok) throw new Error("HTTP " + response.status);
+
+            renderSlots(await response.json());
+
+        } catch (error) {
+            console.error("Slot loading error:", error);
+            hint.textContent = "Cannot load time slots. Try again.";
+            hint.className = "slot-hint warn";
+        }
+    }
+
+    /* ---------- SUBMIT ---------- */
+
+    async function submitAppointment(event) {
+        event.preventDefault();
+        clearMessage();
+        console.log("Book appointment clicked");
+
+        const category = document.getElementById("categorySelect").value;
+        const date = document.getElementById("appointmentDate").value;
+        const notes = document.getElementById("appointmentNotes").value.trim();
+
+        if (!customer || !customer.customerId) {
+            showMessage("Your login details are missing. Please log out and log in again.", "error");
+            return;
+        }
+        if (!category)  { showMessage("Select a waste category.", "error"); return; }
+        if (!date)      { showMessage("Select a date.", "error"); return; }
+        if (!selectedSlot) { showMessage("Select a time slot.", "error"); return; }
+
+        const payload = {
+            customerId: customer.customerId,
+            customerName: customer.name || customer.email,
+            categoryName: category,
+            appointmentDate: date,
+            appointmentTime: selectedSlot,
+            notes: notes
+        };
+
+        const btn = document.getElementById("submitBtn");
+        btn.disabled = true;
+        btn.textContent = "Booking...";
+
+        try {
+            const response = await fetch(API_BASE + "/appointments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                showMessage(await readError(response, "Could not book the appointment. Try again."), "error");
+                loadSlots();   // the slot may have just been taken, refresh the list
+                return;
+            }
+
+            const bookedTime = formatTime(selectedSlot);
+
+            document.getElementById("appointmentForm").reset();
+            selectedSlot = "";
+            document.getElementById("slotGrid").innerHTML = "";
+            document.getElementById("slotHint").className = "slot-hint";
+            document.getElementById("slotHint").textContent = "Select a category and a date to see free slots.";
+
+            showMessage("Booked for " + date + " at " + bookedTime +
+                ". Status: Pending until the admin confirms.", "success");
+
+            loadAppointments();
+
+        } catch (error) {
+            console.error("Booking error:", error);
+            showMessage("Cannot reach the server. Check that the backend is running.", "error");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Book appointment";
+        }
+    }
+
+    /* ---------- MY APPOINTMENTS ---------- */
+
+    async function loadAppointments() {
+        const list = document.getElementById("appointmentList");
+
+        if (!customer || !customer.customerId) {
+            list.innerHTML = '<li class="empty-state">Log in again to see your appointments.</li>';
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                API_BASE + "/appointments/customer/" + customer.customerId
+            );
+
+            if (!response.ok) {
+                list.innerHTML = '<li class="empty-state">Unable to load appointments.</li>';
+                return;
+            }
+
+            const data = await response.json();
+
+            if (!Array.isArray(data) || data.length === 0) {
+                list.innerHTML = '<li class="empty-state">No appointments yet. Book your first one.</li>';
+                return;
+            }
+
+            list.innerHTML = "";
+
+            data.forEach(function(a) {
+
+                const status = a.status || "Pending";
+                const info = statusInfo(status);
+                const s = status.toLowerCase();
+                const canCancel = (s === "pending" || s === "confirmed");
+
+                const li = document.createElement("li");
+                li.className = "appt-item";
+
+                li.innerHTML =
+                    '<div class="appt-item-main">' +
+                        "<strong>" + escapeHtml(a.categoryName || "-") + "</strong>" +
+                        "<span>" + escapeHtml(a.appointmentDate || "-") + " at " +
+                            escapeHtml(a.appointmentTime ? formatTime(String(a.appointmentTime).substring(0, 5)) : "-") + "</span>" +
+                        '<span class="appt-note ' + info.noteCls + '">' + escapeHtml(info.note) + "</span>" +
+                    "</div>" +
+                    '<div class="appt-item-side">' +
+                        '<span class="status-pill ' + info.cls + '">' + escapeHtml(status) + "</span>" +
+                       
+                    "</div>";
+
+                list.appendChild(li);
+            });
+
+            list.querySelectorAll(".cancel-link").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    cancelAppointment(btn.getAttribute("data-id"));
+                });
+            });
+
+        } catch (error) {
+            console.error("Appointment loading error:", error);
+            list.innerHTML = '<li class="empty-state">Cannot reach the server.</li>';
+        }
+    }
+
+    async function cancelAppointment(id) {
+        if (!id || !confirm("Cancel this appointment?")) return;
+
+        try {
+            const response = await fetch(
+                API_BASE + "/appointments/" + id + "/cancel?customerId=" + customer.customerId,
+                { method: "PUT" }
+            );
+
+            if (!response.ok) {
+                alert(await readError(response, "Could not cancel the appointment."));
+                return;
+            }
+
+            loadAppointments();
+            loadSlots();   // the freed slot becomes available again
+
+        } catch (error) {
+            console.error("Cancel error:", error);
+            alert("Cannot reach the server.");
+        }
+    }
+
+    /* ---------- PROFILE PHOTO (same as dashboard) ---------- */
+
+    async function loadProfilePhoto() {
+
+        if (!customer || !customer.customerId) {
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                API_BASE + "/customers/" + customer.customerId
+            );
+
+            if (!response.ok) {
+                return;
+            }
+
+            const data = await response.json();
+
+            // Keep the latest customer data locally and use the same saved
+            // profile photo that is displayed on the other customer pages.
+            if (data && data.profilePhoto && String(data.profilePhoto).trim() !== "") {
+                customer.profilePhoto = data.profilePhoto;
+                localStorage.setItem("customer", JSON.stringify(customer));
+
+                document.querySelectorAll(
+                    ".user-avatar img, #headerProfilePhoto, .profile-avatar-img"
+                ).forEach(function(img) {
+                    img.src = data.profilePhoto;
+                });
+            }
+
+        } catch (error) {
+            console.error("Profile photo loading error:", error);
+        }
+    }
+
+    /* ---------- INIT ---------- */
+
+    document.getElementById("appointmentForm")
+        .addEventListener("submit", submitAppointment);
+
+    document.getElementById("categorySelect").addEventListener("change", loadSlots);
+
+    setupDateInput();
+    loadAppointments();
+    loadProfilePhoto();
+
+    // Pick up admin confirmations without a manual refresh
+    setInterval(loadAppointments, 30000);
+
+  </script>
+
+</body>
+</html>

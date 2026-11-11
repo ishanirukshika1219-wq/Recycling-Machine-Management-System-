@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Category & Rates - SRMMS Admin</title>
+
+    <link rel="stylesheet" href="src/dashboard.css">
+</head>
+
+<body class="dashboard-body">
+
+<div class="dashboard-container">
+
+    <!-- =========================
+         ADMIN SIDEBAR
+    ========================== -->
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+            <span class="brand-logo-icon">♻</span>
+
+            <span class="brand-name">
+                SRMMS
+                <small class="admin-badge">Admin</small>
+            </span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <ul>
+
+                <li>
+                    <a href="admin-dashboard.html">
+                        <span class="nav-icon">📊</span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="active">
+                    <a href="category-rates.html">
+                        <span class="nav-icon">🏷</span>
+                        <span>Category & Rates</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="all-transactions.html">
+                        <span class="nav-icon">📋</span>
+                        <span>All Transactions</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="appointments.html">
+                        <span class="nav-icon">📅</span>
+                        <span>Appointments</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="manage-users.html">
+                        <span class="nav-icon">👥</span>
+                        <span>Manage Users</span>
+                    </a>
+                </li>
+
+                <li>
+             <a href="staff-management.html">
+                <span class="nav-icon">🧑‍💼</span>
+                <span>Staff Management</span>
+             </a>
+            </li>
+
+                
+                <li>
+                    <a href="customer-inquiries.html">
+                        <span class="nav-icon">📩</span>
+                        <span>Customer Inquiries</span>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="reward-rules.html">
+                        <span class="nav-icon">🏅</span>
+                        <span>Reward Rules</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="reports.html">
+                        <span class="nav-icon">📈</span>
+                        <span>Reports</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="admin-settings.html">
+                        <span class="nav-icon">⚙</span>
+                        <span>Settings</span>
+                    </a>
+                </li>
+
+                <li class="logout-item">
+                    <a href="logout.html">
+                        <span class="nav-icon">↪</span>
+                        <span>Logout</span>
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+    <main class="main-content">
+
+        <!-- TOP HEADER -->
+        <header class="top-header">
+
+            <button class="menu-toggle">
+                ☰
+            </button>
+
+            <div class="header-right">
+
+                
+                <div class="user-profile-badge">
+
+                    <span class="user-name">
+                        System Admin ▾
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             DASHBOARD WRAPPER
+        ========================== -->
+        <div class="dashboard-wrapper">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header-block page-header-flex">
+
+                <div>
+
+                    <h1 class="page-title">
+                        Recyclable Categories & Rates
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Configure material categories, rates per kilogram,
+                        and operational availability.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 CATEGORY & RATES GRID
+            ========================== -->
+            <div class="category-rates-grid">
+
+
+                <!-- =========================
+                     LEFT SIDE - FORM
+                ========================== -->
+                <div class="profile-card-panel">
+
+                    <h2
+                        class="panel-title"
+                        id="formTitle">
+
+                        Add Material
+
+                    </h2>
+
+
+                    <!-- Hidden Category ID -->
+                    <input
+                        type="hidden"
+                        id="categoryId">
+
+
+                    <form
+                        class="profile-form"
+                        id="categoryForm">
+
+
+                        <!-- CATEGORY NAME -->
+                        <div class="form-group">
+
+                            <label for="categoryName">
+                                Category Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="categoryName"
+                                placeholder="e.g., Plastic, Glass, Paper"
+                                required>
+
+                        </div>
+
+
+                        <!-- RATE PER KG -->
+                        <div class="form-group">
+
+                            <label for="ratePerKg">
+                                Rate Per Kg (Rs.)
+                            </label>
+
+                            <input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                id="ratePerKg"
+                                placeholder="0.00"
+                                required>
+
+                        </div>
+
+
+                        <!-- STATUS -->
+                        <div class="form-group">
+
+                            <label for="categoryStatus">
+                                Availability Status
+                            </label>
+
+                            <select
+                                id="categoryStatus"
+                                class="settings-select">
+
+                                <option value="Active">
+                                    Active
+                                </option>
+
+                                <option value="Disabled">
+                                    Disabled
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+                        <div class="form-group">
+
+                            <label for="categoryDesc">
+                                Description
+                            </label>
+
+                            <textarea
+                                id="categoryDesc"
+                                rows="3"
+                                placeholder="Brief details on accepted items (e.g., PET Bottles, Cardboard)..."></textarea>
+
+                        </div>
+
+
+                        <!-- FORM BUTTONS -->
+                        <div class="form-actions-flex">
+
+                            <button
+                                type="button"
+                                class="btn-outline-edit"
+                                id="resetButton">
+
+                                Reset
+
+                            </button>
+
+
+                            <button
+                                type="submit"
+                                class="btn-primary-save"
+                                id="saveButton">
+
+                                💾 Save Category
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+
+                <!-- =========================
+                     RIGHT SIDE - TABLE
+                ========================== -->
+                <div class="transactions-panel-card">
+
+
+                    <div class="panel-header-flex">
+
+                        <h2 class="panel-title">
+                            Configured Material Rates
+                        </h2>
+
+
+                        <!-- SEARCH -->
+                        <div class="table-search-box">
+
+                            <input
+                                type="text"
+                                id="searchCategory"
+                                placeholder="Search category..."
+                                class="table-search-input">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TABLE -->
+                    <div class="table-responsive">
+
+                        <table
+                            class="transactions-table full-history-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Cat ID</th>
+
+                                    <th>Category Name</th>
+
+                                    <th>Description</th>
+
+                                    <th>Rate / Kg</th>
+
+                                    <th>Status</th>
+
+                                    <th>Actions</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="categoryTableBody">
+
+                                <tr>
+
+                                    <td
+                                        colspan="6"
+                                        style="text-align:center;">
+
+                                        Loading categories...
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   BACKEND API URL
+===================================================== */
+
+const API_URL =
+    "http://localhost:8080/api/categories";
+
+
+/* =====================================================
+   STORE DATABASE DATA
+===================================================== */
+
+let allCategories = [];
+
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadCategories();
+
+    }
+);
+
+
+
+/* =====================================================
+   WHEN USER COMES BACK TO PAGE
+===================================================== */
+
+window.addEventListener(
+    "pageshow",
+    function () {
+
+        loadCategories();
+
+    }
+);
+
+
+
+/* =====================================================
+   LOAD CATEGORIES FROM DATABASE
+===================================================== */
+
+async function loadCategories() {
+
+    const tableBody =
+        document.getElementById(
+            "categoryTableBody"
+        );
+
+
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="6" style="text-align:center;">
+                Loading categories...
+            </td>
+        </tr>
+    `;
+
+
+    try {
+
+        const response = await fetch(
+            API_URL +
+            "?time=" +
+            new Date().getTime(),
+            {
+                method: "GET",
+                cache: "no-store"
+            }
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP Error: " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        allCategories = data;
+
+
+        displayCategories(
+            allCategories
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Error loading categories:",
+            error
+        );
+
+
+        tableBody.innerHTML = `
+            <tr>
+                <td
+                    colspan="6"
+                    style="text-align:center; color:red;">
+
+                    Failed to load categories.
+
+                    <br><br>
+
+                    ${escapeHtml(error.message)}
+
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   DISPLAY CATEGORIES
+===================================================== */
+
+function displayCategories(categories) {
+
+    const tableBody =
+        document.getElementById(
+            "categoryTableBody"
+        );
+
+
+    tableBody.innerHTML = "";
+
+
+    if (
+        !categories ||
+        categories.length === 0
+    ) {
+
+        tableBody.innerHTML = `
+            <tr>
+                <td
+                    colspan="6"
+                    style="text-align:center;">
+
+                    No categories found.
+
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    categories.forEach(
+        function (category) {
+
+            const row =
+                document.createElement("tr");
+
+
+            let statusClass;
+
+            if (
+                category.status === "Active"
+            ) {
+
+                statusClass =
+                    "status-completed";
+
+            }
+            else {
+
+                statusClass =
+                    "status-cancelled";
+
+            }
+
+
+            let statusButtonText;
+
+            let statusButtonClass;
+
+            let newStatus;
+
+
+            if (
+                category.status === "Active"
+            ) {
+
+                statusButtonText =
+                    "Disable";
+
+                statusButtonClass =
+                    "btn-action-reject";
+
+                newStatus =
+                    "Disabled";
+
+            }
+            else {
+
+                statusButtonText =
+                    "Enable";
+
+                statusButtonClass =
+                    "btn-action-approve";
+
+                newStatus =
+                    "Active";
+
+            }
+
+
+            const categoryCode =
+                "CAT-" +
+                String(category.categoryId)
+                    .padStart(3, "0");
+
+
+            row.innerHTML = `
+
+                <td class="tx-id">
+                    ${categoryCode}
+                </td>
+
+
+                <td>
+                    <strong>
+                        ${escapeHtml(
+                            category.categoryName
+                        )}
+                    </strong>
+                </td>
+
+
+                <td>
+                    ${escapeHtml(
+                        category.description || "-"
+                    )}
+                </td>
+
+
+                <td class="rate-highlight">
+                    Rs.
+                    ${Number(
+                        category.ratePerKg
+                    ).toFixed(2)}
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="status-pill ${statusClass}">
+
+                        ${escapeHtml(
+                            category.status || "Active"
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div
+                        class="action-buttons-wrap">
+
+
+                        <button
+                            type="button"
+                            class="btn-action-view"
+                            onclick="editCategory(${category.categoryId})">
+
+                            Edit
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="${statusButtonClass}"
+                            onclick="changeStatus(
+                                ${category.categoryId},
+                                '${newStatus}'
+                            )">
+
+                            ${statusButtonText}
+
+                        </button>
+
+
+                    </div>
+
+                </td>
+
+            `;
+
+
+            tableBody.appendChild(row);
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   EDIT CATEGORY
+===================================================== */
+
+function editCategory(id) {
+
+    const category =
+        allCategories.find(
+            function (item) {
+
+                return (
+                    item.categoryId === id
+                );
+
+            }
+        );
+
+
+    if (!category) {
+
+        alert(
+            "Category not found."
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "categoryId"
+    ).value =
+        category.categoryId;
+
+
+    document.getElementById(
+        "categoryName"
+    ).value =
+        category.categoryName;
+
+
+    document.getElementById(
+        "ratePerKg"
+    ).value =
+        category.ratePerKg;
+
+
+    document.getElementById(
+        "categoryStatus"
+    ).value =
+        category.status || "Active";
+
+
+    document.getElementById(
+        "categoryDesc"
+    ).value =
+        category.description || "";
+
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Edit Material";
+
+
+    document.getElementById(
+        "saveButton"
+    ).textContent =
+        "💾 Update Category";
+
+
+    document
+        .querySelector(
+            ".profile-card-panel"
+        )
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+
+/* =====================================================
+   ADD NEW CATEGORY BUTTON
+===================================================== */
+
+const addCategoryButton =
+    document.getElementById(
+        "openAddCategoryModal"
+    );
+
+if (addCategoryButton) {
+
+    addCategoryButton.addEventListener(
+        "click",
+        function () {
+
+            clearForm();
+
+            document
+                .getElementById(
+                    "categoryName"
+                )
+                .focus();
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   RESET BUTTON
+===================================================== */
+
+document.getElementById(
+    "resetButton"
+).addEventListener(
+    "click",
+    function () {
+
+        clearForm();
+
+    }
+);
+
+
+
+/* =====================================================
+   CLEAR FORM
+===================================================== */
+
+function clearForm() {
+
+    document.getElementById(
+        "categoryId"
+    ).value = "";
+
+
+    document.getElementById(
+        "categoryName"
+    ).value = "";
+
+
+    document.getElementById(
+        "ratePerKg"
+    ).value = "";
+
+
+    document.getElementById(
+        "categoryStatus"
+    ).value = "Active";
+
+
+    document.getElementById(
+        "categoryDesc"
+    ).value = "";
+
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Add Material";
+
+
+    document.getElementById(
+        "saveButton"
+    ).textContent =
+        "💾 Save Category";
+
+}
+
+
+
+/* =====================================================
+   SAVE / UPDATE CATEGORY
+===================================================== */
+
+document.getElementById(
+    "categoryForm"
+).addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+
+        const categoryId =
+            document.getElementById(
+                "categoryId"
+            ).value;
+
+
+        const categoryName =
+            document.getElementById(
+                "categoryName"
+            ).value.trim();
+
+
+        const ratePerKg =
+            document.getElementById(
+                "ratePerKg"
+            ).value;
+
+
+        const status =
+            document.getElementById(
+                "categoryStatus"
+            ).value;
+
+
+        const description =
+            document.getElementById(
+                "categoryDesc"
+            ).value.trim();
+
+
+
+        /* ==========================================
+           BASIC VALIDATION
+        ========================================== */
+
+        if (
+            categoryName === ""
+        ) {
+
+            alert(
+                "Please enter category name."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            ratePerKg === "" ||
+            Number(ratePerKg) < 0
+        ) {
+
+            alert(
+                "Please enter a valid rate."
+            );
+
+            return;
+
+        }
+
+
+
+        /* ==========================================
+           DUPLICATE CATEGORY NAME CHECK
+           
+           This checks the categories already loaded
+           from the database.
+           
+           It is case-insensitive.
+           
+           Example:
+           Plastic
+           plastic
+           PLASTIC
+           PlAsTiC
+           
+           All are considered the same category.
+        ========================================== */
+
+        const enteredName =
+            categoryName
+                .trim()
+                .toLowerCase();
+
+
+        const duplicateCategory =
+            allCategories.find(
+                function (category) {
+
+                    const existingName =
+                        (
+                            category.categoryName
+                            || ""
+                        )
+                        .trim()
+                        .toLowerCase();
+
+
+                    /*
+                    If editing an existing category,
+                    ignore the same category itself.
+                    */
+
+                    if (
+                        categoryId !== "" &&
+                        String(
+                            category.categoryId
+                        ) === String(
+                            categoryId
+                        )
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return (
+                        existingName ===
+                        enteredName
+                    );
+
+                }
+            );
+
+
+        /*
+        If duplicate category exists,
+        stop saving.
+        */
+
+        if (duplicateCategory) {
+
+            alert(
+                "Category name already exists!\n\n" +
+                "Please enter a different category name."
+            );
+
+            return;
+
+        }
+
+
+
+        /*
+        JSON object sent to Spring Boot
+        */
+
+        const categoryData = {
+
+            categoryName:
+                categoryName,
+
+            description:
+                description,
+
+            ratePerKg:
+                Number(ratePerKg),
+
+            status:
+                status
+
+        };
+
+
+
+        try {
+
+            let response;
+
+
+
+            /* ======================================
+               ADD NEW CATEGORY
+            ====================================== */
+
+            if (
+                categoryId === ""
+            ) {
+
+                response =
+                    await fetch(
+                        API_URL,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    categoryData
+                                )
+                        }
+                    );
+
+            }
+
+
+
+            /* ======================================
+               UPDATE EXISTING CATEGORY
+            ====================================== */
+
+            else {
+
+                response =
+                    await fetch(
+                        API_URL +
+                        "/" +
+                        categoryId,
+                        {
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    categoryData
+                                )
+                        }
+                    );
+
+            }
+
+
+
+            /*
+            Check server response
+            */
+
+            if (
+                !response.ok
+            ) {
+
+                const errorText =
+                    await response.text();
+
+
+                /*
+                If backend sends duplicate
+                message, show it directly.
+                */
+
+                let errorMessage =
+                    errorText;
+
+
+                try {
+
+                    const errorData =
+                        JSON.parse(
+                            errorText
+                        );
+
+
+                    if (
+                        errorData.message
+                    ) {
+
+                        errorMessage =
+                            errorData.message;
+
+                    }
+
+                }
+                catch (e) {
+
+                    // Response was not JSON
+
+                }
+
+
+                throw new Error(
+                    errorMessage ||
+                    "Server Error: " +
+                    response.status
+                );
+
+            }
+
+
+
+            /*
+            Get saved object
+            */
+
+            const savedCategory =
+                await response.json();
+
+
+            console.log(
+                "Saved category:",
+                savedCategory
+            );
+
+
+
+            /*
+            Success message
+            */
+
+            if (
+                categoryId === ""
+            ) {
+
+                alert(
+                    "Category added successfully!"
+                );
+
+            }
+            else {
+
+                alert(
+                    "Category updated successfully!"
+                );
+
+            }
+
+
+
+            /*
+            Clear form
+            */
+
+            clearForm();
+
+
+
+            /*
+            Reload latest DB data
+            */
+
+            await loadCategories();
+
+        }
+        catch (error) {
+
+            console.error(
+                "Save error:",
+                error
+            );
+
+
+            alert(
+                "Could not save category.\n\n" +
+                error.message
+            );
+
+        }
+
+    }
+);
+
+
+
+/* =====================================================
+   ENABLE / DISABLE CATEGORY
+===================================================== */
+
+async function changeStatus(
+    id,
+    newStatus
+) {
+
+    const category =
+        allCategories.find(
+            function (item) {
+
+                return (
+                    item.categoryId === id
+                );
+
+            }
+        );
+
+
+    if (!category) {
+
+        alert(
+            "Category not found."
+        );
+
+        return;
+
+    }
+
+
+    const actionText =
+        newStatus === "Active"
+            ? "enable"
+            : "disable";
+
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to " +
+            actionText +
+            " " +
+            category.categoryName +
+            "?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    const updatedData = {
+
+        categoryName:
+            category.categoryName,
+
+        description:
+            category.description || "",
+
+        ratePerKg:
+            Number(category.ratePerKg),
+
+        status:
+            newStatus
+
+    };
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL +
+                "/" +
+                id,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            updatedData
+                        )
+                }
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            const errorText =
+                await response.text();
+
+
+            throw new Error(
+                errorText ||
+                "Failed to update status."
+            );
+
+        }
+
+
+        alert(
+            "Category status updated successfully!"
+        );
+
+
+        await loadCategories();
+
+    }
+    catch (error) {
+
+        console.error(
+            "Status update error:",
+            error
+        );
+
+
+        alert(
+            "Could not update status.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   SEARCH CATEGORY
+===================================================== */
+
+document.getElementById(
+    "searchCategory"
+).addEventListener(
+    "input",
+    function () {
+
+        const searchText =
+            this.value
+                .trim()
+                .toLowerCase();
+
+
+        if (
+            searchText === ""
+        ) {
+
+            displayCategories(
+                allCategories
+            );
+
+            return;
+
+        }
+
+
+        const filteredCategories =
+            allCategories.filter(
+                function (category) {
+
+                    const name =
+                        (
+                            category.categoryName
+                            || ""
+                        ).toLowerCase();
+
+
+                    const description =
+                        (
+                            category.description
+                            || ""
+                        ).toLowerCase();
+
+
+                    return (
+                        name.includes(
+                            searchText
+                        )
+                        ||
+                        description.includes(
+                            searchText
+                        )
+                    );
+
+                }
+            );
+
+
+        displayCategories(
+            filteredCategories
+        );
+
+    }
+);
+
+
+
+/* =====================================================
+   HTML ESCAPE FUNCTION
+===================================================== */
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+</script>
+
+</body>
+
+</html>
